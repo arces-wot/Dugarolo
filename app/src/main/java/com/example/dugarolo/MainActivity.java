@@ -14,8 +14,9 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,9 +25,13 @@ public class MainActivity extends AppCompatActivity {
     MapView map = null;
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        loadMap();
+        ListView listRequests = (ListView) findViewById(R.id.list_requests);
+        loadRequests(listRequests);
+        setListViewListener(listRequests);
+    }
 
-        //handle permissions first, before map is created. not depicted here
-
+    private void loadMap() {
         //load/initialize the osmdroid configuration, this can be done
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
@@ -44,29 +49,36 @@ public class MainActivity extends AppCompatActivity {
         map.setMultiTouchControls(true);
         IMapController mapController = map.getController();
         mapController.setZoom(9.5);
-        GeoPoint startPoint = new GeoPoint(48.8583, 2.2944);
+        GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
-        //crea array adapter
-        ArrayAdapter<Farm> listAdapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_list_item_1,
-                Farm.farms
-        );
-        //lega l'adapter con la list view
-        ListView listFarms = (ListView) findViewById(R.id.list_farms);
-        listFarms.setAdapter(listAdapter);
+    }
+
+    private void loadRequests(ListView listRequests) {
+        ArrayList<Request> arrayOfRequests = new ArrayList<>();
+        RequestsAdapter adapter = new RequestsAdapter(this, arrayOfRequests);
+        listRequests = (ListView) findViewById(R.id.list_requests);
+        listRequests.setAdapter(adapter);
+        Request request1 = new Request(R.drawable.request_cancelled, "Bertacchini\'s farm", R.drawable.request_interrupted);
+        Request request2 = new Request(R.drawable.request_completed, "Ferrari\'s farm", R.drawable.status_unknown);
+        adapter.add(request1);
+        adapter.add(request2);
+        Request.requests.add(request1);
+        Request.requests.add(request2);
+    }
+
+    private void setListViewListener(ListView listRequests) {
         //crea il listener per i click sulla list view
         AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> listFarms, View itemView, int position, long id) {
+            public void onItemClick(AdapterView<?> listRequests, View itemView, int position, long id) {
                 //passa la fattoria cliccata a RequestDetailActivity
                 Intent intent = new Intent(MainActivity.this, RequestDetailsActivity.class);
-                intent.putExtra(RequestDetailsActivity.EXTRA_FARM_ID, (int) id);
+                intent.putExtra(RequestDetailsActivity.EXTRA_REQUEST_ID, (int) id);
                 startActivity(intent);
             }
         };
         //assegna il listener alla list view
-        listFarms.setOnItemClickListener(itemClickListener);
+        listRequests.setOnItemClickListener(itemClickListener);
     }
 
     public void onResume(){

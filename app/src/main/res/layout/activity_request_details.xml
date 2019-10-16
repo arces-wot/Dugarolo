@@ -3,11 +3,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     tools:context=".RequestDetailsActivity">
 
     <TextView
-        android:id="@+id/request"
+        android:id="@+id/string_request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
@@ -18,13 +18,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/farm"
+        android:id="@+id/request"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="52dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/request"
+        app:layout_constraintStart_toEndOf="@+id/string_request"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -44,30 +44,48 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:layout_marginTop="40dp"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/selectStatus"
-        android:orientation="vertical">
+        app:layout_constraintTop_toBottomOf="@+id/selectStatus">
 
         <RadioButton
             android:id="@+id/satisfied"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/satisfied_request">
-        </RadioButton>
+            android:text="@string/satisfied_request"></RadioButton>
 
         <RadioButton
             android:id="@+id/cancelled"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancelled_request">
-        </RadioButton>
+            android:text="@string/cancelled_request"></RadioButton>
 
         <RadioButton
             android:id="@+id/interrupted"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/interrupted_request">
-        </RadioButton>
-
+            android:text="@string/interrupted_request"></RadioButton>
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/detailsForm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/submitButton"
+        app:layout_constraintTop_toBottomOf="@id/radioGroup"
+        android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.">
+    </TextView>
+
+    <Button
+        android:id="@+id/submitButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/submit_button"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+    </Button>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

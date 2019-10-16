@@ -10,4 +10,5 @@
     <string name="satisfied_request">Satisfied</string>
     <string name="cancelled_request">Cancelled</string>
     <string name="interrupted_request">Interrupted</string>
+    <string name="submit_button">SUBMIT</string>
 </resources>

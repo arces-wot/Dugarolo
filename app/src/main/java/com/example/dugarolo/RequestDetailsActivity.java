@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 public class RequestDetailsActivity extends AppCompatActivity {
 
-    public static final String EXTRA_FARM_ID = "id";
+    public static final String EXTRA_REQUEST_ID = "id";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -17,10 +17,10 @@ public class RequestDetailsActivity extends AppCompatActivity {
         //abilita il bottone "Up"
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
-        //prendi la farm dall'intent
-        int farmId = (Integer) getIntent().getExtras().get(EXTRA_FARM_ID);
-        Farm farm = Farm.farms[farmId];
-        TextView farmName = (TextView) findViewById(R.id.farm);
-        farmName.setText(farm.getName());
+        //prendi la request dall'intent
+        int requestId = (Integer) getIntent().getExtras().get(EXTRA_REQUEST_ID);
+        Request request = Request.requests.get(requestId);
+        TextView farmName = (TextView) findViewById(R.id.request);
+        farmName.setText(request.getName());
     }
 }
