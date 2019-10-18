@@ -1,6 +1,7 @@
 package com.example.dugarolo;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,7 +31,7 @@ public class RequestsAdapter extends ArrayAdapter<Request> {
         ImageView statusIcon = (ImageView) convertView.findViewById(R.id.status_icon);
 
         basicIcon.setImageResource(request.getBasicIconId());
-        farmName.setText(request.getName());
+        farmName.setText(Html.fromHtml(request.getName() + "<br />" + "<small>" + request.getDate().toString() + "</small"));
         statusIcon.setImageResource(request.getStatusIconId());
         return convertView;
     }

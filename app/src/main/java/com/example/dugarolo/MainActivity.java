@@ -16,7 +16,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     MapView map = null;
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        JodaTimeAndroid.init(this);
+        Arrays.sort(Request.requests);
         loadMap();
         ListView listRequests = (ListView) findViewById(R.id.list_requests);
         loadRequests(listRequests);
