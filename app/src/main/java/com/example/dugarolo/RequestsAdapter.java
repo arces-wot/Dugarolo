@@ -8,13 +8,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 
 public class RequestsAdapter extends ArrayAdapter<Request> {
 
-    public RequestsAdapter(@NonNull Context context, ArrayList<Request> requests) {
+    public RequestsAdapter(@NonNull Context context, Request[] requests) {
         super(context, 0, requests);
     }
 

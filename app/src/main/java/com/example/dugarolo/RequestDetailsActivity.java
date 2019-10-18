@@ -3,12 +3,17 @@ package com.example.dugarolo;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 public class RequestDetailsActivity extends AppCompatActivity {
 
     public static final String EXTRA_REQUEST_ID = "id";
+    private Integer requestId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,8 +24,38 @@ public class RequestDetailsActivity extends AppCompatActivity {
         actionBar.setDisplayHomeAsUpEnabled(true);
         //prendi la request dall'intent
         int requestId = (Integer) getIntent().getExtras().get(EXTRA_REQUEST_ID);
-        Request request = Request.requests.get(requestId);
+        setRequestId(requestId);
+        Request request = Request.requests[requestId];
         TextView farmName = (TextView) findViewById(R.id.request);
         farmName.setText(request.getName());
+    }
+
+    public void onClickSubmit(View view) {
+        RadioGroup radioGroup = findViewById(R.id.radioGroup);
+        int radioButtonId = radioGroup.getCheckedRadioButtonId();
+        Request request = Request.requests[requestId];
+        //RadioButton radioButton = findViewById(radioButtonId);
+        switch (radioButtonId) {
+            case R.id.cancelled:
+                request.setStatusIconId(R.drawable.request_cancelled);
+                break;
+            case R.id.interrupted:
+                request.setStatusIconId(R.drawable.request_interrupted);
+                break;
+            case R.id.satisfied:
+                request.setStatusIconId(R.drawable.request_completed);
+                break;
+            default:
+        }
+        Intent intent = new Intent(RequestDetailsActivity.this, MainActivity.class);
+        intent.putExtra(MainActivity.STATUS_ICON_ID, request.getStatusIconId());
+        startActivity(intent);
+    }
+
+    public Integer getRequestId() {
+        return this.requestId;
+    }
+    public void setRequestId(Integer requestId) {
+        this.requestId = requestId;
     }
 }

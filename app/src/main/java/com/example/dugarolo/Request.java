@@ -8,7 +8,10 @@ public class Request {
     private Integer statusIconId;
 
 
-    public static final ArrayList<Request> requests = new ArrayList<>();
+    public static final Request[] requests = {
+            new Request(R.drawable.request_cancelled, "Bertacchini\'s farm", R.drawable.request_interrupted),
+            new Request(R.drawable.request_completed, "Ferrari\'s farm", R.drawable.status_unknown)
+    };
 
     public Request(Integer basicIconId, String name, Integer statusIconId) {
         this.basicIconId = basicIconId;
@@ -27,6 +30,20 @@ public class Request {
     public Integer getStatusIconId() {
         return statusIconId;
     }
+
+    public void setStatusIconId(Integer statusIconId) {
+        this.statusIconId = statusIconId;
+    }
+
+    /*
+    public void populateArray() {
+        Request request1 = new Request(R.drawable.request_cancelled, "Bertacchini\'s farm", R.drawable.request_interrupted);
+        Request request2 = new Request(R.drawable.request_completed, "Ferrari\'s farm", R.drawable.status_unknown);
+        requests.add(request1);
+        requests.add(request2);
+    }
+    */
+
 
     public String toString(){
         return this.name;

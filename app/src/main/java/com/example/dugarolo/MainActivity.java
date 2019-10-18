@@ -20,6 +20,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
+    public static final String STATUS_ICON_ID = "id";
+    private Integer requestId;
 
 
     MapView map = null;
@@ -29,6 +31,11 @@ public class MainActivity extends AppCompatActivity {
         ListView listRequests = (ListView) findViewById(R.id.list_requests);
         loadRequests(listRequests);
         setListViewListener(listRequests);
+        if(requestId != null) {
+            Request request = Request.requests[requestId];
+            Integer statusIcon = (Integer) getIntent().getExtras().get(STATUS_ICON_ID);
+            request.setStatusIconId(statusIcon);
+        }
     }
 
     private void loadMap() {
@@ -54,16 +61,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void loadRequests(ListView listRequests) {
-        ArrayList<Request> arrayOfRequests = new ArrayList<>();
-        RequestsAdapter adapter = new RequestsAdapter(this, arrayOfRequests);
+        //ArrayList<Request> arrayOfRequests = new ArrayList<>();
+        RequestsAdapter adapter = new RequestsAdapter(this, Request.requests);
         listRequests = (ListView) findViewById(R.id.list_requests);
         listRequests.setAdapter(adapter);
+        /*
         Request request1 = new Request(R.drawable.request_cancelled, "Bertacchini\'s farm", R.drawable.request_interrupted);
         Request request2 = new Request(R.drawable.request_completed, "Ferrari\'s farm", R.drawable.status_unknown);
         adapter.add(request1);
         adapter.add(request2);
+        */
+        /*
         Request.requests.add(request1);
         Request.requests.add(request2);
+         */
     }
 
     private void setListViewListener(ListView listRequests) {
@@ -74,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 //passa la fattoria cliccata a RequestDetailActivity
                 Intent intent = new Intent(MainActivity.this, RequestDetailsActivity.class);
                 intent.putExtra(RequestDetailsActivity.EXTRA_REQUEST_ID, (int) id);
+                requestId = (int) id;
                 startActivity(intent);
             }
         };

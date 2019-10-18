@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">Dugarolo</string>
     <string name="irrigation_scheduling">Irrigation Scheduling</string>
-    <string-array name="farms">
-        <item>Bertacchini\'s Farm</item>
-        <item>Ferrari\'s Farm</item>
-    </string-array>
     <string name="request">Request:</string>
     <string name="select_status">Select status:</string>
     <string name="satisfied_request">Satisfied</string>
