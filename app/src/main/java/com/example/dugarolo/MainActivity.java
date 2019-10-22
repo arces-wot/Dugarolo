@@ -2,11 +2,16 @@ package com.example.dugarolo;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.TilesOverlay;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,16 +23,19 @@ import android.widget.ListView;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String STATUS_ICON_ID = "id";
     private Integer requestId;
+    private ArrayList<Canal> canals = new ArrayList<>();
+    private MapView map = null;
 
-
-    MapView map = null;
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
@@ -55,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
 
         //inflate and create the map
         setContentView(R.layout.activity_main);
-
         map = (MapView) findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.USGS_SAT);
         map.setMultiTouchControls(true);
@@ -63,8 +70,40 @@ public class MainActivity extends AppCompatActivity {
         mapController.setZoom(9.5);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
+        loadGeoPoints();
+        drawCanals();
     }
 
+    private void loadGeoPoints() {
+        try {
+            JSONArray jsonArray = new JSONArray(loadJSONFromAsset());
+            for(int index = 0; index < jsonArray.length(); index++) {
+                JSONObject jsonObject = (JSONObject) jsonArray.get(index);
+                double geoLanStart = jsonObject.getJSONObject("start").getDouble("lan");
+                double geoLongStart = jsonObject.getJSONObject("start").getDouble("long");
+                GeoPoint start = new GeoPoint(geoLanStart, geoLongStart);
+                double geoLanEnd = jsonObject.getJSONObject("end").getDouble("lan");
+                double geoLongEnd = jsonObject.getJSONObject("end").getDouble("long");
+                GeoPoint end = new GeoPoint(geoLanEnd, geoLongEnd);
+                Canal canal = new Canal(start, end);
+                canals.add(canal);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void drawCanals() {
+        for(Canal canal: canals) {
+            Polyline line = new Polyline();
+            List<GeoPoint> geoPoints = new ArrayList<>();
+            geoPoints.add(canal.getStart());
+            geoPoints.add(canal.getEnd());
+            line.setPoints(geoPoints);
+            map.getOverlayManager().add(line);
+            map.invalidate();
+        }
+    }
     private void loadRequests(ListView listRequests) {
         //ArrayList<Request> arrayOfRequests = new ArrayList<>();
         RequestsAdapter adapter = new RequestsAdapter(this, Request.requests);
@@ -116,5 +155,20 @@ public class MainActivity extends AppCompatActivity {
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
+    public String loadJSONFromAsset() {
+        String json = null;
+        try {
+            InputStream is = this.getAssets().open("canals.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+    }
 
 }

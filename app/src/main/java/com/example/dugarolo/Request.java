@@ -1,6 +1,5 @@
 package com.example.dugarolo;
 
-import org.joda.time.DateTimeComparator;
 import org.joda.time.LocalDate;
 
 public class Request implements Comparable<Request>{
@@ -12,8 +11,8 @@ public class Request implements Comparable<Request>{
 
 
     public static final Request[] requests = {
-            new Request(R.drawable.request_cancelled, "Bertacchini\'s farm", new LocalDate(2019, 9, 18, null), R.drawable.request_interrupted),
-            new Request(R.drawable.request_completed, "Ferrari\'s farm", new LocalDate(2019, 9, 19, null), R.drawable.status_unknown)
+            new Request(R.drawable.swamp_leaf, "Bertacchini\'s farm", new LocalDate(2019, 9, 18, null), R.drawable.request_interrupted),
+            new Request(R.drawable.swamp_leaf, "Ferrari\'s farm", new LocalDate(2019, 9, 19, null), R.drawable.status_unknown)
     };
 
     public Request(Integer basicIconId, String name, LocalDate localDate, Integer statusIconId) {
