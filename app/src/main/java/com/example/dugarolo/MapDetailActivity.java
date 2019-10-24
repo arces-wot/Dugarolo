@@ -1,6 +1,15 @@
 package com.example.dugarolo;
 
-import androidx.appcompat.app.AppCompatActivity;
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.View;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,44 +21,28 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Polyline;
-
-import android.content.Context;
-import android.content.Intent;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.preference.PreferenceManager;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
-
-import net.danlew.android.joda.JodaTimeAndroid;
+import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
+import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
-    public static final String STATUS_ICON_ID = "id";
-    private Integer requestId;
+public class MapDetailActivity extends AppCompatActivity {
+
     private ArrayList<Canal> canals = new ArrayList<>();
     private MapView map = null;
+    private GpsMyLocationProvider gpsMyLocationProvider;
 
-    @Override public void onCreate(Bundle savedInstanceState) {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        JodaTimeAndroid.init(this);
-        Arrays.sort(Request.requests);
+        gpsMyLocationProvider = new GpsMyLocationProvider(this);
         loadMap();
-        ListView listRequests = (ListView) findViewById(R.id.list_requests);
-        loadRequests(listRequests);
-        setListViewListener(listRequests);
-        if(requestId != null) {
-            Request request = Request.requests[requestId];
-            Integer statusIcon = (Integer) getIntent().getExtras().get(STATUS_ICON_ID);
-            request.setStatusIconId(statusIcon);
-        }
     }
 
     private void loadMap() {
@@ -63,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's tile servers will get you banned based on this string
 
         //inflate and create the map
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.map_detail);
         map = (MapView) findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
@@ -98,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void drawCanals() {
-        //disegna una linea per ogni canale
         for(Canal canal: canals) {
             Polyline line = new Polyline();
             List<GeoPoint> geoPoints = new ArrayList<>();
@@ -109,56 +101,6 @@ public class MainActivity extends AppCompatActivity {
             map.getOverlayManager().add(line);
             map.invalidate();
         }
-    }
-    private void loadRequests(ListView listRequests) {
-        //ArrayList<Request> arrayOfRequests = new ArrayList<>();
-        RequestsAdapter adapter = new RequestsAdapter(this, Request.requests);
-        listRequests = (ListView) findViewById(R.id.list_requests);
-        listRequests.setAdapter(adapter);
-        /*
-        Request request1 = new Request(R.drawable.request_cancelled, "Bertacchini\'s farm", R.drawable.request_interrupted);
-        Request request2 = new Request(R.drawable.request_completed, "Ferrari\'s farm", R.drawable.status_unknown);
-        adapter.add(request1);
-        adapter.add(request2);
-        */
-        /*
-        Request.requests.add(request1);
-        Request.requests.add(request2);
-         */
-    }
-
-    private void setListViewListener(ListView listRequests) {
-        //crea il listener per i click sulla list view
-        AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> listRequests, View itemView, int position, long id) {
-                //passa la fattoria cliccata a RequestDetailActivity
-                Intent intent = new Intent(MainActivity.this, RequestDetailsActivity.class);
-                intent.putExtra(RequestDetailsActivity.EXTRA_REQUEST_ID, (int) id);
-                requestId = (int) id;
-                startActivity(intent);
-            }
-        };
-        //assegna il listener alla list view
-        listRequests.setOnItemClickListener(itemClickListener);
-    }
-
-    public void onResume(){
-        super.onResume();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
-    }
-
-    public void onPause(){
-        super.onPause();
-        //this will refresh the osmdroid configuration on resuming.
-        //if you make changes to the configuration, use
-        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-        //Configuration.getInstance().save(this, prefs);
-        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
     public String loadJSONFromAsset() {
@@ -177,9 +119,44 @@ public class MainActivity extends AppCompatActivity {
         return json;
     }
 
-    public void onClickExpandMap(View view) {
-        Intent intent = new Intent(MainActivity.this, MapDetailActivity.class);
+    public void onPause(){
+        super.onPause();
+        //this will refresh the osmdroid configuration on resuming.
+        //if you make changes to the configuration, use
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        //Configuration.getInstance().save(this, prefs);
+        MyLocationNewOverlay locationNewOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
+        locationNewOverlay.disableMyLocation();
+        map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+    }
+
+    public void onResume(){
+        super.onResume();
+        //this will refresh the osmdroid configuration on resuming.
+        //if you make changes to the configuration, use
+        //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
+        MyLocationNewOverlay locationNewOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
+        locationNewOverlay.enableMyLocation();
+        map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+    }
+
+    public void onClickResizeMap(View view) {
+        Intent intent = new Intent(MapDetailActivity.this, MainActivity.class);
         startActivity(intent);
     }
 
+    public void onClickShowMyLocation(View view) {
+        gpsMyLocationProvider.addLocationSource(LocationManager.NETWORK_PROVIDER);
+        MyLocationNewOverlay locationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
+        locationOverlay.enableFollowLocation();
+        locationOverlay.enableMyLocation();
+        Drawable currentDraw = ResourcesCompat.getDrawable(getResources(), R.mipmap.ic_launcher, null);
+        Bitmap currentIcon = null;
+        if (currentDraw != null) {
+            currentIcon = ((BitmapDrawable) currentDraw).getBitmap();
+        }
+        locationOverlay.setPersonIcon(currentIcon);
+        map.getOverlayManager().add(locationOverlay);
+    }
 }

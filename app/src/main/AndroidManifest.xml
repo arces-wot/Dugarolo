@@ -11,9 +11,9 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/swamp_final_fix"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/swamp_final_fix"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".WeirActivity"></activity>
@@ -30,6 +30,9 @@
             android:name=".RequestDetailsActivity"
             android:label="SWAMP"
             android:parentActivityName=".MainActivity" />
+        <activity android:name=".MapDetailActivity"
+            android:label="SWAMP"
+            android:parentActivityName=".MainActivity"/>
     </application>
 
 </manifest>

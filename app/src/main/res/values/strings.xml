@@ -1,10 +1,13 @@
 <resources>
     <string name="app_name">Dugarolo</string>
-    <string name="irrigation_scheduling">Irrigation Scheduling</string>
+    <string name="irrigation_scheduling">Irrigation Requests</string>
     <string name="request">Request:</string>
     <string name="select_status">Select status:</string>
     <string name="satisfied_request">Satisfied</string>
     <string name="cancelled_request">Cancelled</string>
     <string name="interrupted_request">Interrupted</string>
     <string name="submit_button">SUBMIT</string>
+    <string name="expand_button">EXPAND</string>
+    <string name="resize_button">RESIZE</string>
+    <string name="my_location">MY LOCATION</string>
 </resources>
