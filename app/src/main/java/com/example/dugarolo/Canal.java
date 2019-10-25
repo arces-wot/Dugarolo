@@ -16,15 +16,8 @@ public class Canal {
         return end;
     }
 
-    public void setEnd(GeoPoint end) {
-        this.end = end;
-    }
-
     public GeoPoint getStart() {
         return start;
     }
 
-    public void setStart(GeoPoint start) {
-        this.start = start;
-    }
 }

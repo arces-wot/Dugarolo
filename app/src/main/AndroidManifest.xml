@@ -16,7 +16,6 @@
         android:roundIcon="@drawable/swamp_final_fix"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WeirActivity"></activity>
         <activity
             android:name=".MainActivity"
             android:label="SWAMP">
@@ -33,6 +32,10 @@
         <activity android:name=".MapDetailActivity"
             android:label="SWAMP"
             android:parentActivityName=".MainActivity"/>
+        <activity android:name=".WeirActivity"
+            android:label="SWAMP"
+            android:parentActivityName=".MapDetailActivity">
+        </activity>
     </application>
 
 </manifest>

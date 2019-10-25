@@ -20,6 +20,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -56,7 +57,7 @@ public class MapDetailActivity extends AppCompatActivity {
         //note, the load method also sets the HTTP User Agent to your application's package name, abusing osm's tile servers will get you banned based on this string
 
         //inflate and create the map
-        setContentView(R.layout.map_detail);
+        setContentView(R.layout.activity_map_detail);
         map = (MapView) findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
@@ -67,13 +68,40 @@ public class MapDetailActivity extends AppCompatActivity {
         mapController.setZoom(13.0);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
-        loadGeoPoints();
+        Marker startMarker = new Marker(map);
+        startMarker.setPosition(startPoint);
+        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        Drawable weirIcon = getResources().getDrawable(R.drawable.weir);
+        Bitmap bitmap = ((BitmapDrawable) weirIcon).getBitmap();
+        Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
+        startMarker.setIcon(resizedWeirIcon);
+        startMarker.setInfoWindow(null);
+        map.getOverlays().add(startMarker);
+        startMarker.setOnMarkerClickListener(
+                new Marker.OnMarkerClickListener() {
+                    @Override
+                    public boolean onMarkerClick(Marker marker, MapView mapView) {
+                        Intent intent = new Intent(MapDetailActivity.this, WeirActivity.class);
+                        startActivity(intent);
+                        return true;
+                    }
+                });
+        loadGeoPointsWeirs();
+        drawWeirs();
+        loadGeoPointsCanals();
         drawCanals();
     }
 
-    private void loadGeoPoints() {
+    private void drawWeirs() {
+
+    }
+
+    private void loadGeoPointsWeirs() {
+    }
+
+    private void loadGeoPointsCanals() {
         try {
-            JSONArray jsonArray = new JSONArray(loadJSONFromAsset());
+            JSONArray jsonArray = new JSONArray(loadJSONFromAssetCanals());
             for(int index = 0; index < jsonArray.length(); index++) {
                 JSONObject jsonObject = (JSONObject) jsonArray.get(index);
                 double geoLanStart = jsonObject.getJSONObject("start").getDouble("lan");
@@ -103,7 +131,7 @@ public class MapDetailActivity extends AppCompatActivity {
         }
     }
 
-    public String loadJSONFromAsset() {
+    public String loadJSONFromAssetCanals() {
         String json = null;
         try {
             InputStream is = this.getAssets().open("canals.json");
