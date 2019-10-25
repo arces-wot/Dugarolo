@@ -13,6 +13,7 @@
     </ImageView>
 
     <TextView
+        android:id="@+id/weir_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -21,6 +22,7 @@
     </TextView>
 
     <TextView
+        android:id="@+id/farm_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -28,6 +30,7 @@
     </TextView>
 
     <TextView
+        android:id="@+id/water_level"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_weight="1"

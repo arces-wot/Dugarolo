@@ -10,6 +10,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.ArrayAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,6 +69,7 @@ public class MapDetailActivity extends AppCompatActivity {
         mapController.setZoom(13.0);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
+        /*
         Marker startMarker = new Marker(map);
         startMarker.setPosition(startPoint);
         startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
@@ -86,17 +88,46 @@ public class MapDetailActivity extends AppCompatActivity {
                         return true;
                     }
                 });
-        loadGeoPointsWeirs();
-        drawWeirs();
+         */
         loadGeoPointsCanals();
         drawCanals();
+        loadGeoPointsWeirs();
+        drawWeirs();
     }
 
     private void drawWeirs() {
-
+        //ora si itera su un array creato staticamente, poi si userà il json
+        for(Integer index = 0; index < Weir.weirs.length; index++) {
+            Marker marker = new Marker(map);
+            marker.setPosition(Weir.weirs[index].getPosition());
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+            Drawable weirIcon = getResources().getDrawable(R.drawable.weir);
+            Bitmap bitmap = ((BitmapDrawable) weirIcon).getBitmap();
+            Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
+            marker.setIcon(resizedWeirIcon);
+            marker.setInfoWindow(null);
+            marker.setId(Weir.weirs[index].getNumber().toString());
+            marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    Intent intent = new Intent(MapDetailActivity.this, WeirActivity.class);
+                    for(int index = 0; index < Weir.weirs.length; index++) {
+                        if(marker.getId().equals(Weir.weirs[index].getNumber().toString())) {
+                            intent.putExtra("Farm", Weir.weirs[index].getFarm());
+                            intent.putExtra("Number", Weir.weirs[index].getNumber());
+                            intent.putExtra("Water Level", Weir.weirs[index].getWaterLevel());
+                        }
+                    }
+                    startActivity(intent);
+                    return true;
+                }
+            });
+            map.getOverlays().add(marker);
+        }
     }
 
     private void loadGeoPointsWeirs() {
+
     }
 
     private void loadGeoPointsCanals() {

@@ -1,14 +1,23 @@
 package com.example.dugarolo;
 
+import org.osmdroid.util.GeoPoint;
+
 public class Weir {
     private Integer number;
     private String farm;
-    private String waterLevel;
+    private Integer waterLevel;
+    private GeoPoint position;
 
-    public Weir(Integer number, String farm, String waterLevel) {
+    public static Weir[] weirs = {
+            new Weir(1, "Martinelli", 70, new GeoPoint(44.774749, 10.720185)),
+            new Weir(2, "Luceri", 46, new GeoPoint(44.780640, 10.727920))
+    };
+
+    public Weir(Integer number, String farm, Integer waterLevel, GeoPoint position) {
         this.farm = farm;
         this.number = number;
         this.waterLevel = waterLevel;
+        this.position = position;
     }
 
     public String getFarm() {
@@ -19,7 +28,11 @@ public class Weir {
         return number;
     }
 
-    public String getWaterLevel() {
+    public Integer getWaterLevel() {
         return waterLevel;
+    }
+
+    public GeoPoint getPosition() {
+        return position;
     }
 }
