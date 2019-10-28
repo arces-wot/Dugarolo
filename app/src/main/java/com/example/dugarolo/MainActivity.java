@@ -11,7 +11,7 @@ import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.Polygon;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,22 +28,22 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String STATUS_ICON_ID = "id";
     private Integer requestId;
-    private ArrayList<Canal> canals = new ArrayList<>();
+    private ArrayList<Farm> farms = new ArrayList<>();
     private MapView map = null;
+
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
         Arrays.sort(Request.requests);
         loadMap();
-        ListView listRequests = (ListView) findViewById(R.id.list_requests);
-        loadRequests(listRequests);
+        ListView listRequests = findViewById(R.id.list_requests);
+        loadRequests();
         setListViewListener(listRequests);
         if(requestId != null) {
             Request request = Request.requests[requestId];
@@ -64,56 +64,64 @@ public class MainActivity extends AppCompatActivity {
 
         //inflate and create the map
         setContentView(R.layout.activity_main);
-        map = (MapView) findViewById(R.id.map);
+        map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
         map.setTilesScaledToDpi(true);
         map.setClickable(true);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         IMapController mapController = map.getController();
-        mapController.setZoom(13.0);
+        mapController.setZoom(14.0);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
-        loadGeoPoints();
-        drawCanals();
+        drawFarms();
     }
 
-    private void loadGeoPoints() {
+    private void loadGeoPointsFarms() {
         try {
-            JSONArray jsonArray = new JSONArray(loadJSONFromAsset());
+            JSONArray jsonArray = new JSONArray(loadJSONFromAssetFarms());
             for(int index = 0; index < jsonArray.length(); index++) {
-                JSONObject jsonObject = (JSONObject) jsonArray.get(index);
-                double geoLanStart = jsonObject.getJSONObject("start").getDouble("lan");
-                double geoLongStart = jsonObject.getJSONObject("start").getDouble("long");
-                GeoPoint start = new GeoPoint(geoLanStart, geoLongStart);
-                double geoLanEnd = jsonObject.getJSONObject("end").getDouble("lan");
-                double geoLongEnd = jsonObject.getJSONObject("end").getDouble("long");
-                GeoPoint end = new GeoPoint(geoLanEnd, geoLongEnd);
-                Canal canal = new Canal(start, end);
-                canals.add(canal);
+                JSONObject jsonObject = jsonArray.getJSONObject(index);
+                JSONArray jsonArrayPoints = jsonObject.getJSONArray("area");
+                Polygon polygon = new Polygon();
+                for(int i = 0; i < jsonArrayPoints.length(); i++) {
+                    JSONObject jsonObjectPoint = jsonArrayPoints.getJSONObject(i);
+                    double lat = jsonObjectPoint.getDouble("lat");
+                    double lon = jsonObjectPoint.getDouble("lon");
+                    GeoPoint geoPoint = new GeoPoint(lat, lon);
+                    polygon.addPoint(geoPoint);
+                }
+                Farm farm = new Farm(jsonObject.getString("name"), polygon);
+                farms.add(farm);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    private void drawCanals() {
+    private void drawFarms() {
+        loadGeoPointsFarms();
         //disegna una linea per ogni canale
-        for(Canal canal: canals) {
-            Polyline line = new Polyline();
-            List<GeoPoint> geoPoints = new ArrayList<>();
-            geoPoints.add(canal.getStart());
-            geoPoints.add(canal.getEnd());
-            line.setPoints(geoPoints);
-            line.getOutlinePaint().setColor(Color.parseColor("#ADD8E6"));
-            map.getOverlayManager().add(line);
+        for(Farm farm: farms) {
+            Polygon polygon = farm.getArea();
+            switch (farm.getName()) {
+                case "Bertacchini's Farm":
+                    polygon.getOutlinePaint().setColor(Color.YELLOW);
+                    break;
+                case "Ferrari's Farm":
+                    polygon.getOutlinePaint().setColor(Color.BLUE);
+                    break;
+                default:
+            }
+            polygon.getFillPaint().setColor(Color.TRANSPARENT);
+            polygon.getOutlinePaint().setStrokeWidth(3);
+            map.getOverlayManager().add(polygon);
             map.invalidate();
         }
     }
-    private void loadRequests(ListView listRequests) {
-        //ArrayList<Request> arrayOfRequests = new ArrayList<>();
+    private void loadRequests() {
         RequestsAdapter adapter = new RequestsAdapter(this, Request.requests);
-        listRequests = (ListView) findViewById(R.id.list_requests);
+        ListView listRequests = findViewById(R.id.list_requests);
         listRequests.setAdapter(adapter);
         /*
         Request request1 = new Request(R.drawable.request_cancelled, "Bertacchini\'s farm", R.drawable.request_interrupted);
@@ -161,10 +169,10 @@ public class MainActivity extends AppCompatActivity {
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
-    public String loadJSONFromAsset() {
-        String json = null;
+    public String loadJSONFromAssetFarms() {
+        String json;
         try {
-            InputStream is = this.getAssets().open("canals.json");
+            InputStream is = this.getAssets().open("farms_swamp.json");
             int size = is.available();
             byte[] buffer = new byte[size];
             is.read(buffer);

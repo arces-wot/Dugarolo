@@ -10,7 +10,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
-import android.widget.ArrayAdapter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,6 +38,7 @@ public class MapDetailActivity extends AppCompatActivity {
     private ArrayList<Canal> canals = new ArrayList<>();
     private MapView map = null;
     private GpsMyLocationProvider gpsMyLocationProvider;
+    private ArrayList<Weir> weirs = new ArrayList<>();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +59,7 @@ public class MapDetailActivity extends AppCompatActivity {
 
         //inflate and create the map
         setContentView(R.layout.activity_map_detail);
-        map = (MapView) findViewById(R.id.map);
+        map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
         map.setTilesScaledToDpi(true);
@@ -89,33 +89,32 @@ public class MapDetailActivity extends AppCompatActivity {
                     }
                 });
          */
-        loadGeoPointsCanals();
         drawCanals();
-        loadGeoPointsWeirs();
         drawWeirs();
     }
 
     private void drawWeirs() {
         //ora si itera su un array creato staticamente, poi si userà il json
-        for(Integer index = 0; index < Weir.weirs.length; index++) {
+        loadGeoPointsWeirs();
+        for(Weir weir : weirs) {
             Marker marker = new Marker(map);
-            marker.setPosition(Weir.weirs[index].getPosition());
+            marker.setPosition(weir.getPosition());
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
             Drawable weirIcon = getResources().getDrawable(R.drawable.weir);
             Bitmap bitmap = ((BitmapDrawable) weirIcon).getBitmap();
-            Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
+            Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 40, 40, true));
             marker.setIcon(resizedWeirIcon);
             marker.setInfoWindow(null);
-            marker.setId(Weir.weirs[index].getNumber().toString());
+            marker.setId(weir.getNumber().toString());
             marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
                     Intent intent = new Intent(MapDetailActivity.this, WeirActivity.class);
-                    for(int index = 0; index < Weir.weirs.length; index++) {
-                        if(marker.getId().equals(Weir.weirs[index].getNumber().toString())) {
-                            intent.putExtra("Farm", Weir.weirs[index].getFarm());
-                            intent.putExtra("Number", Weir.weirs[index].getNumber());
-                            intent.putExtra("Water Level", Weir.weirs[index].getWaterLevel());
+                    for(Weir weir : weirs) {
+                        if(marker.getId().equals(weir.getNumber().toString())) {
+                            intent.putExtra("Farm", weir.getFarm());
+                            intent.putExtra("Number", weir.getNumber());
+                            intent.putExtra("Water Level", weir.getWaterLevel());
                         }
                     }
                     startActivity(intent);
@@ -123,11 +122,46 @@ public class MapDetailActivity extends AppCompatActivity {
                 }
             });
             map.getOverlays().add(marker);
+            map.invalidate();
         }
     }
 
     private void loadGeoPointsWeirs() {
+        JSONObject jsonObject;
+        try {
+            jsonObject = new JSONObject(loadJSONFromAssetWDN());
+            JSONArray jsonArray = jsonObject.getJSONArray("nodes");
+            for (int index = 0; index < jsonArray.length(); index++) {
+                JSONObject jsonArrayElem = jsonArray.getJSONObject(index);
+                //considero solo le chiuse
+                if (jsonArrayElem.getString("type").equals("Weir")) {
+                    int id = jsonArrayElem.getInt("id");
+                    int waterLevel = jsonArrayElem.getInt("openLevel");
+                    GeoPoint geoPoint = new GeoPoint(jsonArrayElem.getJSONObject("location").getDouble("lat"),
+                            jsonArrayElem.getJSONObject("location").getDouble("lon"));
+                    Weir weir = new Weir(id, "X", waterLevel, geoPoint);
+                    weirs.add(weir);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
 
+    private String loadJSONFromAssetWDN() {
+        String json;
+        try {
+            InputStream is = this.getAssets().open("wdn_data.json");
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
     }
 
     private void loadGeoPointsCanals() {
@@ -150,6 +184,7 @@ public class MapDetailActivity extends AppCompatActivity {
     }
 
     private void drawCanals() {
+        loadGeoPointsCanals();
         for(Canal canal: canals) {
             Polyline line = new Polyline();
             List<GeoPoint> geoPoints = new ArrayList<>();
