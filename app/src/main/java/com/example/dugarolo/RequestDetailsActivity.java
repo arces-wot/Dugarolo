@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import java.util.List;
+
 public class RequestDetailsActivity extends AppCompatActivity {
 
     public static final String EXTRA_REQUEST_ID = "id";
@@ -18,21 +20,27 @@ public class RequestDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_details);
+        RequestLab requestLab = RequestLab.get(this);
+        List<Request> requestList = requestLab.getRequestList();
         //abilita il bottone "Up"
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         //prendi la request dall'intent
         int requestId = (Integer) getIntent().getExtras().get(EXTRA_REQUEST_ID);
         setRequestId(requestId);
-        Request request = Request.requests[requestId];
-        TextView farmName = (TextView) findViewById(R.id.request);
+        //Request request = Request.requests[requestId];
+        Request request = requestList.get(requestId);
+        TextView farmName = findViewById(R.id.request);
         farmName.setText(request.getName());
     }
 
     public void onClickSubmit(View view) {
+        RequestLab requestLab = RequestLab.get(this);
+        List<Request> requestList = requestLab.getRequestList();
         RadioGroup radioGroup = findViewById(R.id.radioGroup);
         int radioButtonId = radioGroup.getCheckedRadioButtonId();
-        Request request = Request.requests[requestId];
+        //Request request = Request.requests[requestId];
+        Request request = requestList.get(requestId);
         //RadioButton radioButton = findViewById(radioButtonId);
         switch (radioButtonId) {
             case R.id.cancelled:

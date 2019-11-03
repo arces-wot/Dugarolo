@@ -30,11 +30,11 @@
         android:textStyle="bold">
     </TextView>
 
-    <ListView
+    <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_requests"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:smoothScrollbar="true"
+        android:scrollbars="vertical"
         android:padding="10dp"/>
 
 </LinearLayout>

@@ -1,6 +1,9 @@
 package com.example.dugarolo;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -18,35 +21,49 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ListView;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    private RecyclerView requestRecyclerView;
+    private RecyclerView.Adapter requestAdapter;
+    private RecyclerView.LayoutManager layoutManager;
     public static final String STATUS_ICON_ID = "id";
     private Integer requestId;
     private ArrayList<Farm> farms = new ArrayList<>();
     private MapView map = null;
+    //debug only
+    //private static final String TAG = "MainActivity";
+
 
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
-        Arrays.sort(Request.requests);
+        //Log.d("Requests", "Reqs" + Arrays.toString(Request.requests));
+        //Arrays.sort(Request.requests);
+        //Request.requests.add(new Request(R.drawable.swamp_leaf, "Bertacchini\'s farm", new LocalDate(2019, 9, 18, null), R.drawable.request_interrupted));
+        //Request.requests.add(new Request(R.drawable.swamp_leaf, "Ferrari\'s farm", new LocalDate(2019, 9, 19, null), R.drawable.status_unknown));
+        RequestLab requestLab = RequestLab.get(this);
+        List<Request> requestList = requestLab.getRequestList();
         loadMap();
-        ListView listRequests = findViewById(R.id.list_requests);
-        loadRequests();
-        setListViewListener(listRequests);
+        loadRequests(requestList);
         if(requestId != null) {
-            Request request = Request.requests[requestId];
+            //Request request = Request.requests[requestId];
+            Request request = requestList.get(requestId);
             Integer statusIcon = (Integer) getIntent().getExtras().get(STATUS_ICON_ID);
             request.setStatusIconId(statusIcon);
         }
@@ -119,36 +136,13 @@ public class MainActivity extends AppCompatActivity {
             map.invalidate();
         }
     }
-    private void loadRequests() {
-        RequestsAdapter adapter = new RequestsAdapter(this, Request.requests);
-        ListView listRequests = findViewById(R.id.list_requests);
-        listRequests.setAdapter(adapter);
-        /*
-        Request request1 = new Request(R.drawable.request_cancelled, "Bertacchini\'s farm", R.drawable.request_interrupted);
-        Request request2 = new Request(R.drawable.request_completed, "Ferrari\'s farm", R.drawable.status_unknown);
-        adapter.add(request1);
-        adapter.add(request2);
-        */
-        /*
-        Request.requests.add(request1);
-        Request.requests.add(request2);
-         */
-    }
-
-    private void setListViewListener(ListView listRequests) {
-        //crea il listener per i click sulla list view
-        AdapterView.OnItemClickListener itemClickListener = new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> listRequests, View itemView, int position, long id) {
-                //passa la fattoria cliccata a RequestDetailActivity
-                Intent intent = new Intent(MainActivity.this, RequestDetailsActivity.class);
-                intent.putExtra(RequestDetailsActivity.EXTRA_REQUEST_ID, (int) id);
-                requestId = (int) id;
-                startActivity(intent);
-            }
-        };
-        //assegna il listener alla list view
-        listRequests.setOnItemClickListener(itemClickListener);
+    private void loadRequests(List<Request> requestList) {
+        Collections.sort(requestList);
+        requestRecyclerView = findViewById(R.id.list_requests);
+        layoutManager = new LinearLayoutManager(this);
+        requestRecyclerView.setLayoutManager(layoutManager);
+        requestAdapter = new RequestAdapter(requestList);
+        requestRecyclerView.setAdapter(requestAdapter);
     }
 
     public void onResume(){
@@ -188,6 +182,61 @@ public class MainActivity extends AppCompatActivity {
     public void onClickExpandMap(View view) {
         Intent intent = new Intent(MainActivity.this, MapDetailActivity.class);
         startActivity(intent);
+    }
+
+
+    private class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestHolder> {
+
+        private List<Request> requests;
+
+        private class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+
+            public ImageView basicIcon;
+            public TextView dateAndFarmName;
+            public ImageView statusIcon;
+
+            public RequestHolder(View itemView) {
+                super(itemView);
+                basicIcon = itemView.findViewById(R.id.basic_icon);
+                dateAndFarmName = itemView.findViewById(R.id.farm_name);
+                statusIcon = itemView.findViewById(R.id.status_icon);
+                itemView.setOnClickListener(this);
+            }
+
+            @Override
+            public void onClick(View v) {
+                int position = getLayoutPosition();
+                Intent intent = new Intent(MainActivity.this, RequestDetailsActivity.class);
+                intent.putExtra(RequestDetailsActivity.EXTRA_REQUEST_ID, position);
+                requestId = position;
+                startActivity(intent);
+            }
+        }
+
+        public RequestAdapter(List<Request> requests) {
+                this.requests = requests;
+        }
+
+        @NonNull
+        @Override
+        public RequestHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+            View v = inflater.inflate(R.layout.item_request, parent, false);
+            return new RequestHolder(v);
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull RequestAdapter.RequestHolder holder, int position) {
+            Request currentRequest = requests.get(position);
+            holder.basicIcon.setImageResource(currentRequest.getBasicIconId());
+            holder.dateAndFarmName.setText(Html.fromHtml(currentRequest.getName() + "<br />" + "<small>" + currentRequest.getDate().toString() + "</small"));
+            holder.statusIcon.setImageResource(currentRequest.getStatusIconId());
+        }
+
+        @Override
+        public int getItemCount() {
+            return requests.size();
+        }
     }
 
 }

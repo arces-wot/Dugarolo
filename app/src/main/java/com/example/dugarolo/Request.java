@@ -2,18 +2,15 @@ package com.example.dugarolo;
 
 import org.joda.time.LocalDate;
 
+import java.util.ArrayList;
+import java.util.UUID;
+
 public class Request implements Comparable<Request>{
 
-    private Integer basicIconId;
+    private int basicIconId;
     private String name;
     private Integer statusIconId;
     private LocalDate date;
-
-
-    public static final Request[] requests = {
-            new Request(R.drawable.swamp_leaf, "Bertacchini\'s farm", new LocalDate(2019, 9, 18, null), R.drawable.request_interrupted),
-            new Request(R.drawable.swamp_leaf, "Ferrari\'s farm", new LocalDate(2019, 9, 19, null), R.drawable.status_unknown)
-    };
 
     public Request(Integer basicIconId, String name, LocalDate localDate, Integer statusIconId) {
         this.basicIconId = basicIconId;
@@ -26,7 +23,7 @@ public class Request implements Comparable<Request>{
         return name;
     }
 
-    public Integer getBasicIconId() {
+    public int getBasicIconId() {
         return basicIconId;
     }
 
@@ -41,15 +38,6 @@ public class Request implements Comparable<Request>{
     public void setStatusIconId(Integer statusIconId) {
         this.statusIconId = statusIconId;
     }
-
-    /*
-    public void populateArray() {
-        Request request1 = new Request(R.drawable.request_cancelled, "Bertacchini\'s farm", R.drawable.request_interrupted);
-        Request request2 = new Request(R.drawable.request_completed, "Ferrari\'s farm", R.drawable.status_unknown);
-        requests.add(request1);
-        requests.add(request2);
-    }
-    */
 
 
     public String toString(){
