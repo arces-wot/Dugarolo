@@ -2,7 +2,7 @@
     "name" : "sistema di canali dell'emilia centrale",
     "nodes": [
         {
-            "id" : 1234,
+            "id" : "1234",
             "type": "Weir",
             "location": {
                 "lat": 44.774411,
@@ -11,7 +11,7 @@
             "openLevel": 25
         },
         {
-            "id": 987,
+            "id": "987",
             "type": "Weir",
             "location": {
                 "lat": 44.780454,
@@ -48,12 +48,47 @@
         {
             "type": "Channel",
             "id":"4",
-            "start": 1234,
-            "end": 1235,
-            "level": 15,
-            "hasDevice": [
-                "123"
-            ]
+            "start": {
+                "lan" : 44.778399,
+                "long" : 10.714899
+            },
+            "end": {
+                "lan": 44.774749,
+                "long": 10.720185
+            },
+            "hasWeir": {
+                "id": "1234"
+            }
+        },
+        {
+            "type": "Channel",
+            "id": "5",
+            "start": {
+                "lan": 44.774749,
+                "long": 10.720185
+            },
+            "end": {
+                "lan": 44.767419,
+                "long": 10.708277
+            },
+            "hasWeir": {
+                "id": "1234"
+            }
+        },
+        {
+            "type": "Channel",
+            "id": "6",
+            "start": {
+                "lan": 44.774749,
+                "long": 10.720185
+            },
+            "end": {
+                "lan": 44.780640,
+                "long": 10.727920
+            },
+            "hasWeir": {
+                "id": "987"
+            }
         }
     ]
 }

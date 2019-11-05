@@ -22,6 +22,7 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
+import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -66,36 +67,15 @@ public class MapDetailActivity extends AppCompatActivity {
         map.setClickable(true);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         IMapController mapController = map.getController();
-        mapController.setZoom(13.0);
+        mapController.setZoom(15.0);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
-        /*
-        Marker startMarker = new Marker(map);
-        startMarker.setPosition(startPoint);
-        startMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        Drawable weirIcon = getResources().getDrawable(R.drawable.weir);
-        Bitmap bitmap = ((BitmapDrawable) weirIcon).getBitmap();
-        Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 50, 50, true));
-        startMarker.setIcon(resizedWeirIcon);
-        startMarker.setInfoWindow(null);
-        map.getOverlays().add(startMarker);
-        startMarker.setOnMarkerClickListener(
-                new Marker.OnMarkerClickListener() {
-                    @Override
-                    public boolean onMarkerClick(Marker marker, MapView mapView) {
-                        Intent intent = new Intent(MapDetailActivity.this, WeirActivity.class);
-                        startActivity(intent);
-                        return true;
-                    }
-                });
-         */
+        loadGeoPoints();
         drawCanals();
         drawWeirs();
     }
 
     private void drawWeirs() {
-        //ora si itera su un array creato staticamente, poi si userà il json
-        loadGeoPointsWeirs();
         for(Weir weir : weirs) {
             Marker marker = new Marker(map);
             marker.setPosition(weir.getPosition());
@@ -126,21 +106,39 @@ public class MapDetailActivity extends AppCompatActivity {
         }
     }
 
-    private void loadGeoPointsWeirs() {
+    private void loadGeoPoints() {
         JSONObject jsonObject;
         try {
             jsonObject = new JSONObject(loadJSONFromAssetWDN());
+            //ottengo i dati dei "nodes"
             JSONArray jsonArray = jsonObject.getJSONArray("nodes");
             for (int index = 0; index < jsonArray.length(); index++) {
                 JSONObject jsonArrayElem = jsonArray.getJSONObject(index);
                 //considero solo le chiuse
                 if (jsonArrayElem.getString("type").equals("Weir")) {
-                    int id = jsonArrayElem.getInt("id");
+                    String id = jsonArrayElem.getString("id");
                     int waterLevel = jsonArrayElem.getInt("openLevel");
                     GeoPoint geoPoint = new GeoPoint(jsonArrayElem.getJSONObject("location").getDouble("lat"),
                             jsonArrayElem.getJSONObject("location").getDouble("lon"));
                     Weir weir = new Weir(id, "X", waterLevel, geoPoint);
                     weirs.add(weir);
+                }
+            }
+            //ottengo i dati delle "connections"
+            jsonArray = jsonObject.getJSONArray("connections");
+            for (int index = 0; index < jsonArray.length(); index++) {
+                JSONObject jsonArrayElem = jsonArray.getJSONObject(index);
+                //considero solo i canali
+                if (jsonArrayElem.getString("type").equals("Channel")) {
+                    double geoLanStart = jsonArrayElem.getJSONObject("start").getDouble("lan");
+                    double geoLongStart = jsonArrayElem.getJSONObject("start").getDouble("long");
+                    GeoPoint start = new GeoPoint(geoLanStart, geoLongStart);
+                    double geoLanEnd = jsonArrayElem.getJSONObject("end").getDouble("lan");
+                    double geoLongEnd = jsonArrayElem.getJSONObject("end").getDouble("long");
+                    String weirId = jsonArrayElem.getJSONObject("hasWeir").getString("id");
+                    GeoPoint end = new GeoPoint(geoLanEnd, geoLongEnd);
+                    Canal canal = new Canal(weirId, start, end);
+                    canals.add(canal);
                 }
             }
         } catch (JSONException e) {
@@ -164,27 +162,7 @@ public class MapDetailActivity extends AppCompatActivity {
         return json;
     }
 
-    private void loadGeoPointsCanals() {
-        try {
-            JSONArray jsonArray = new JSONArray(loadJSONFromAssetCanals());
-            for(int index = 0; index < jsonArray.length(); index++) {
-                JSONObject jsonObject = (JSONObject) jsonArray.get(index);
-                double geoLanStart = jsonObject.getJSONObject("start").getDouble("lan");
-                double geoLongStart = jsonObject.getJSONObject("start").getDouble("long");
-                GeoPoint start = new GeoPoint(geoLanStart, geoLongStart);
-                double geoLanEnd = jsonObject.getJSONObject("end").getDouble("lan");
-                double geoLongEnd = jsonObject.getJSONObject("end").getDouble("long");
-                GeoPoint end = new GeoPoint(geoLanEnd, geoLongEnd);
-                Canal canal = new Canal(start, end);
-                canals.add(canal);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
     private void drawCanals() {
-        loadGeoPointsCanals();
         for(Canal canal: canals) {
             Polyline line = new Polyline();
             List<GeoPoint> geoPoints = new ArrayList<>();
@@ -194,23 +172,18 @@ public class MapDetailActivity extends AppCompatActivity {
             line.getOutlinePaint().setColor(Color.parseColor("#ADD8E6"));
             map.getOverlayManager().add(line);
             map.invalidate();
+            for(int i = 0; i < weirs.size(); i++) {
+                Weir weir = weirs.get(i);
+                if(weir.getNumber().equals(canal.getWeirId())) {
+                    Marker marker = new Marker(map);
+                    marker.setTitle("Water level is: " + weir.getWaterLevel().toString() + " mm");
+                    marker.setIcon(null);
+                    marker.setPosition(midPoint(canal.getStart(), canal.getEnd()));
+                    map.getOverlayManager().add(marker);
+                    map.invalidate();
+                }
+            }
         }
-    }
-
-    public String loadJSONFromAssetCanals() {
-        String json = null;
-        try {
-            InputStream is = this.getAssets().open("canals.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return json;
     }
 
     public void onPause(){
@@ -252,5 +225,9 @@ public class MapDetailActivity extends AppCompatActivity {
         }
         locationOverlay.setPersonIcon(currentIcon);
         map.getOverlayManager().add(locationOverlay);
+    }
+
+    private GeoPoint midPoint(GeoPoint geoPoint1, GeoPoint geoPoint2) {
+        return GeoPoint.fromCenterBetween(geoPoint1, geoPoint2);
     }
 }
