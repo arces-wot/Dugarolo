@@ -30,4 +30,8 @@ public class Weir {
     public GeoPoint getPosition() {
         return position;
     }
+
+    public void setWaterLevel(Integer waterLevel) {
+        this.waterLevel = waterLevel;
+    }
 }

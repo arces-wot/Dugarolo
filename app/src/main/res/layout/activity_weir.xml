@@ -8,35 +8,53 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/weir"
-            android:layout_gravity="top|center_horizontal"/>
+            android:layout_weight="1"/>
 
         <TextView
             android:id="@+id/weir_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Weir #2"
-            android:layout_gravity="center"
+            android:layout_weight="1"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
             android:id="@+id/farm_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_weight="1"
             android:text="Bertacchini and Ferrari fields" />
 
         <TextView
             android:id="@+id/water_level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom|center_horizontal"
+            android:layout_weight="1"
             android:text="Water level" />
+
+        <SeekBar
+            android:id="@+id/new_level"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1">
+        </SeekBar>
+
+        <Button
+            android:id="@+id/udpate_water_level"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onClickUpdateWaterLevel"
+            android:text="UPDATE WATER LEVEL"
+            android:layout_weight="1">
+        </Button>
+
     </LinearLayout>
 
 </ScrollView>

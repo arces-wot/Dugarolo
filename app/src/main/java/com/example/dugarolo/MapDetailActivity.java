@@ -1,5 +1,6 @@
 package com.example.dugarolo;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -22,7 +23,6 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polyline;
-import org.osmdroid.views.overlay.infowindow.MarkerInfoWindow;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 
@@ -40,11 +40,15 @@ public class MapDetailActivity extends AppCompatActivity {
     private MapView map = null;
     private GpsMyLocationProvider gpsMyLocationProvider;
     private ArrayList<Weir> weirs = new ArrayList<>();
+    private boolean onChangedWaterLevel;
+
+    private static final int REQUEST_CODE_WATER = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
+        loadGeoPoints();
         loadMap();
     }
 
@@ -70,7 +74,6 @@ public class MapDetailActivity extends AppCompatActivity {
         mapController.setZoom(15.0);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
-        loadGeoPoints();
         drawCanals();
         drawWeirs();
     }
@@ -91,13 +94,13 @@ public class MapDetailActivity extends AppCompatActivity {
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
                     Intent intent = new Intent(MapDetailActivity.this, WeirActivity.class);
                     for(Weir weir : weirs) {
-                        if(marker.getId().equals(weir.getNumber().toString())) {
+                        if(marker.getId().equals(weir.getNumber())) {
                             intent.putExtra("Farm", weir.getFarm());
                             intent.putExtra("Number", weir.getNumber());
                             intent.putExtra("Water Level", weir.getWaterLevel());
                         }
                     }
-                    startActivity(intent);
+                    startActivityForResult(intent, REQUEST_CODE_WATER);
                     return true;
                 }
             });
@@ -176,9 +179,12 @@ public class MapDetailActivity extends AppCompatActivity {
                 Weir weir = weirs.get(i);
                 if(weir.getNumber().equals(canal.getWeirId())) {
                     Marker marker = new Marker(map);
-                    marker.setTitle("Water level is: " + weir.getWaterLevel().toString() + " mm");
-                    marker.setIcon(null);
                     marker.setPosition(midPoint(canal.getStart(), canal.getEnd()));
+                    marker.setTextLabelBackgroundColor(Color.TRANSPARENT);
+                    marker.setTextLabelForegroundColor(Color.RED);
+                    marker.setTextLabelFontSize(20);
+                    marker.setTextIcon(weir.getWaterLevel().toString() + " mm");
+                    marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
                     map.getOverlayManager().add(marker);
                     map.invalidate();
                 }
@@ -229,5 +235,27 @@ public class MapDetailActivity extends AppCompatActivity {
 
     private GeoPoint midPoint(GeoPoint geoPoint1, GeoPoint geoPoint2) {
         return GeoPoint.fromCenterBetween(geoPoint1, geoPoint2);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        if(requestCode == REQUEST_CODE_WATER) {
+            if(data == null) {
+                return;
+            }
+            String weirNumber = data.getExtras().getString("Weir Number");
+            Integer newWaterLevel = data.getExtras().getInt("Water Level");
+            for (Weir weir : weirs) {
+                if (weir.getNumber().equals(weirNumber)) {
+                    weir.setWaterLevel(newWaterLevel);
+                }
+            }
+        }
+        drawCanals();
     }
 }
