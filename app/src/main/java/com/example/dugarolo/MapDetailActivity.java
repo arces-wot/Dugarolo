@@ -22,6 +22,7 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Marker.OnMarkerClickListener;
 import org.osmdroid.views.overlay.Polyline;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
@@ -29,6 +30,7 @@ import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,7 +42,7 @@ public class MapDetailActivity extends AppCompatActivity {
     private MapView map = null;
     private GpsMyLocationProvider gpsMyLocationProvider;
     private ArrayList<Weir> weirs = new ArrayList<>();
-    private boolean onChangedWaterLevel;
+    private ArrayList<Marker> textMarkers = new ArrayList<>();
 
     private static final int REQUEST_CODE_WATER = 0;
 
@@ -89,7 +91,7 @@ public class MapDetailActivity extends AppCompatActivity {
             marker.setIcon(resizedWeirIcon);
             marker.setInfoWindow(null);
             marker.setId(weir.getNumber().toString());
-            marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+            marker.setOnMarkerClickListener(new OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
                     Intent intent = new Intent(MapDetailActivity.this, WeirActivity.class);
@@ -166,6 +168,13 @@ public class MapDetailActivity extends AppCompatActivity {
     }
 
     private void drawCanals() {
+        if(textMarkers.size() > 0) {
+            for(Iterator<Marker> iterator = textMarkers.iterator(); iterator.hasNext();) {
+                Marker textMarker = iterator.next();
+                map.getOverlayManager().remove(textMarker);
+                iterator.remove();        ;
+            }
+        }
         for(Canal canal: canals) {
             Polyline line = new Polyline();
             List<GeoPoint> geoPoints = new ArrayList<>();
@@ -174,9 +183,7 @@ public class MapDetailActivity extends AppCompatActivity {
             line.setPoints(geoPoints);
             line.getOutlinePaint().setColor(Color.parseColor("#ADD8E6"));
             map.getOverlayManager().add(line);
-            map.invalidate();
-            for(int i = 0; i < weirs.size(); i++) {
-                Weir weir = weirs.get(i);
+            for(Weir weir : weirs) {
                 if(weir.getNumber().equals(canal.getWeirId())) {
                     Marker marker = new Marker(map);
                     marker.setPosition(midPoint(canal.getStart(), canal.getEnd()));
@@ -185,10 +192,20 @@ public class MapDetailActivity extends AppCompatActivity {
                     marker.setTextLabelFontSize(20);
                     marker.setTextIcon(weir.getWaterLevel().toString() + " mm");
                     marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
-                    map.getOverlayManager().add(marker);
-                    map.invalidate();
+                    marker.setOnMarkerClickListener(new OnMarkerClickListener() {
+                        @Override
+                        public boolean onMarkerClick(Marker marker, MapView mapView) {
+                            //nascondo la info window e impedisco lo zoom-in automatico sul click
+                            return true;
+                        }
+                    });
+                    textMarkers.add(marker);
                 }
             }
+        }
+        for (Marker textMarker : textMarkers) {
+            map.getOverlayManager().add(textMarker);
+            map.invalidate();
         }
     }
 
@@ -212,6 +229,7 @@ public class MapDetailActivity extends AppCompatActivity {
         MyLocationNewOverlay locationNewOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
         locationNewOverlay.enableMyLocation();
         map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
+        //drawCanals();
     }
 
     public void onClickResizeMap(View view) {
