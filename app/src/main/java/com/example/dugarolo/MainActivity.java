@@ -4,21 +4,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
-import org.osmdroid.views.MapView;
-import org.osmdroid.views.overlay.Polygon;
-
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -27,11 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import net.danlew.android.joda.JodaTimeAndroid;
-
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -44,7 +32,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String STATUS_ICON_ID = "id";
     private Integer requestId;
     private ArrayList<Farm> farms = new ArrayList<>();
-    private MapView map = null;
+    private MyMapView map = null;
+    private AssetLoader assetLoader = new AssetLoader();
     //debug only
     //private static final String TAG = "MainActivity";
 
@@ -53,16 +42,11 @@ public class MainActivity extends AppCompatActivity {
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
-        //Log.d("Requests", "Reqs" + Arrays.toString(Request.requests));
-        //Arrays.sort(Request.requests);
-        //Request.requests.add(new Request(R.drawable.swamp_leaf, "Bertacchini\'s farm", new LocalDate(2019, 9, 18, null), R.drawable.request_interrupted));
-        //Request.requests.add(new Request(R.drawable.swamp_leaf, "Ferrari\'s farm", new LocalDate(2019, 9, 19, null), R.drawable.status_unknown));
         RequestLab requestLab = RequestLab.get(this);
         List<Request> requestList = requestLab.getRequestList();
         loadMap();
         loadRequests(requestList);
         if(requestId != null) {
-            //Request request = Request.requests[requestId];
             Request request = requestList.get(requestId);
             Integer statusIcon = (Integer) getIntent().getExtras().get(STATUS_ICON_ID);
             request.setStatusIconId(statusIcon);
@@ -81,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         //inflate and create the map
         setContentView(R.layout.activity_main);
-        map = findViewById(R.id.map);
+        map = (MyMapView) findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
         map.setTilesScaledToDpi(true);
@@ -91,51 +75,10 @@ public class MainActivity extends AppCompatActivity {
         mapController.setZoom(14.0);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
-        drawFarms();
+        assetLoader.loadGeoPointsFarms(farms, this);
+        map.drawFarms(farms);
     }
 
-    private void loadGeoPointsFarms() {
-        try {
-            JSONArray jsonArray = new JSONArray(loadJSONFromAssetFarms());
-            for(int index = 0; index < jsonArray.length(); index++) {
-                JSONObject jsonObject = jsonArray.getJSONObject(index);
-                JSONArray jsonArrayPoints = jsonObject.getJSONArray("area");
-                Polygon polygon = new Polygon();
-                for(int i = 0; i < jsonArrayPoints.length(); i++) {
-                    JSONObject jsonObjectPoint = jsonArrayPoints.getJSONObject(i);
-                    double lat = jsonObjectPoint.getDouble("lat");
-                    double lon = jsonObjectPoint.getDouble("lon");
-                    GeoPoint geoPoint = new GeoPoint(lat, lon);
-                    polygon.addPoint(geoPoint);
-                }
-                Farm farm = new Farm(jsonObject.getString("name"), polygon);
-                farms.add(farm);
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void drawFarms() {
-        loadGeoPointsFarms();
-        //disegna una linea per ogni canale
-        for(Farm farm: farms) {
-            Polygon polygon = farm.getArea();
-            switch (farm.getName()) {
-                case "Bertacchini's Farm":
-                    polygon.getOutlinePaint().setColor(Color.YELLOW);
-                    break;
-                case "Ferrari's Farm":
-                    polygon.getOutlinePaint().setColor(Color.BLUE);
-                    break;
-                default:
-            }
-            polygon.getFillPaint().setColor(Color.TRANSPARENT);
-            polygon.getOutlinePaint().setStrokeWidth(3);
-            map.getOverlayManager().add(polygon);
-            map.invalidate();
-        }
-    }
     private void loadRequests(List<Request> requestList) {
         Collections.sort(requestList);
         requestRecyclerView = findViewById(R.id.list_requests);
@@ -161,22 +104,6 @@ public class MainActivity extends AppCompatActivity {
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().save(this, prefs);
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
-    }
-
-    public String loadJSONFromAssetFarms() {
-        String json;
-        try {
-            InputStream is = this.getAssets().open("farms_swamp.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return json;
     }
 
     public void onClickExpandMap(View view) {
