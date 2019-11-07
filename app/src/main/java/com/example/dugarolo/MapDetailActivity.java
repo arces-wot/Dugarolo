@@ -99,7 +99,7 @@ public class MapDetailActivity extends AppCompatActivity {
                         if(marker.getId().equals(weir.getNumber())) {
                             intent.putExtra("Farm", weir.getFarm());
                             intent.putExtra("Number", weir.getNumber());
-                            intent.putExtra("Water Level", weir.getWaterLevel());
+                            intent.putExtra("Open Level", weir.getOpenLevel());
                         }
                     }
                     startActivityForResult(intent, REQUEST_CODE_WATER);
@@ -122,10 +122,10 @@ public class MapDetailActivity extends AppCompatActivity {
                 //considero solo le chiuse
                 if (jsonArrayElem.getString("type").equals("Weir")) {
                     String id = jsonArrayElem.getString("id");
-                    int waterLevel = jsonArrayElem.getInt("openLevel");
+                    int openLevel = jsonArrayElem.getInt("openLevel");
                     GeoPoint geoPoint = new GeoPoint(jsonArrayElem.getJSONObject("location").getDouble("lat"),
                             jsonArrayElem.getJSONObject("location").getDouble("lon"));
-                    Weir weir = new Weir(id, "X", waterLevel, geoPoint);
+                    Weir weir = new Weir(id, "X", openLevel, geoPoint);
                     weirs.add(weir);
                 }
             }
@@ -135,14 +135,15 @@ public class MapDetailActivity extends AppCompatActivity {
                 JSONObject jsonArrayElem = jsonArray.getJSONObject(index);
                 //considero solo i canali
                 if (jsonArrayElem.getString("type").equals("Channel")) {
+                    String id = jsonArrayElem.getString("id");
                     double geoLanStart = jsonArrayElem.getJSONObject("start").getDouble("lan");
                     double geoLongStart = jsonArrayElem.getJSONObject("start").getDouble("long");
                     GeoPoint start = new GeoPoint(geoLanStart, geoLongStart);
                     double geoLanEnd = jsonArrayElem.getJSONObject("end").getDouble("lan");
                     double geoLongEnd = jsonArrayElem.getJSONObject("end").getDouble("long");
-                    String weirId = jsonArrayElem.getJSONObject("hasWeir").getString("id");
                     GeoPoint end = new GeoPoint(geoLanEnd, geoLongEnd);
-                    Canal canal = new Canal(weirId, start, end);
+                    Integer waterLevel = jsonArrayElem.getInt("waterLevel");
+                    Canal canal = new Canal(id, start, end, waterLevel);
                     canals.add(canal);
                 }
             }
@@ -168,6 +169,9 @@ public class MapDetailActivity extends AppCompatActivity {
     }
 
     private void drawCanals() {
+        /*
+        - il codice commentato all'interno di questa funzione potrebbe essere molto utile(in quanto
+        - funzionante) in futuro. NON CANCELLARE!
         if(textMarkers.size() > 0) {
             for(Iterator<Marker> iterator = textMarkers.iterator(); iterator.hasNext();) {
                 Marker textMarker = iterator.next();
@@ -175,6 +179,7 @@ public class MapDetailActivity extends AppCompatActivity {
                 iterator.remove();        ;
             }
         }
+         */
         for(Canal canal: canals) {
             Polyline line = new Polyline();
             List<GeoPoint> geoPoints = new ArrayList<>();
@@ -183,6 +188,27 @@ public class MapDetailActivity extends AppCompatActivity {
             line.setPoints(geoPoints);
             line.getOutlinePaint().setColor(Color.parseColor("#ADD8E6"));
             map.getOverlayManager().add(line);
+            map.invalidate();
+            Marker marker = new Marker(map);
+            marker.setPosition(midPoint(canal.getStart(), canal.getEnd()));
+            marker.setTextLabelBackgroundColor(Color.TRANSPARENT);
+            marker.setTextLabelForegroundColor(Color.RED);
+            marker.setTextLabelFontSize(20);
+            marker.setTextIcon(canal.getWaterLevel().toString() + " mm");
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
+            marker.setOnMarkerClickListener(new OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    //nascondo la info window e impedisco lo zoom-in automatico sul click
+                    return true;
+                }
+            });
+            textMarkers.add(marker);
+            for (Marker textMarker : textMarkers) {
+                map.getOverlayManager().add(textMarker);
+                map.invalidate();
+            }
+            /*
             for(Weir weir : weirs) {
                 if(weir.getNumber().equals(canal.getWeirId())) {
                     Marker marker = new Marker(map);
@@ -202,11 +228,14 @@ public class MapDetailActivity extends AppCompatActivity {
                     textMarkers.add(marker);
                 }
             }
+             */
         }
+        /*
         for (Marker textMarker : textMarkers) {
             map.getOverlayManager().add(textMarker);
             map.invalidate();
         }
+         */
     }
 
     public void onPause(){
@@ -267,13 +296,12 @@ public class MapDetailActivity extends AppCompatActivity {
                 return;
             }
             String weirNumber = data.getExtras().getString("Weir Number");
-            Integer newWaterLevel = data.getExtras().getInt("Water Level");
+            Integer newOpenLevel = data.getExtras().getInt("Open Level");
             for (Weir weir : weirs) {
                 if (weir.getNumber().equals(weirNumber)) {
-                    weir.setWaterLevel(newWaterLevel);
+                    weir.setOpenLevel(newOpenLevel);
                 }
             }
         }
-        drawCanals();
     }
 }

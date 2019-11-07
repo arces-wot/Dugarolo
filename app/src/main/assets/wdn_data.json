@@ -56,9 +56,7 @@
                 "lan": 44.774749,
                 "long": 10.720185
             },
-            "hasWeir": {
-                "id": "1234"
-            }
+            "waterLevel": 18
         },
         {
             "type": "Channel",
@@ -71,9 +69,7 @@
                 "lan": 44.767419,
                 "long": 10.708277
             },
-            "hasWeir": {
-                "id": "1234"
-            }
+            "waterLevel": 30
         },
         {
             "type": "Channel",
@@ -86,9 +82,7 @@
                 "lan": 44.780640,
                 "long": 10.727920
             },
-            "hasWeir": {
-                "id": "987"
-            }
+            "waterLevel": 26
         }
     ]
 }

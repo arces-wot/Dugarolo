@@ -4,18 +4,20 @@ import org.osmdroid.util.GeoPoint;
 
 public class Canal {
 
-    private String weirId;
+    private String id;
     private GeoPoint start;
     private GeoPoint end;
+    private Integer waterLevel;
 
-    public Canal(String weirId, GeoPoint start, GeoPoint end) {
-        this.weirId = weirId;
+    public Canal(String id, GeoPoint start, GeoPoint end, Integer waterLevel) {
+        this.id = id;
         this.start = start;
         this.end = end;
+        this.waterLevel = waterLevel;
     }
 
-    public String getWeirId() {
-        return weirId;
+    public String getId() {
+        return id;
     }
 
     public GeoPoint getEnd() {
@@ -26,4 +28,12 @@ public class Canal {
         return start;
     }
 
+
+    public Integer getWaterLevel() {
+        return waterLevel;
+    }
+
+    public void setWaterLevel(Integer waterLevel) {
+        this.waterLevel = waterLevel;
+    }
 }

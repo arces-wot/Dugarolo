@@ -10,12 +10,12 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 public class WeirActivity extends AppCompatActivity {
-    private SeekBar waterLevelSeekBar;
-    private Button updateWaterLevelButton;
+    private SeekBar openLevelSeekBar;
+    private Button updateOpenLevelButton;
     private TextView farmName;
     private TextView weirNumber;
-    private TextView waterLevel;
-    private Integer newWaterLevel;
+    private TextView openLevel;
+    private Integer newOpenLevel;
     private String weirToUpdate;
 
     @Override
@@ -26,19 +26,20 @@ public class WeirActivity extends AppCompatActivity {
         farmName.setText(getIntent().getExtras().get("Farm") + "\'s farm");
         weirNumber = findViewById(R.id.weir_number);
         weirNumber.setText("Weir #" + getIntent().getExtras().get("Number").toString());
-        waterLevel = findViewById(R.id.water_level);
-        waterLevel.setText("Water level is: " + getIntent().getExtras().get("Water Level").toString() + "mm");
-        updateWaterLevelButton = findViewById(R.id.udpate_water_level);
-        updateWaterLevelButton.setEnabled(false);
-        waterLevelSeekBar = findViewById(R.id.new_level);
+        openLevel = findViewById(R.id.water_level);
+        openLevel.setText("Open level is: " + getIntent().getExtras().get("Open Level").toString() + "mm");
+        updateOpenLevelButton = findViewById(R.id.udpate_water_level);
+        updateOpenLevelButton.setEnabled(false);
+        openLevelSeekBar = findViewById(R.id.new_level);
+        openLevelSeekBar.setProgress((Integer) getIntent().getExtras().get("Open Level"));
         weirToUpdate = getIntent().getExtras().get("Number").toString();
 
-        waterLevelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+        openLevelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                waterLevel.setText("Water level is: " + progress + "mm");
-                updateWaterLevelButton.setEnabled(true);
-                newWaterLevel = progress;
+                openLevel.setText("Open level is: " + progress + "mm");
+                updateOpenLevelButton.setEnabled(true);
+                newOpenLevel = progress;
             }
 
             @Override
@@ -57,7 +58,7 @@ public class WeirActivity extends AppCompatActivity {
     public void onClickUpdateWaterLevel(View view) {
         Intent intent = new Intent(WeirActivity.this, MapDetailActivity.class);
         intent.putExtra("Weir Number", weirToUpdate);
-        intent.putExtra("Water Level", newWaterLevel);
+        intent.putExtra("Open Level", newOpenLevel);
         setResult(RESULT_OK, intent);
         finish();
     }

@@ -5,13 +5,13 @@ import org.osmdroid.util.GeoPoint;
 public class Weir {
     private String number;
     private String farm;
-    private Integer waterLevel;
+    private Integer openLevel;
     private GeoPoint position;
 
-    public Weir(String number, String farm, Integer waterLevel, GeoPoint position) {
+    public Weir(String number, String farm, Integer openLevel, GeoPoint position) {
         this.farm = farm;
         this.number = number;
-        this.waterLevel = waterLevel;
+        this.openLevel = openLevel;
         this.position = position;
     }
 
@@ -23,15 +23,15 @@ public class Weir {
         return number;
     }
 
-    public Integer getWaterLevel() {
-        return waterLevel;
+    public Integer getOpenLevel() {
+        return openLevel;
     }
 
     public GeoPoint getPosition() {
         return position;
     }
 
-    public void setWaterLevel(Integer waterLevel) {
-        this.waterLevel = waterLevel;
+    public void setOpenLevel(Integer openLevel) {
+        this.openLevel = openLevel;
     }
 }
