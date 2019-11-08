@@ -8,6 +8,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
 import org.osmdroid.api.IMapController;
@@ -24,7 +25,10 @@ import java.util.ArrayList;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
 
-public class MapDetailActivity extends AppCompatActivity {
+import static com.example.dugarolo.JSONIntentService.STATUS_ERROR;
+import static com.example.dugarolo.JSONIntentService.STATUS_FINISHED;
+
+public class MapDetailActivity extends AppCompatActivity implements JSONReceiver.Receiver{
 
     private ArrayList<Canal> canals = new ArrayList<>();
     private MyMapView map = null;
@@ -34,6 +38,7 @@ public class MapDetailActivity extends AppCompatActivity {
     private ArrayList<Marker> weirMarkers = new ArrayList<>();
     private ArrayList<Farm> farms = new ArrayList<>();
     private AssetLoader assetLoader = new AssetLoader();
+    private JSONReceiver jsonReceiver;
 
     private static final int REQUEST_CODE_WATER = 0;
 
@@ -41,6 +46,7 @@ public class MapDetailActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
+        //registerService();
         assetLoader.loadGeoPointsWDN(canals, weirs, this);
         assetLoader.loadGeoPointsFarms(farms, this);
         loadMap();
@@ -154,6 +160,26 @@ public class MapDetailActivity extends AppCompatActivity {
                     return true;
                 }
             });
+        }
+    }
+
+    private void registerService() {
+        Intent intent = new Intent(MapDetailActivity.this, JSONIntentService.class);
+        jsonReceiver = new JSONReceiver(new Handler());
+        intent.putExtra("receiver", jsonReceiver);
+        startService(intent);
+    }
+
+    @Override
+    public void onReceiveResult(int resultCode, Bundle resultData) {
+        //gestisci i risultati ottenuti dall'intent service
+        switch(resultCode) {
+            case STATUS_FINISHED:
+                //do something interesting
+            break;
+            case STATUS_ERROR:
+                //gestsci l'errore
+            break;
         }
     }
 }
