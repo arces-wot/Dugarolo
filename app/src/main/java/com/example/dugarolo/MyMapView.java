@@ -42,18 +42,7 @@ public class MyMapView extends MapView {
         }
     }
 
-    public void drawCanals(ArrayList<Canal> canals, ArrayList<Marker> textMarkers) {
-        /*
-        - il codice commentato all'interno di questa funzione potrebbe essere molto utile(in quanto
-        - funzionante) in futuro. NON CANCELLARE!
-        if(textMarkers.size() > 0) {
-            for(Iterator<Marker> iterator = textMarkers.iterator(); iterator.hasNext();) {
-                Marker textMarker = iterator.next();
-                map.getOverlayManager().remove(textMarker);
-                iterator.remove();        ;
-            }
-        }
-         */
+    public void drawCanals(ArrayList<Canal> canals) {
         for(Canal canal: canals) {
             Polyline line = new Polyline();
             List<GeoPoint> geoPoints = new ArrayList<>();
@@ -63,53 +52,7 @@ public class MyMapView extends MapView {
             line.getOutlinePaint().setColor(Color.parseColor("#ADD8E6"));
             this.getOverlayManager().add(line);
             this.invalidate();
-            Marker marker = new Marker(this);
-            marker.setPosition(midPoint(canal.getStart(), canal.getEnd()));
-            marker.setTextLabelBackgroundColor(Color.TRANSPARENT);
-            marker.setTextLabelForegroundColor(Color.RED);
-            marker.setTextLabelFontSize(20);
-            marker.setTextIcon(canal.getWaterLevel().toString() + " mm");
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
-            marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    //nascondo la info window e impedisco lo zoom-in automatico sul click
-                    return true;
-                }
-            });
-            textMarkers.add(marker);
-            for (Marker textMarker : textMarkers) {
-                this.getOverlayManager().add(textMarker);
-                this.invalidate();
-            }
-            /*
-            for(Weir weir : weirs) {
-                if(weir.getNumber().equals(canal.getWeirId())) {
-                    Marker marker = new Marker(map);
-                    marker.setPosition(midPoint(canal.getStart(), canal.getEnd()));
-                    marker.setTextLabelBackgroundColor(Color.TRANSPARENT);
-                    marker.setTextLabelForegroundColor(Color.RED);
-                    marker.setTextLabelFontSize(20);
-                    marker.setTextIcon(weir.getWaterLevel().toString() + " mm");
-                    marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
-                    marker.setOnMarkerClickListener(new OnMarkerClickListener() {
-                        @Override
-                        public boolean onMarkerClick(Marker marker, MapView mapView) {
-                            //nascondo la info window e impedisco lo zoom-in automatico sul click
-                            return true;
-                        }
-                    });
-                    textMarkers.add(marker);
-                }
-            }
-             */
         }
-        /*
-        for (Marker textMarker : textMarkers) {
-            map.getOverlayManager().add(textMarker);
-            map.invalidate();
-        }
-         */
     }
 
     private GeoPoint midPoint(GeoPoint geoPoint1, GeoPoint geoPoint2) {
@@ -133,6 +76,42 @@ public class MyMapView extends MapView {
             polygon.getOutlinePaint().setStrokeWidth(3);
             this.getOverlayManager().add(polygon);
             this.invalidate();
+        }
+    }
+
+    public void drawWaterLevelTextMarkers(ArrayList<Canal> canals, ArrayList<Marker> textMarkers) {
+        /*
+        - il codice commentato all'interno di questa funzione potrebbe essere molto utile(in quanto
+        - funzionante) in futuro. NON CANCELLARE!
+        if(textMarkers.size() > 0) {
+            for(Iterator<Marker> iterator = textMarkers.iterator(); iterator.hasNext();) {
+                Marker textMarker = iterator.next();
+                map.getOverlayManager().remove(textMarker);
+                iterator.remove();        ;
+            }
+        }
+         */
+        for(Canal canal : canals) {
+            Marker marker = new Marker(this);
+            marker.setPosition(midPoint(canal.getStart(), canal.getEnd()));
+            marker.setTextLabelBackgroundColor(Color.TRANSPARENT);
+            marker.setTextLabelForegroundColor(Color.RED);
+            marker.setTextLabelFontSize(20);
+            marker.setTextIcon(canal.getWaterLevel().toString() + " mm");
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
+            marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    //nascondo la info window e impedisco lo zoom-in automatico sul click
+                    return true;
+                }
+            });
+            textMarkers.add(marker);
+            for (Marker textMarker : textMarkers) {
+                this.getOverlayManager().add(textMarker);
+                this.invalidate();
+            }
+
         }
     }
 }

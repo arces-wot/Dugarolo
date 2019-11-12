@@ -36,6 +36,7 @@
             android:label="SWAMP"
             android:parentActivityName=".MapDetailActivity">
         </activity>
+        <service android:name=".JSONIntentService"/>
     </application>
 
 </manifest>

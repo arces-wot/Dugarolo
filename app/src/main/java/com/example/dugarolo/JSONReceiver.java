@@ -27,6 +27,10 @@ public class JSONReceiver extends ResultReceiver {
         }
     }
 
+    public void setmReceiver(Receiver receiver) {
+        mReceiver = receiver;
+    }
+
     public interface  Receiver {
         void onReceiveResult(int resultCode, Bundle resultData);
     }

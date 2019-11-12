@@ -11,6 +11,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -46,7 +51,8 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
-        //registerService();
+        //carica i valori relativi al livello dell'acqua dei canali tramite intent sevice
+        registerService();
         assetLoader.loadGeoPointsWDN(canals, weirs, this);
         assetLoader.loadGeoPointsFarms(farms, this);
         loadMap();
@@ -74,7 +80,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         mapController.setZoom(15.0);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
-        map.drawCanals(canals, textMarkers);
+        map.drawCanals(canals);
         map.drawWeirs(weirs, weirMarkers);
         map.drawFarms(farms);
         setWeirListeners(weirMarkers);
@@ -166,6 +172,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     private void registerService() {
         Intent intent = new Intent(MapDetailActivity.this, JSONIntentService.class);
         jsonReceiver = new JSONReceiver(new Handler());
+        jsonReceiver.setmReceiver(this);
         intent.putExtra("receiver", jsonReceiver);
         startService(intent);
     }
@@ -173,13 +180,37 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     @Override
     public void onReceiveResult(int resultCode, Bundle resultData) {
         //gestisci i risultati ottenuti dall'intent service
+        try {
+            parseResult(resultCode, resultData);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void parseResult(int resultCode, Bundle resultData) throws JSONException {
         switch(resultCode) {
             case STATUS_FINISHED:
-                //do something interesting
-            break;
+                String jsonText = resultData.getString("results");
+                jsonText = jsonText.replace("\n", "");
+                JSONArray jsonArray = new JSONArray(jsonText);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonArrayElem = jsonArray.getJSONObject(i);
+                    String id = jsonArrayElem.getString("id");
+                    double geoLanStart = jsonArrayElem.getJSONObject("start").getDouble("lan");
+                    double geoLongStart = jsonArrayElem.getJSONObject("start").getDouble("long");
+                    GeoPoint start = new GeoPoint(geoLanStart, geoLongStart);
+                    double geoLanEnd = jsonArrayElem.getJSONObject("end").getDouble("lan");
+                    double geoLongEnd = jsonArrayElem.getJSONObject("end").getDouble("long");
+                    GeoPoint end = new GeoPoint(geoLanEnd, geoLongEnd);
+                    Integer waterLevel = jsonArrayElem.getInt("waterLevel");
+                    Canal canal = new Canal(id, start, end, waterLevel);
+                    canals.add(canal);
+                }
+                map.drawWaterLevelTextMarkers(canals, textMarkers);
+                break;
             case STATUS_ERROR:
-                //gestsci l'errore
-            break;
+                Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT);
+                break;
         }
     }
 }
