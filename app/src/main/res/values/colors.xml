@@ -3,4 +3,6 @@
     <color name="colorPrimary">#3498DB</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+    <color name="colorBertacchini">#FFFF00</color>
+    <color name="colorFerrari">#0000FF</color>
 </resources>

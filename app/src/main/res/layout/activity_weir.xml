@@ -50,8 +50,8 @@
             android:id="@+id/udpate_water_level"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="onClickUpdateWaterLevel"
-            android:text="UPDATE WATER LEVEL"
+            android:onClick="onClickUpdateOpenLevel"
+            android:text="@string/update_weir_open_level"
             android:layout_weight="1">
         </Button>
 

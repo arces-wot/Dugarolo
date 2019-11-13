@@ -10,4 +10,5 @@
     <string name="expand_button">EXPAND</string>
     <string name="resize_button">RESIZE</string>
     <string name="my_location">MY LOCATION</string>
+    <string name="update_weir_open_level">UPDATE OPEN LEVEL</string>
 </resources>
