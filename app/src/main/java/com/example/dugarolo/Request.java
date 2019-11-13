@@ -1,10 +1,6 @@
 package com.example.dugarolo;
 
 import org.joda.time.LocalDate;
-
-import java.util.ArrayList;
-import java.util.UUID;
-
 public class Request implements Comparable<Request>{
 
     private int basicIconId;

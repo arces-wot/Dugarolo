@@ -44,19 +44,14 @@ public class WeirActivity extends AppCompatActivity {
         openLevelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                if(progress == 0) {
-                    newOpenLevel = minOpenLevel;
+                if(progress <= minOpenLevel) {
+                    seekBar.setProgress(minOpenLevel);
                 }
-                else if(progress == seekBar.getMax()) {
-                    newOpenLevel = maxOpenLevel - minOpenLevel;
-                }
-                else {
-                    newOpenLevel = progress;
-                    openLevel.setText("Open level is: " + newOpenLevel + "mm");
-                    updateOpenLevelButton.setEnabled(true);
-                }
-
+                newOpenLevel = seekBar.getProgress();
+                openLevel.setText("Open level is: " + newOpenLevel + "mm");
+                updateOpenLevelButton.setEnabled(true);
             }
+
 
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {

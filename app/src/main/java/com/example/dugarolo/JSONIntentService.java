@@ -42,32 +42,10 @@ public class JSONIntentService extends IntentService {
         if (intent != null) {
             ResultReceiver jsonReceiver = intent.getParcelableExtra("receiver");
             Bundle bundle = new Bundle();
-            JSONObject jsonObject;
             ArrayList<Canal> canals = intent.getParcelableArrayListExtra("canals");
             try {
                 //prendi il json
                 String jsonText = getJSONFromURL(new URL( "http://192.168.43.209:3000/canals"));
-                /*
-                Iterator x = jsonObject.keys();
-                JSONArray jsonArray = new JSONArray();
-                while(x.hasNext()) {
-                    String key = (String) x.next();
-                    jsonArray.put(jsonObject.get(key));
-                }
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonArrayElem = jsonArray.getJSONObject(i);
-                    String id = jsonArrayElem.getString("id");
-                    double geoLanStart = jsonArrayElem.getJSONObject("start").getDouble("lan");
-                    double geoLongStart = jsonArrayElem.getJSONObject("start").getDouble("long");
-                    GeoPoint start = new GeoPoint(geoLanStart, geoLongStart);
-                    double geoLanEnd = jsonArrayElem.getJSONObject("end").getDouble("lan");
-                    double geoLongEnd = jsonArrayElem.getJSONObject("end").getDouble("long");
-                    GeoPoint end = new GeoPoint(geoLanEnd, geoLongEnd);
-                    Integer waterLevel = jsonArrayElem.getInt("waterLevel");
-                    Canal canal = new Canal(id, start, end, waterLevel);
-                    canals.add(canal);
-                }
-                 */
                 bundle.putString("results", jsonText);
                 jsonReceiver.send(STATUS_FINISHED, bundle);
             } catch (Exception e) {
