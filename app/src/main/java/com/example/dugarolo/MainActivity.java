@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView requestRecyclerView;
     private RecyclerView.Adapter requestAdapter;
     private RecyclerView.LayoutManager layoutManager;
-    public static final String STATUS_ICON_ID = "id";
+    public static final String REQUEST_STATUS= "id";
     private Integer requestId;
     private ArrayList<Farm> farms = new ArrayList<>();
     private MyMapView map = null;
@@ -58,8 +58,8 @@ public class MainActivity extends AppCompatActivity {
         loadRequests(requestList);
         if(requestId != null) {
             Request request = requestList.get(requestId);
-            Integer statusIcon = (Integer) getIntent().getExtras().get(STATUS_ICON_ID);
-            request.setStatusIconId(statusIcon);
+            String status = (String) getIntent().getExtras().get(REQUEST_STATUS);
+            request.setStatus(status);
         }
     }
 
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             return new RequestHolder(v);
         }
 
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
         @Override
         public void onBindViewHolder(@NonNull RequestAdapter.RequestHolder holder, int position) {
             Request currentRequest = requests.get(position);
@@ -177,9 +177,21 @@ public class MainActivity extends AppCompatActivity {
                 int ferrari = ContextCompat.getColor(MainActivity.this, R.color.colorFerrari);
                 holder.farmColor.setColorFilter(ferrari, PorterDuff.Mode.SRC);
             }
-            holder.basicIcon.setImageResource(currentRequest.getBasicIconId());
             holder.dateAndFarmName.setText(Html.fromHtml(currentRequest.getName() + "<br />" + "<small>" + currentRequest.getDate().toString() + "</small"));
-            holder.statusIcon.setImageResource(currentRequest.getStatusIconId());
+            String status = currentRequest.getStatus();
+            switch (status) {
+                case "cancelled":
+                    holder.statusIcon.setColorFilter(Color.RED, PorterDuff.Mode.SRC);
+                    break;
+                case "interrupted":
+                    holder.statusIcon.setColorFilter(Color.parseColor("#FFA500"), PorterDuff.Mode.SRC);
+                    break;
+                case "satisfied":
+                    holder.statusIcon.setColorFilter(Color.parseColor("#008000"), PorterDuff.Mode.SRC);
+                    break;
+                default:
+                    holder.statusIcon.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC);
+            }
         }
 
         @Override

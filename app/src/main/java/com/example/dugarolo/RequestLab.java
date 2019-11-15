@@ -21,8 +21,8 @@ public class RequestLab {
 
     private RequestLab(Context context) {
         requestList = new ArrayList<>();
-        requestList.add(new Request(R.drawable.swamp_leaf, "Bertacchini\'s farm", new LocalDate(2019, 9, 18, null), R.drawable.request_interrupted));
-        requestList.add(new Request( R.drawable.swamp_leaf, "Ferrari\'s farm", new LocalDate(2019, 9, 19, null), R.drawable.status_unknown));
+        requestList.add(new Request("Bertacchini\'s farm", new LocalDate(2019, 9, 18, null), "interrupted"));
+        requestList.add(new Request( "Ferrari\'s farm", new LocalDate(2019, 9, 19, null), "unknown"));
     }
 
     public List<Request> getRequestList() {

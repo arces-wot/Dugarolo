@@ -3,15 +3,13 @@ package com.example.dugarolo;
 import org.joda.time.LocalDate;
 public class Request implements Comparable<Request>{
 
-    private int basicIconId;
     private String name;
-    private Integer statusIconId;
+    private String status;
     private LocalDate date;
 
-    public Request(Integer basicIconId, String name, LocalDate localDate, Integer statusIconId) {
-        this.basicIconId = basicIconId;
+    public Request(String name, LocalDate localDate, String status) {
         this.name = name;
-        this.statusIconId = statusIconId;
+        this.status = status;
         this.date = localDate;
     }
 
@@ -19,20 +17,16 @@ public class Request implements Comparable<Request>{
         return name;
     }
 
-    public int getBasicIconId() {
-        return basicIconId;
-    }
-
-    public Integer getStatusIconId() {
-        return statusIconId;
+    public String getStatus() {
+        return status;
     }
 
     public LocalDate getDate() {
         return date;
     }
 
-    public void setStatusIconId(Integer statusIconId) {
-        this.statusIconId = statusIconId;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
 

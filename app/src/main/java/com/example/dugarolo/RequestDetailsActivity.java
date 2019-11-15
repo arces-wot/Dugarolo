@@ -44,18 +44,18 @@ public class RequestDetailsActivity extends AppCompatActivity {
         //RadioButton radioButton = findViewById(radioButtonId);
         switch (radioButtonId) {
             case R.id.cancelled:
-                request.setStatusIconId(R.drawable.request_cancelled);
+                request.setStatus("cancelled");
                 break;
             case R.id.interrupted:
-                request.setStatusIconId(R.drawable.request_interrupted);
+                request.setStatus("interrupted");
                 break;
             case R.id.satisfied:
-                request.setStatusIconId(R.drawable.request_completed);
+                request.setStatus("satisfied");
                 break;
             default:
         }
         Intent intent = new Intent(RequestDetailsActivity.this, MainActivity.class);
-        intent.putExtra(MainActivity.STATUS_ICON_ID, request.getStatusIconId());
+        intent.putExtra(MainActivity.REQUEST_STATUS, request.getStatus());
         startActivity(intent);
     }
 
