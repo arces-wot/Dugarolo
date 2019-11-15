@@ -13,6 +13,7 @@ import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class MyMapView extends MapView {
@@ -80,17 +81,13 @@ public class MyMapView extends MapView {
     }
 
     public void drawWaterLevelTextMarkers(ArrayList<Canal> canals, ArrayList<Marker> textMarkers) {
-        /*
-        - il codice commentato all'interno di questa funzione potrebbe essere molto utile(in quanto
-        - funzionante) in futuro. NON CANCELLARE!
         if(textMarkers.size() > 0) {
             for(Iterator<Marker> iterator = textMarkers.iterator(); iterator.hasNext();) {
                 Marker textMarker = iterator.next();
-                map.getOverlayManager().remove(textMarker);
+                this.getOverlayManager().remove(textMarker);
                 iterator.remove();        ;
             }
         }
-         */
         for(Canal canal : canals) {
             Marker marker = new Marker(this);
             marker.setPosition(midPoint(canal.getStart(), canal.getEnd()));

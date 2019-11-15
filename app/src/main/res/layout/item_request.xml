@@ -5,26 +5,39 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
+    <ImageView
+        android:id="@+id/farm_color"
+        android:layout_width="5dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/basic_icon"/>
+
 
     <ImageView
         android:id="@+id/basic_icon"
         android:layout_width="30dp"
         android:layout_height="30dp"
+        android:layout_marginStart="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/farm_name"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></ImageView>
+        app:layout_constraintStart_toEndOf="@id/farm_color"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
         android:id="@+id/farm_name"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="7dp"
-        android:layout_marginRight="7dp"
-        android:textSize="20dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:textSize="20sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/status_icon"
-        app:layout_constraintStart_toEndOf="@+id/basic_icon"></TextView>
+        app:layout_constraintStart_toEndOf="@+id/basic_icon"/>
 
     <ImageView
         android:id="@+id/status_icon"
@@ -34,6 +47,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/farm_name"
-        app:layout_constraintTop_toTopOf="@+id/farm_name"></ImageView>
+        app:layout_constraintTop_toTopOf="@+id/farm_name"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

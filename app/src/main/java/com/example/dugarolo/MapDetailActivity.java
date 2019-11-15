@@ -7,6 +7,8 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -174,7 +176,16 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         jsonReceiver = new JSONReceiver(new Handler());
         jsonReceiver.setmReceiver(this);
         intent.putExtra("receiver", jsonReceiver);
-        startService(intent);
+        ConnectivityManager connectivityManager =
+                (ConnectivityManager) this.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        boolean isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        if (isConnected) {
+            startService(intent);
+        }
+        else {
+            Toast.makeText(MapDetailActivity.this   , "Device is not connected, can't fetch water level data", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -191,25 +202,29 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         switch(resultCode) {
             case STATUS_FINISHED:
                 String jsonText = resultData.getString("results");
-                jsonText = jsonText.replace("\n", "");
-                JSONArray jsonArray = new JSONArray(jsonText);
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject jsonArrayElem = jsonArray.getJSONObject(i);
-                    String id = jsonArrayElem.getString("id");
-                    double geoLanStart = jsonArrayElem.getJSONObject("start").getDouble("lan");
-                    double geoLongStart = jsonArrayElem.getJSONObject("start").getDouble("long");
-                    GeoPoint start = new GeoPoint(geoLanStart, geoLongStart);
-                    double geoLanEnd = jsonArrayElem.getJSONObject("end").getDouble("lan");
-                    double geoLongEnd = jsonArrayElem.getJSONObject("end").getDouble("long");
-                    GeoPoint end = new GeoPoint(geoLanEnd, geoLongEnd);
-                    Integer waterLevel = jsonArrayElem.getInt("waterLevel");
-                    Canal canal = new Canal(id, start, end, waterLevel);
-                    canals.add(canal);
+                if(jsonText == null) {
+                    Toast.makeText(MapDetailActivity.this, "No results received, server might be offline", Toast.LENGTH_LONG).show();
+                } else {
+                    jsonText = jsonText.replace("\n", "");
+                    JSONArray jsonArray = new JSONArray(jsonText);
+                    for (int i = 0; i < jsonArray.length(); i++) {
+                        JSONObject jsonArrayElem = jsonArray.getJSONObject(i);
+                        String id = jsonArrayElem.getString("id");
+                        double geoLanStart = jsonArrayElem.getJSONObject("start").getDouble("lan");
+                        double geoLongStart = jsonArrayElem.getJSONObject("start").getDouble("long");
+                        GeoPoint start = new GeoPoint(geoLanStart, geoLongStart);
+                        double geoLanEnd = jsonArrayElem.getJSONObject("end").getDouble("lan");
+                        double geoLongEnd = jsonArrayElem.getJSONObject("end").getDouble("long");
+                        GeoPoint end = new GeoPoint(geoLanEnd, geoLongEnd);
+                        Integer waterLevel = jsonArrayElem.getInt("waterLevel");
+                        Canal canal = new Canal(id, start, end, waterLevel);
+                        canals.add(canal);
+                    }
+                    map.drawWaterLevelTextMarkers(canals, textMarkers);
                 }
-                map.drawWaterLevelTextMarkers(canals, textMarkers);
                 break;
             case STATUS_ERROR:
-                Toast.makeText(this, "Something went wrong!", Toast.LENGTH_SHORT);
+                Toast.makeText(MapDetailActivity.this, "Something went wrong!", Toast.LENGTH_LONG);
                 break;
         }
     }

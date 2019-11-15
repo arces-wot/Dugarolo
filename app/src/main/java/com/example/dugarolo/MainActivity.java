@@ -1,7 +1,12 @@
 package com.example.dugarolo;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.content.res.AppCompatResources;
+import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import org.osmdroid.api.IMapController;
@@ -11,6 +16,11 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.media.Image;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
@@ -118,12 +128,14 @@ public class MainActivity extends AppCompatActivity {
 
         private class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
 
+            public ImageView farmColor;
             public ImageView basicIcon;
             public TextView dateAndFarmName;
             public ImageView statusIcon;
 
             public RequestHolder(View itemView) {
                 super(itemView);
+                farmColor = itemView.findViewById(R.id.farm_color);
                 basicIcon = itemView.findViewById(R.id.basic_icon);
                 dateAndFarmName = itemView.findViewById(R.id.farm_name);
                 statusIcon = itemView.findViewById(R.id.status_icon);
@@ -152,9 +164,19 @@ public class MainActivity extends AppCompatActivity {
             return new RequestHolder(v);
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         public void onBindViewHolder(@NonNull RequestAdapter.RequestHolder holder, int position) {
             Request currentRequest = requests.get(position);
+            holder.farmColor.setImageResource(R.drawable.farm_color);
+            String name = currentRequest.getName();
+            if(name.equals("Bertacchini's farm")) {
+                int bertacchini = ContextCompat.getColor(MainActivity.this, R.color.colorBertacchini);
+                holder.farmColor.setColorFilter(bertacchini, PorterDuff.Mode.SRC);
+            } else if(name.equals("Ferrari's farm")) {
+                int ferrari = ContextCompat.getColor(MainActivity.this, R.color.colorFerrari);
+                holder.farmColor.setColorFilter(ferrari, PorterDuff.Mode.SRC);
+            }
             holder.basicIcon.setImageResource(currentRequest.getBasicIconId());
             holder.dateAndFarmName.setText(Html.fromHtml(currentRequest.getName() + "<br />" + "<small>" + currentRequest.getDate().toString() + "</small"));
             holder.statusIcon.setImageResource(currentRequest.getStatusIconId());
