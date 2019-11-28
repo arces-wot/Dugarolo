@@ -43,20 +43,7 @@ public class MyMapView extends MapView {
         }
     }
 
-    public void drawCanals(ArrayList<Canal> canals) {
-        for(Canal canal: canals) {
-            Polyline line = new Polyline();
-            List<GeoPoint> geoPoints = new ArrayList<>();
-            geoPoints.add(canal.getStart());
-            geoPoints.add(canal.getEnd());
-            line.setPoints(geoPoints);
-            line.getOutlinePaint().setColor(Color.parseColor("#ADD8E6"));
-            this.getOverlayManager().add(line);
-            this.invalidate();
-        }
-    }
-
-    private GeoPoint midPoint(GeoPoint geoPoint1, GeoPoint geoPoint2) {
+    public GeoPoint midPoint(GeoPoint geoPoint1, GeoPoint geoPoint2) {
         return GeoPoint.fromCenterBetween(geoPoint1, geoPoint2);
     }
 
@@ -80,35 +67,19 @@ public class MyMapView extends MapView {
         }
     }
 
-    public void drawWaterLevelTextMarkers(ArrayList<Canal> canals, ArrayList<Marker> textMarkers) {
-        if(textMarkers.size() > 0) {
-            for(Iterator<Marker> iterator = textMarkers.iterator(); iterator.hasNext();) {
-                Marker textMarker = iterator.next();
-                this.getOverlayManager().remove(textMarker);
-                iterator.remove();        ;
-            }
-        }
+    public void drawCanals(ArrayList<Canal> canals, ArrayList<Marker> textMarkers) {
         for(Canal canal : canals) {
-            Marker marker = new Marker(this);
-            marker.setPosition(midPoint(canal.getStart(), canal.getEnd()));
-            marker.setTextLabelBackgroundColor(Color.TRANSPARENT);
-            marker.setTextLabelForegroundColor(Color.RED);
-            marker.setTextLabelFontSize(20);
-            marker.setTextIcon(canal.getWaterLevel().toString() + " mm");
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
-            marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    //nascondo la info window e impedisco lo zoom-in automatico sul click
-                    return true;
-                }
-            });
-            textMarkers.add(marker);
-            for (Marker textMarker : textMarkers) {
-                this.getOverlayManager().add(textMarker);
-                this.invalidate();
-            }
-
+            Polyline line = new Polyline();
+            List<GeoPoint> geoPoints = new ArrayList<>();
+            geoPoints.add(canal.getStart());
+            geoPoints.add(canal.getEnd());
+            line.setPoints(geoPoints);
+            line.getOutlinePaint().setColor(Color.parseColor("#ADD8E6"));
+            this.getOverlayManager().add(line);
         }
+        for (Marker textMarker : textMarkers) {
+            this.getOverlayManager().add(textMarker);
+        }
+        this.invalidate();
     }
 }

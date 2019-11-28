@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.location.LocationManager;
@@ -28,6 +29,10 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
@@ -82,7 +87,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         mapController.setZoom(15.0);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
-        map.drawCanals(canals);
+        //map.drawCanals(canals);
         map.drawWeirs(weirs, weirMarkers);
         map.drawFarms(farms);
         setWeirListeners(weirMarkers);
@@ -172,7 +177,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     }
 
     private void registerService() {
-        Intent intent = new Intent(MapDetailActivity.this, JSONIntentService.class);
+        final Intent intent = new Intent(MapDetailActivity.this, JSONIntentService.class);
         jsonReceiver = new JSONReceiver(new Handler());
         jsonReceiver.setmReceiver(this);
         intent.putExtra("receiver", jsonReceiver);
@@ -181,7 +186,14 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         boolean isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnected();
         if (isConnected) {
-            startService(intent);
+            ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
+
+            scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    startService(intent);
+                }
+            }, 1, 5, TimeUnit.SECONDS);
         }
         else {
             Toast.makeText(MapDetailActivity.this   , "Device is not connected, can't fetch water level data", Toast.LENGTH_SHORT).show();
@@ -199,6 +211,11 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     }
 
     private void parseResult(int resultCode, Bundle resultData) throws JSONException {
+        if(textMarkers.size() > 0) {
+            for(Marker textMarker : textMarkers) {
+                textMarker.setVisible(false);
+            }
+        }
         switch(resultCode) {
             case STATUS_FINISHED:
                 String jsonText = resultData.getString("results");
@@ -209,18 +226,36 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                     JSONArray jsonArray = new JSONArray(jsonText);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonArrayElem = jsonArray.getJSONObject(i);
-                        String id = jsonArrayElem.getString("id");
-                        double geoLanStart = jsonArrayElem.getJSONObject("start").getDouble("lan");
-                        double geoLongStart = jsonArrayElem.getJSONObject("start").getDouble("long");
-                        GeoPoint start = new GeoPoint(geoLanStart, geoLongStart);
-                        double geoLanEnd = jsonArrayElem.getJSONObject("end").getDouble("lan");
-                        double geoLongEnd = jsonArrayElem.getJSONObject("end").getDouble("long");
-                        GeoPoint end = new GeoPoint(geoLanEnd, geoLongEnd);
-                        Integer waterLevel = jsonArrayElem.getInt("waterLevel");
-                        Canal canal = new Canal(id, start, end, waterLevel);
-                        canals.add(canal);
+                        //considero solo i canali
+                        if (jsonArrayElem.getString("type").equals("Channel")) {
+                            String id = jsonArrayElem.getString("id");
+                            double geoLanStart = jsonArrayElem.getJSONObject("start").getDouble("lan");
+                            double geoLongStart = jsonArrayElem.getJSONObject("start").getDouble("long");
+                            GeoPoint start = new GeoPoint(geoLanStart, geoLongStart);
+                            double geoLanEnd = jsonArrayElem.getJSONObject("end").getDouble("lan");
+                            double geoLongEnd = jsonArrayElem.getJSONObject("end").getDouble("long");
+                            GeoPoint end = new GeoPoint(geoLanEnd, geoLongEnd);
+                            Integer waterLevel = jsonArrayElem.getInt("waterLevel");
+                            Canal canal = new Canal(id, start, end, waterLevel);
+                            canals.add(canal);
+                            Marker marker = new Marker(map);
+                            marker.setPosition(map.midPoint(canal.getStart(), canal.getEnd()));
+                            marker.setTextLabelBackgroundColor(Color.TRANSPARENT);
+                            marker.setTextLabelForegroundColor(Color.RED);
+                            marker.setTextLabelFontSize(20);
+                            marker.setTextIcon(canal.getWaterLevel().toString() + " mm");
+                            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
+                            marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                                @Override
+                                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                                    //nascondo la info window e impedisco lo zoom-in automatico sul click
+                                    return true;
+                                }
+                            });
+                            textMarkers.add(marker);
+                        }
                     }
-                    map.drawWaterLevelTextMarkers(canals, textMarkers);
+                    map.drawCanals(canals, textMarkers);
                 }
                 break;
             case STATUS_ERROR:

@@ -34,7 +34,7 @@ public class JSONIntentService extends IntentService {
             Bundle bundle = new Bundle();
             try {
                 //prendi il json
-                String jsonText = getJSONFromURL(new URL( "http://192.168.1.11:3000/canals"));
+                String jsonText = getJSONFromURL(new URL( "http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/connections"));
                 bundle.putString("results", jsonText);
                 jsonReceiver.send(STATUS_FINISHED, bundle);
             } catch (Exception e) {
