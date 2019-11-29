@@ -12,6 +12,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Toast;
@@ -29,10 +30,6 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.res.ResourcesCompat;
@@ -57,6 +54,13 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if(savedInstanceState != null) {
+            canals = savedInstanceState.getParcelableArrayList("canals");
+            farms = savedInstanceState.getParcelableArrayList("farms");
+            map = savedInstanceState.getParcelable("map");
+            weirs = savedInstanceState.getParcelableArrayList("weirs");
+            jsonReceiver = savedInstanceState.getParcelable("jsonReceiver");
+        }
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
         //carica i valori relativi al livello dell'acqua dei canali tramite intent sevice
         registerService();
@@ -87,7 +91,6 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         mapController.setZoom(15.0);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
-        //map.drawCanals(canals);
         map.drawWeirs(weirs, weirMarkers);
         map.drawFarms(farms);
         setWeirListeners(weirMarkers);
@@ -186,14 +189,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
         boolean isConnected = activeNetworkInfo != null && activeNetworkInfo.isConnected();
         if (isConnected) {
-            ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
-
-            scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
-                @Override
-                public void run() {
-                    startService(intent);
-                }
-            }, 1, 5, TimeUnit.SECONDS);
+            startService(intent);
         }
         else {
             Toast.makeText(MapDetailActivity.this   , "Device is not connected, can't fetch water level data", Toast.LENGTH_SHORT).show();
@@ -263,4 +259,14 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                 break;
         }
     }
-}
+
+    @Override
+    protected void onSaveInstanceState(Bundle bundle) {
+        super.onSaveInstanceState(bundle);
+        bundle.putParcelableArrayList("canals", canals);
+        bundle.putParcelableArrayList("farms", farms);
+        bundle.putParcelable("map", (Parcelable) map);
+        bundle.putParcelableArrayList("weirs", weirs);
+        bundle.putParcelable("jsonReceiver", jsonReceiver);
+    }
+ }

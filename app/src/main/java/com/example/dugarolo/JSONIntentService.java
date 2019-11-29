@@ -10,6 +10,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 
 import androidx.annotation.Nullable;
@@ -30,16 +33,28 @@ public class JSONIntentService extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         if (intent != null) {
-            ResultReceiver jsonReceiver = intent.getParcelableExtra("receiver");
-            Bundle bundle = new Bundle();
-            try {
-                //prendi il json
-                String jsonText = getJSONFromURL(new URL( "http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/connections"));
-                bundle.putString("results", jsonText);
-                jsonReceiver.send(STATUS_FINISHED, bundle);
-            } catch (Exception e) {
-                jsonReceiver.send(STATUS_ERROR, bundle);
-            }
+            final ResultReceiver jsonReceiver = intent.getParcelableExtra("receiver");
+            final Bundle bundle = new Bundle();
+            ScheduledExecutorService scheduleTaskExecutor = Executors.newScheduledThreadPool(1);
+
+            scheduleTaskExecutor.scheduleAtFixedRate(new Runnable() {
+                @Override
+                public void run() {
+                    //prendi il json
+                    String jsonText = null;
+                    try {
+                        jsonText = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/connections"));
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                    if (jsonText != null) {
+                        bundle.putString("results", jsonText);
+                        jsonReceiver.send(STATUS_FINISHED, bundle);
+                    } else {
+                        jsonReceiver.send(STATUS_ERROR, bundle);
+                    }
+                }
+            }, 1, 5, TimeUnit.SECONDS);
         }
     }
 

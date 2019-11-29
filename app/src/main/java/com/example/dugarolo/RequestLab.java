@@ -2,6 +2,7 @@ package com.example.dugarolo;
 
 import android.content.Context;
 
+import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 
 import java.util.ArrayList;
@@ -21,8 +22,8 @@ public class RequestLab {
 
     private RequestLab(Context context) {
         requestList = new ArrayList<>();
-        requestList.add(new Request("Bertacchini\'s farm", new LocalDate(2019, 9, 18, null), "interrupted"));
-        requestList.add(new Request( "Ferrari\'s farm", new LocalDate(2019, 9, 19, null), "unknown"));
+        requestList.add(new Request("Bertacchini\'s farm", new DateTime(2019, 11, 24, 13, 47), "interrupted", "18"));
+        requestList.add(new Request( "Ferrari\'s farm", new DateTime(2019, 10, 25, 12, 48), "unknown", "7"));
     }
 
     public List<Request> getRequestList() {

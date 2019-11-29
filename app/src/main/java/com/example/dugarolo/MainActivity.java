@@ -9,6 +9,10 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -30,6 +34,8 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import net.danlew.android.joda.JodaTimeAndroid;
+
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -177,7 +183,11 @@ public class MainActivity extends AppCompatActivity {
                 int ferrari = ContextCompat.getColor(MainActivity.this, R.color.colorFerrari);
                 holder.farmColor.setColorFilter(ferrari, PorterDuff.Mode.SRC);
             }
-            holder.dateAndFarmName.setText(Html.fromHtml(currentRequest.getName() + "<br />" + "<small>" + currentRequest.getDate().toString() + "</small"));
+            DateTime dateTime = currentRequest.getDateTime();
+            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+            String formattedDateTime = dateTime.toString(dtf);
+            holder.dateAndFarmName.setText(Html.fromHtml(currentRequest.getName() + "<br />" + "<small>" + "<small>" + formattedDateTime
+                    + " , water: " + currentRequest.getWaterVolume() + " mm" + "</small" + "</small"));
             String status = currentRequest.getStatus();
             switch (status) {
                 case "cancelled":
