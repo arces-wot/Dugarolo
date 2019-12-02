@@ -5,9 +5,14 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.List;
 
@@ -31,7 +36,11 @@ public class RequestDetailsActivity extends AppCompatActivity {
         //Request request = Request.requests[requestId];
         Request request = requestList.get(requestId);
         TextView farmName = findViewById(R.id.request);
-        farmName.setText(request.getName());
+        DateTime dateTime = request.getDateTime();
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+        String formattedDateTime = dateTime.toString(dtf);
+        farmName.setText(Html.fromHtml(request.getName() + "<br />"+ "<small>"  + formattedDateTime
+                + " , water: " + request.getWaterVolume() + " mm" + "</small"));
     }
 
     public void onClickSubmit(View view) {

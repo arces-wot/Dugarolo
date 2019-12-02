@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -13,10 +14,9 @@ import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
-public class MyMapView extends MapView {
+public class MyMapView extends MapView  {
 
     public MyMapView(Context context) {
         super(context);

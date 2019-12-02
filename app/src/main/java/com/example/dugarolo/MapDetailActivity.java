@@ -12,7 +12,6 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Toast;
@@ -40,7 +39,7 @@ import static com.example.dugarolo.JSONIntentService.STATUS_FINISHED;
 public class MapDetailActivity extends AppCompatActivity implements JSONReceiver.Receiver{
 
     private ArrayList<Canal> canals = new ArrayList<>();
-    private MyMapView map = null;
+    private MyMapView map;
     private GpsMyLocationProvider gpsMyLocationProvider;
     private ArrayList<Weir> weirs = new ArrayList<>();
     private ArrayList<Marker> textMarkers = new ArrayList<>();
@@ -48,25 +47,20 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     private ArrayList<Farm> farms = new ArrayList<>();
     private AssetLoader assetLoader = new AssetLoader();
     private JSONReceiver jsonReceiver;
+    private boolean isInFront;
 
     private static final int REQUEST_CODE_WATER = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(savedInstanceState != null) {
-            canals = savedInstanceState.getParcelableArrayList("canals");
-            farms = savedInstanceState.getParcelableArrayList("farms");
-            map = savedInstanceState.getParcelable("map");
-            weirs = savedInstanceState.getParcelableArrayList("weirs");
-            jsonReceiver = savedInstanceState.getParcelable("jsonReceiver");
-        }
+        loadMap();
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
         //carica i valori relativi al livello dell'acqua dei canali tramite intent sevice
         registerService();
         assetLoader.loadGeoPointsWDN(canals, weirs, this);
         assetLoader.loadGeoPointsFarms(farms, this);
-        loadMap();
+        loadMapElements();
     }
 
     private void loadMap() {
@@ -81,6 +75,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
 
         //inflate and create the map
         setContentView(R.layout.activity_map_detail);
+        map = new MyMapView(this);
         map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
@@ -91,6 +86,9 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         mapController.setZoom(15.0);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
+    }
+
+    private void loadMapElements() {
         map.drawWeirs(weirs, weirMarkers);
         map.drawFarms(farms);
         setWeirListeners(weirMarkers);
@@ -105,6 +103,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         MyLocationNewOverlay locationNewOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
         locationNewOverlay.disableMyLocation();
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+        isInFront = false;
     }
 
     public void onResume(){
@@ -112,6 +111,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         //this will refresh the osmdroid configuration on resuming.
         //if you make changes to the configuration, use
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        isInFront = true;
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
         MyLocationNewOverlay locationNewOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
         locationNewOverlay.enableMyLocation();
@@ -200,7 +200,9 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     public void onReceiveResult(int resultCode, Bundle resultData) {
         //gestisci i risultati ottenuti dall'intent service
         try {
-            parseResult(resultCode, resultData);
+            if(isInFront) {
+                parseResult(resultCode, resultData);
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -258,15 +260,5 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                 Toast.makeText(MapDetailActivity.this, "Something went wrong!", Toast.LENGTH_LONG);
                 break;
         }
-    }
-
-    @Override
-    protected void onSaveInstanceState(Bundle bundle) {
-        super.onSaveInstanceState(bundle);
-        bundle.putParcelableArrayList("canals", canals);
-        bundle.putParcelableArrayList("farms", farms);
-        bundle.putParcelable("map", (Parcelable) map);
-        bundle.putParcelableArrayList("weirs", weirs);
-        bundle.putParcelable("jsonReceiver", jsonReceiver);
     }
  }
