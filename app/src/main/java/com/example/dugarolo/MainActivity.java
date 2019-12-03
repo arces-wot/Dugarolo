@@ -1,12 +1,8 @@
 package com.example.dugarolo;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.content.res.AppCompatResources;
-import androidx.cardview.widget.CardView;
 import androidx.core.content.ContextCompat;
-import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -22,11 +18,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
-import android.os.Build;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.service.media.MediaBrowserService;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,10 +30,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import java.text.SimpleDateFormat;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.xml.transform.Result;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -61,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         RequestLab requestLab = RequestLab.get(this);
         List<Request> requestList = requestLab.getRequestList();
         loadMap();
+        new LoadFarms().execute();
         loadRequests(requestList);
         if(requestId != null) {
             Request request = requestList.get(requestId);
@@ -91,8 +89,6 @@ public class MainActivity extends AppCompatActivity {
         mapController.setZoom(14.0);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
-        assetLoader.loadGeoPointsFarms(farms, this);
-        map.drawFarms(farms);
     }
 
     private void loadRequests(List<Request> requestList) {
@@ -210,4 +206,21 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    private class LoadFarms extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void... voids) {
+            assetLoader.loadGeoPointsFarms(farms);
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if(aBoolean) {
+                map.drawFarms(farms);
+            }
+        }
+    }
 }

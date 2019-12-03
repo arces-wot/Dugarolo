@@ -6,25 +6,36 @@ import android.os.Parcelable;
 import org.osmdroid.util.GeoPoint;
 
 public class Weir implements Parcelable {
-    private String number;
-    private String farm;
-    private Integer openLevel;
+    private String id;
+    private Integer maxLevel;
+    private Integer minLevel;
+    private Integer currentOpenLevel;
     private GeoPoint position;
 
-    public Weir(String number, String farm, Integer openLevel, GeoPoint position) {
-        this.farm = farm;
-        this.number = number;
-        this.openLevel = openLevel;
+    public Weir(String id, Integer maxLevel, Integer minLevel, Integer openLevel, GeoPoint position) {
+        this.id = id;
+        this.maxLevel = maxLevel;
+        this.minLevel = minLevel;
+        this.currentOpenLevel = openLevel;
         this.position = position;
     }
 
     protected Weir(Parcel in) {
-        number = in.readString();
-        farm = in.readString();
+        id = in.readString();
         if (in.readByte() == 0) {
-            openLevel = null;
+            maxLevel = null;
         } else {
-            openLevel = in.readInt();
+            maxLevel = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            minLevel = null;
+        } else {
+            minLevel = in.readInt();
+        }
+        if (in.readByte() == 0) {
+            currentOpenLevel = null;
+        } else {
+            currentOpenLevel = in.readInt();
         }
         position = in.readParcelable(GeoPoint.class.getClassLoader());
     }
@@ -41,16 +52,24 @@ public class Weir implements Parcelable {
         }
     };
 
-    public String getFarm() {
-        return farm;
+    public String getId() {
+        return id;
     }
 
-    public String getNumber() {
-        return number;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public Integer getMaxLevel() {
+        return this.maxLevel;
+    }
+
+    public Integer getMinLevel() {
+        return this.minLevel;
     }
 
     public Integer getOpenLevel() {
-        return openLevel;
+        return currentOpenLevel;
     }
 
     public GeoPoint getPosition() {
@@ -58,8 +77,9 @@ public class Weir implements Parcelable {
     }
 
     public void setOpenLevel(Integer openLevel) {
-        this.openLevel = openLevel;
+        this.currentOpenLevel = openLevel;
     }
+
 
     @Override
     public int describeContents() {
@@ -68,13 +88,24 @@ public class Weir implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(number);
-        dest.writeString(farm);
-        if (openLevel == null) {
+        dest.writeString(id);
+        if (maxLevel == null) {
             dest.writeByte((byte) 0);
         } else {
             dest.writeByte((byte) 1);
-            dest.writeInt(openLevel);
+            dest.writeInt(maxLevel);
+        }
+        if (minLevel == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(minLevel);
+        }
+        if (currentOpenLevel == null) {
+            dest.writeByte((byte) 0);
+        } else {
+            dest.writeByte((byte) 1);
+            dest.writeInt(currentOpenLevel);
         }
         dest.writeParcelable(position, flags);
     }

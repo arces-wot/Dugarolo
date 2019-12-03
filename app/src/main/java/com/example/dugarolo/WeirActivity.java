@@ -14,7 +14,6 @@ import android.widget.Toast;
 public class WeirActivity extends AppCompatActivity {
     private SeekBar openLevelSeekBar;
     private Button updateOpenLevelButton;
-    private TextView farmName;
     private TextView weirNumber;
     private TextView openLevel;
     private Integer newOpenLevel;
@@ -26,10 +25,8 @@ public class WeirActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_weir);
-        minOpenLevel = 15;
-        maxOpenLevel = 300;
-        farmName = findViewById(R.id.farm_name);
-        farmName.setText(getIntent().getExtras().get("Farm") + "\'s farm");
+        minOpenLevel = getIntent().getExtras().getInt("Min Level");
+        maxOpenLevel = getIntent().getExtras().getInt("Max Level");
         weirNumber = findViewById(R.id.weir_number);
         weirNumber.setText("Weir #" + getIntent().getExtras().get("Number").toString());
         openLevel = findViewById(R.id.water_level);
@@ -38,7 +35,7 @@ public class WeirActivity extends AppCompatActivity {
         updateOpenLevelButton.setEnabled(false);
         openLevelSeekBar = findViewById(R.id.new_level);
         openLevelSeekBar.setMax(maxOpenLevel);
-        openLevelSeekBar.setProgress((Integer) getIntent().getExtras().get("Open Level"));
+        openLevelSeekBar.setProgress(Integer.valueOf(openLevel.getText().toString()));
         weirToUpdate = getIntent().getExtras().get("Number").toString();
 
         openLevelSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {

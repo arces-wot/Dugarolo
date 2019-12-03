@@ -36,7 +36,7 @@ public class MyMapView extends MapView  {
             Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, 40, 40, true));
             marker.setIcon(resizedWeirIcon);
             marker.setInfoWindow(null);
-            marker.setId(weir.getNumber());
+            marker.setId(weir.getId());
             weirMarkers.add(marker);
             this.getOverlays().add(marker);
             this.invalidate();
@@ -48,7 +48,6 @@ public class MyMapView extends MapView  {
     }
 
     public void drawFarms(ArrayList<Farm> farms) {
-        //disegna una linea per ogni canale
         for (Farm farm : farms) {
             Polygon polygon = farm.getArea();
             switch (farm.getName()) {
@@ -67,8 +66,8 @@ public class MyMapView extends MapView  {
         }
     }
 
-    public void drawCanals(ArrayList<Canal> canals, ArrayList<Marker> textMarkers) {
-        for(Canal canal : canals) {
+    public void drawCanals(ArrayList<Canal> canals) {
+        for (Canal canal : canals) {
             Polyline line = new Polyline();
             List<GeoPoint> geoPoints = new ArrayList<>();
             geoPoints.add(canal.getStart());
@@ -77,9 +76,32 @@ public class MyMapView extends MapView  {
             line.getOutlinePaint().setColor(Color.parseColor("#ADD8E6"));
             this.getOverlayManager().add(line);
         }
-        for (Marker textMarker : textMarkers) {
-            this.getOverlayManager().add(textMarker);
+    }
+
+    public void drawTextMarkers(ArrayList<Canal> canals, ArrayList<Marker> textMarkers) {
+        if(textMarkers.size() > 0) {
+            for(Marker textMarker : textMarkers) {
+                textMarker.setVisible(false);
+            }
         }
-        this.invalidate();
+        for(Canal canal : canals) {
+            Marker marker = new Marker(this);
+            marker.setPosition(this.midPoint(canal.getStart(), canal.getEnd()));
+            marker.setTextLabelBackgroundColor(Color.TRANSPARENT);
+            marker.setTextLabelForegroundColor(Color.RED);
+            marker.setTextLabelFontSize(20);
+            marker.setTextIcon(canal.getWaterLevel().toString() + " mm");
+            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
+            marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(Marker marker, MapView mapView) {
+                    //nascondo la info window e impedisco lo zoom-in automatico sul click
+                    return true;
+                }
+            });
+            textMarkers.add(marker);
+            this.getOverlayManager().add(marker);
+            this.invalidate();
+        }
     }
 }

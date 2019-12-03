@@ -1,86 +1,107 @@
 package com.example.dugarolo;
 
-import android.content.Context;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polygon;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 
 public class AssetLoader {
-    public AssetLoader(){
+    public AssetLoader() {
 
     }
 
-    public void loadGeoPointsFarms(ArrayList<Farm> farms, Context context) {
-        if(farms.isEmpty()) {
+    private String getJSONFromURL(URL url) {
+        HttpURLConnection connection = null;
+        BufferedReader bufferedReader = null;
+        StringBuffer jsonText = new StringBuffer();
+
+        try {
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setReadTimeout(10000);
+            connection.setConnectTimeout(15000);
+            connection.setRequestMethod("GET");
+            connection.connect();
+
+            int code = connection.getResponseCode();
+
+            if (code == 200) {
+
+                bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+
+                String line = "";
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    jsonText.append(line + "\n");
+                }
+
+                return jsonText.toString();
+            }
+
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            if (connection != null) {
+                connection.disconnect();
+            }
             try {
-                JSONArray jsonArray = new JSONArray(loadJSONFromAssetFarms(context));
-                for (int index = 0; index < jsonArray.length(); index++) {
-                    JSONObject jsonObject = jsonArray.getJSONObject(index);
-                    JSONArray jsonArrayPoints = jsonObject.getJSONArray("area");
-                    Polygon polygon = new Polygon();
-                    for (int i = 0; i < jsonArrayPoints.length(); i++) {
-                        JSONObject jsonObjectPoint = jsonArrayPoints.getJSONObject(i);
-                        double lat = jsonObjectPoint.getDouble("lat");
-                        double lon = jsonObjectPoint.getDouble("lon");
-                        GeoPoint geoPoint = new GeoPoint(lat, lon);
-                        polygon.addPoint(geoPoint);
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return null;
+    }
+
+    public void loadGeoPointsFarms(ArrayList<Farm> farms) {
+        if (farms.isEmpty()) {
+            try {
+                JSONArray JSONArrayFarms = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/assigned_farms")));
+                Polygon polygon = new Polygon();
+                for (int index = 0; index < JSONArrayFarms.length(); index++) {
+                    JSONObject JSONObjectFarm = JSONArrayFarms.getJSONObject(index);
+                    JSONArray JSONArrayFields = JSONObjectFarm.getJSONArray("fields");
+                    for (int index1 = 0; index1 < JSONArrayFields.length(); index1++) {
+                        JSONObject field = JSONArrayFields.getJSONObject(index1);
+                        JSONArray fieldPoints = field.getJSONArray("area");
+                        for (int index2 = 0; index2 < fieldPoints.length(); index2++) {
+                            JSONObject point = fieldPoints.getJSONObject(index2);
+                            double lat = point.getDouble("lat");
+                            double lon = point.getDouble("lon");
+                            GeoPoint geoPoint = new GeoPoint(lat, lon);
+                            polygon.addPoint(geoPoint);
+                        }
                     }
-                    Farm farm = new Farm(jsonObject.getString("name"), polygon);
+                    Farm farm = new Farm(JSONObjectFarm.getString("name"), polygon);
                     farms.add(farm);
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
             }
         }
-    }
-    private String loadJSONFromAssetFarms(Context context) {
-        String json;
-        try {
-            InputStream is = context.getAssets().open("farms_swamp.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
-        }
-        return json;
     }
 
-    public void loadGeoPointsWDN(ArrayList<Canal> canals, ArrayList<Weir> weirs, Context context) {
-        JSONObject jsonObject;
+    public void loadGeoPointsCanals(ArrayList<Canal> canals) {
         try {
-            jsonObject = new JSONObject(loadJSONFromAssetWDN(context));
-            //ottengo i dati dei "nodes"
-            JSONArray jsonArray = jsonObject.getJSONArray("nodes");
-            if(weirs.isEmpty()) {
-                for (int index = 0; index < jsonArray.length(); index++) {
-                    JSONObject jsonArrayElem = jsonArray.getJSONObject(index);
-                    //considero solo le chiuse
-                    if (jsonArrayElem.getString("type").equals("Weir")) {
-                        String id = jsonArrayElem.getString("id");
-                        int openLevel = jsonArrayElem.getInt("openLevel");
-                        GeoPoint geoPoint = new GeoPoint(jsonArrayElem.getJSONObject("location").getDouble("lat"),
-                                jsonArrayElem.getJSONObject("location").getDouble("lon"));
-                        Weir weir = new Weir(id, "X", openLevel, geoPoint);
-                        weirs.add(weir);
-                    }
-                }
-            }
-            if(canals.isEmpty()) {
+            if (canals.isEmpty()) {
+                JSONArray jsonChannels = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/connections")));
                 //ottengo i dati delle "connections"
-                jsonArray = jsonObject.getJSONArray("connections");
-                for (int index = 0; index < jsonArray.length(); index++) {
-                    JSONObject jsonArrayElem = jsonArray.getJSONObject(index);
+                for (int index = 0; index < jsonChannels.length(); index++) {
+                    JSONObject jsonArrayElem = jsonChannels.getJSONObject(index);
                     //considero solo i canali
                     if (jsonArrayElem.getString("type").equals("Channel")) {
                         String id = jsonArrayElem.getString("id");
@@ -98,22 +119,37 @@ public class AssetLoader {
             }
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
         }
     }
 
-    private String loadJSONFromAssetWDN(Context context) {
-        String json;
-        try {
-            InputStream is = context.getAssets().open("wdn_data.json");
-            int size = is.available();
-            byte[] buffer = new byte[size];
-            is.read(buffer);
-            is.close();
-            json = new String(buffer, "UTF-8");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            return null;
+    public void loadGeoPointsWeirs(ArrayList<Weir> weirs) {
+        if(weirs.isEmpty()) {
+            try {
+                JSONArray jsonArrayWeirs = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/nodes")));
+                for (int index = 0; index < jsonArrayWeirs.length(); index++) {
+                    JSONObject jsonArrayElem = jsonArrayWeirs.getJSONObject(index);
+                    //considero solo le chiuse
+                    if (jsonArrayElem.getString("type").equals("Weir")) {
+                        String id = jsonArrayElem.getString("id");
+                        JSONObject openLevel = jsonArrayElem.getJSONObject("openLevel");
+                        int max = openLevel.getInt("max");
+                        int min = openLevel.getInt("min");
+                        int current = openLevel.getInt("current");
+                        GeoPoint geoPoint = new GeoPoint(jsonArrayElem.getJSONObject("location").getDouble("lat"),
+                                jsonArrayElem.getJSONObject("location").getDouble("lon"));
+                        Weir weir = new Weir(id, max, min, current, geoPoint);
+                        weirs.add(weir);
+                    }
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         }
-        return json;
     }
+
 }
+
