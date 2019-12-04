@@ -69,8 +69,8 @@ public class AssetLoader {
         if (farms.isEmpty()) {
             try {
                 JSONArray JSONArrayFarms = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/assigned_farms")));
-                Polygon polygon = new Polygon();
                 for (int index = 0; index < JSONArrayFarms.length(); index++) {
+                    Polygon polygon = new Polygon();
                     JSONObject JSONObjectFarm = JSONArrayFarms.getJSONObject(index);
                     JSONArray JSONArrayFields = JSONObjectFarm.getJSONArray("fields");
                     for (int index1 = 0; index1 < JSONArrayFields.length(); index1++) {
