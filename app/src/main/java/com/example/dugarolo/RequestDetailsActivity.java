@@ -14,11 +14,12 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RequestDetailsActivity extends AppCompatActivity {
 
-    public static final String EXTRA_REQUEST_ID = "id";
+    private ArrayList<Request> requestList = new ArrayList<>();
     private Integer requestId;
 
     @Override
@@ -26,12 +27,13 @@ public class RequestDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_details);
         RequestLab requestLab = RequestLab.get(this);
-        List<Request> requestList = requestLab.getRequestList();
+        //List<Request> requestList = requestLab.getRequestList();
+        requestList = getIntent().getParcelableArrayListExtra("REQUEST_LIST");
         //abilita il bottone "Up"
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
         //prendi la request dall'intent
-        int requestId = (Integer) getIntent().getExtras().get(EXTRA_REQUEST_ID);
+        int requestId = (Integer) getIntent().getExtras().get("REQUEST_CLICKED");
         setRequestId(requestId);
         //Request request = Request.requests[requestId];
         Request request = requestList.get(requestId);
@@ -44,8 +46,6 @@ public class RequestDetailsActivity extends AppCompatActivity {
     }
 
     public void onClickSubmit(View view) {
-        RequestLab requestLab = RequestLab.get(this);
-        List<Request> requestList = requestLab.getRequestList();
         RadioGroup radioGroup = findViewById(R.id.radioGroup);
         int radioButtonId = radioGroup.getCheckedRadioButtonId();
         //Request request = Request.requests[requestId];

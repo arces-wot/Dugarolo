@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.os.Parcelable;
 import android.util.AttributeSet;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -47,23 +46,35 @@ public class MyMapView extends MapView  {
         return GeoPoint.fromCenterBetween(geoPoint1, geoPoint2);
     }
 
-    public void drawFarms(ArrayList<Farm> farms) {
-        for (Farm farm : farms) {
-            Polygon polygon = farm.getArea();
-            switch (farm.getName()) {
-                case "Bertacchini's Farm":
-                    polygon.getOutlinePaint().setColor(Color.YELLOW);
-                    break;
-                case "Ferrari's Farm":
-                    polygon.getOutlinePaint().setColor(Color.BLUE);
-                    break;
-                default:
-            }
-            polygon.getFillPaint().setColor(Color.TRANSPARENT);
-            polygon.getOutlinePaint().setStrokeWidth(3);
-            this.getOverlayManager().add(polygon);
-            this.invalidate();
+    private void drawField(Field field) {
+        ArrayList<GeoPoint> fieldArea = field.getArea();
+        Polygon polygon = new Polygon();
+        for(GeoPoint point : fieldArea) {
+            polygon.addPoint(point);
         }
+        switch(field.getFarmName()) {
+            case "Bertacchini's Farm":
+                polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorBertacchini));
+                break;
+            case "Ferrari's Farm":
+                polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorFerrari));
+                break;
+            default:
+        }
+        polygon.getFillPaint().setColor(Color.TRANSPARENT);
+        polygon.getOutlinePaint().setStrokeWidth(3);
+        this.getOverlayManager().add(polygon);
+        this.invalidate();
+    }
+
+    public void drawFarms(ArrayList<Farm> farms) {
+        for(Farm farm : farms) {
+            ArrayList<Field> farmFields = farm.getFields();
+            for(Field field : farmFields) {
+                this.drawField(field);
+            }
+        }
+
     }
 
     public void drawCanals(ArrayList<Canal> canals) {

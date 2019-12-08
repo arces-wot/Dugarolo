@@ -1,5 +1,8 @@
 package com.example.dugarolo;
 
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +16,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Locale;
 
 public class AssetLoader {
     public AssetLoader() {
@@ -70,21 +74,24 @@ public class AssetLoader {
             try {
                 JSONArray JSONArrayFarms = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/assigned_farms")));
                 for (int index = 0; index < JSONArrayFarms.length(); index++) {
-                    Polygon polygon = new Polygon();
+                    ArrayList<Field> fields = new ArrayList<>();
                     JSONObject JSONObjectFarm = JSONArrayFarms.getJSONObject(index);
                     JSONArray JSONArrayFields = JSONObjectFarm.getJSONArray("fields");
                     for (int index1 = 0; index1 < JSONArrayFields.length(); index1++) {
                         JSONObject field = JSONArrayFields.getJSONObject(index1);
-                        JSONArray fieldPoints = field.getJSONArray("area");
-                        for (int index2 = 0; index2 < fieldPoints.length(); index2++) {
-                            JSONObject point = fieldPoints.getJSONObject(index2);
+                        String fieldId = field.getString("id");
+                        ArrayList<GeoPoint> fieldPoints = new ArrayList<>();
+                        JSONArray JSONFieldPoints = field.getJSONArray("area");
+                        for (int index2 = 0; index2 < JSONFieldPoints.length(); index2++) {
+                            JSONObject point = JSONFieldPoints.getJSONObject(index2);
                             double lat = point.getDouble("lat");
                             double lon = point.getDouble("lon");
                             GeoPoint geoPoint = new GeoPoint(lat, lon);
-                            polygon.addPoint(geoPoint);
+                            fieldPoints.add(geoPoint);
                         }
+                        fields.add(new Field(JSONObjectFarm.getString("name"), fieldId, fieldPoints));
                     }
-                    Farm farm = new Farm(JSONObjectFarm.getString("name"), polygon);
+                    Farm farm = new Farm(JSONObjectFarm.getString("name"), fields);
                     farms.add(farm);
                 }
             } catch (JSONException e) {
@@ -151,5 +158,29 @@ public class AssetLoader {
         }
     }
 
+    public void loadRequests(ArrayList<Farm> farms, ArrayList<Request> requests) {
+        if(requests.isEmpty()) {
+            try {
+                for (Farm farm : farms) {
+                    ArrayList<Field> fields = farm.getFields();
+                    for (Field field : fields) {
+                        JSONArray jsonArray = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/{field}/irrigation_plan")));
+                        for(int index = 0; index < jsonArray.length(); index++) {
+                            JSONObject JSONRequest = jsonArray.getJSONObject(index);
+                            String dateTime = JSONRequest.getString("start");
+                            DateTime formattedDateTime = DateTime.parse(dateTime);
+                            Integer waterVolume = JSONRequest.getInt("waterVolume");
+                            Request request = new Request(field.getFarmName(), formattedDateTime, "unknown", waterVolume.toString());
+                            requests.add(request);
+                        }
+                    }
+                }
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    }
 }
 

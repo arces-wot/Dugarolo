@@ -3,6 +3,7 @@ package com.example.dugarolo;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,8 +21,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.service.media.MediaBrowserService;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,13 +30,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import net.danlew.android.joda.JodaTimeAndroid;
-
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import javax.xml.transform.Result;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -47,6 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Farm> farms = new ArrayList<>();
     private MyMapView map = null;
     private AssetLoader assetLoader = new AssetLoader();
+    private ArrayList<Request> requests = new ArrayList<>();
     //debug only
     //private static final String TAG = "MainActivity";
 
@@ -55,13 +53,13 @@ public class MainActivity extends AppCompatActivity {
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
-        RequestLab requestLab = RequestLab.get(this);
-        List<Request> requestList = requestLab.getRequestList();
+        //RequestLab requestLab = RequestLab.get(this);
+        //List<Request> requestList = requestLab.getRequestList();
         loadMap();
-        new LoadFarms().execute();
-        loadRequests(requestList);
+        new LoadFarmsAndRequests().execute();
+        //loadRequestsRecyclerView(requestList);
         if(requestId != null) {
-            Request request = requestList.get(requestId);
+            Request request = requests.get(requestId);
             String status = (String) getIntent().getExtras().get(REQUEST_STATUS);
             request.setStatus(status);
         }
@@ -79,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
         //inflate and create the map
         setContentView(R.layout.activity_main);
-        map = (MyMapView) findViewById(R.id.map);
+        map = findViewById(R.id.map);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
         map.setTilesScaledToDpi(true);
@@ -91,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
         mapController.setCenter(startPoint);
     }
 
-    private void loadRequests(List<Request> requestList) {
+    private void loadRequestsRecyclerView(List<Request> requestList) {
         Collections.sort(requestList);
         requestRecyclerView = findViewById(R.id.list_requests);
         layoutManager = new LinearLayoutManager(this);
@@ -148,7 +146,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int position = getLayoutPosition();
                 Intent intent = new Intent(MainActivity.this, RequestDetailsActivity.class);
-                intent.putExtra(RequestDetailsActivity.EXTRA_REQUEST_ID, position);
+                intent.putParcelableArrayListExtra("REQUEST_LIST", (ArrayList<? extends Parcelable>) requests);
+                intent.putExtra("REQUEST_CLICKED", position);
                 requestId = position;
                 startActivity(intent);
             }
@@ -172,12 +171,12 @@ public class MainActivity extends AppCompatActivity {
             Request currentRequest = requests.get(position);
             holder.farmColor.setImageResource(R.drawable.farm_color);
             String name = currentRequest.getName();
-            if(name.equals("Bertacchini's farm")) {
-                int bertacchini = ContextCompat.getColor(MainActivity.this, R.color.colorBertacchini);
-                holder.farmColor.setColorFilter(bertacchini, PorterDuff.Mode.SRC);
-            } else if(name.equals("Ferrari's farm")) {
-                int ferrari = ContextCompat.getColor(MainActivity.this, R.color.colorFerrari);
-                holder.farmColor.setColorFilter(ferrari, PorterDuff.Mode.SRC);
+            if(name.equals("Bertacchini's Farm")) {
+                int bertacchini = ResourcesCompat.getColor(getResources(), R.color.colorBertacchini, null);
+                holder.farmColor.setColorFilter(bertacchini);
+            } else if(name.equals("Ferrari's Farm")) {
+                int ferrari = ResourcesCompat.getColor(getResources(), R.color.colorFerrari,null);
+                holder.farmColor.setColorFilter(ferrari);
             }
             DateTime dateTime = currentRequest.getDateTime();
             DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
@@ -207,11 +206,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class LoadFarms extends AsyncTask<Void, Void, Boolean> {
+    private class LoadFarmsAndRequests extends AsyncTask<Void, Void, Boolean> {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
             assetLoader.loadGeoPointsFarms(farms);
+            assetLoader.loadRequests(farms, requests);
             return true;
         }
 
@@ -220,6 +220,7 @@ public class MainActivity extends AppCompatActivity {
             super.onPostExecute(aBoolean);
             if(aBoolean) {
                 map.drawFarms(farms);
+                loadRequestsRecyclerView(requests);
             }
         }
     }

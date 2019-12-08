@@ -5,14 +5,20 @@ import android.os.Parcelable;
 
 import org.osmdroid.views.overlay.Polygon;
 
+import java.util.ArrayList;
+
 public class Farm implements Parcelable {
 
     private String name;
-    private Polygon area;
+    private ArrayList<Field> fields = new ArrayList<>();
 
-    public Farm(String name, Polygon area) {
+    public Farm(String name, ArrayList<Field> fields) {
         this.name = name;
-        this.area = area;
+        this.fields = fields;
+    }
+
+    public ArrayList<Field> getFields() {
+        return fields;
     }
 
     protected Farm(Parcel in) {
@@ -30,10 +36,6 @@ public class Farm implements Parcelable {
             return new Farm[size];
         }
     };
-
-    public Polygon getArea() {
-        return area;
-    }
 
     public String getName() {
         return name;

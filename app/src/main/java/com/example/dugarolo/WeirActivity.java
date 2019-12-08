@@ -111,8 +111,6 @@ public class WeirActivity extends AppCompatActivity {
                 conn.getOutputStream().write(postDataBytes);
                 conn.getOutputStream().flush();
 
-                Integer res = conn.getResponseCode();
-
                 conn.disconnect();
                 return true;
             } catch (MalformedURLException e) {
