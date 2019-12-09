@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -21,12 +22,14 @@ public class RequestDetailsActivity extends AppCompatActivity {
 
     private ArrayList<Request> requestList = new ArrayList<>();
     private Integer requestId;
+    private RadioGroup radioGroup;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_details);
-        RequestLab requestLab = RequestLab.get(this);
+        radioGroup = findViewById(R.id.radioGroup);
+        //RequestLab requestLab = RequestLab.get(this);
         //List<Request> requestList = requestLab.getRequestList();
         requestList = getIntent().getParcelableArrayListExtra("REQUEST_LIST");
         //abilita il bottone "Up"
@@ -43,10 +46,19 @@ public class RequestDetailsActivity extends AppCompatActivity {
         String formattedDateTime = dateTime.toString(dtf);
         farmName.setText(Html.fromHtml(request.getName() + "<br />"+ "<small>"  + formattedDateTime
                 + " , water: " + request.getWaterVolume() + " mm" + "</small"));
+        buildRadioGroup(request.getStatus());
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                switch (checkedId) {
+                    case R.id.satisfied:
+                        
+                }
+            }
+        });
     }
 
     public void onClickSubmit(View view) {
-        RadioGroup radioGroup = findViewById(R.id.radioGroup);
         int radioButtonId = radioGroup.getCheckedRadioButtonId();
         //Request request = Request.requests[requestId];
         Request request = requestList.get(requestId);
@@ -66,6 +78,60 @@ public class RequestDetailsActivity extends AppCompatActivity {
         Intent intent = new Intent(RequestDetailsActivity.this, MainActivity.class);
         intent.putExtra(MainActivity.REQUEST_STATUS, request.getStatus());
         startActivity(intent);
+    }
+
+    private void buildRadioGroup(String status) {
+        RadioButton radioButton = new RadioButton(this);
+        RadioButton radioButton1 = new RadioButton(this);
+        RadioButton radioButton2 = new RadioButton(this);
+        RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+        switch (status) {
+            case "scheduled":
+                radioButton.setText(R.string.accepted_request);
+                radioButton.setId(R.id.accepted);
+                radioGroup.addView(radioButton, params);
+
+                radioButton1.setText(R.string.cancelled_request);
+                radioButton1.setId(R.id.cancelled);
+                radioGroup.addView(radioButton1, params);
+                break;
+            case "accepted":
+                radioButton.setId(R.id.cancelled);
+                radioButton.setText(R.string.cancelled_request);
+                radioGroup.addView(radioButton, params);
+
+                radioButton1.setId(R.id.ongoing);
+                radioButton1.setText(R.string.ongoing_request);
+                radioGroup.addView(radioButton, params);
+                break;
+            case "ongoing":
+                radioButton.setId(R.id.cancelled);
+                radioButton.setText(R.string.cancelled_request);
+                radioGroup.addView(radioButton, params);
+
+                radioButton1.setId(R.id.interrupted);
+                radioButton1.setText(R.string.interrupted_request);
+                radioGroup.addView(radioButton1, params);
+
+                radioButton2.setId(R.id.satisfied);
+                radioButton2.setText(R.string.satisfied_request);
+                radioGroup.addView(radioButton2, params);
+
+                break;
+
+            case "interrupted":
+                radioButton.setId(R.id.cancelled);
+                radioButton.setText(R.string.cancelled_request);
+                radioGroup.addView(radioButton, params);
+
+                radioButton1.setId(R.id.ongoing);
+                radioButton1.setText(R.string.ongoing_request);
+                radioGroup.addView(radioButton1, params);
+
+                break;
+
+            default:
+        }
     }
 
     public Integer getRequestId() {

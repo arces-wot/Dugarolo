@@ -56,37 +56,19 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/selectStatus">
 
-            <RadioButton
-                android:id="@+id/satisfied"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/satisfied_request"></RadioButton>
-
-            <RadioButton
-                android:id="@+id/cancelled"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/cancelled_request"></RadioButton>
-
-            <RadioButton
-                android:id="@+id/interrupted"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/interrupted_request"></RadioButton>
         </RadioGroup>
 
-        <TextView
+        <View
             android:id="@+id/detailsForm"
             android:layout_width="wrap_content"
             android:layout_height="120dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
             app:layout_constraintBottom_toTopOf="@id/submitButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/radioGroup"
-            app:layout_constraintVertical_bias="0.0"></TextView>
+            app:layout_constraintVertical_bias="0.0"/>
 
         <Button
             android:id="@+id/submitButton"
@@ -97,7 +79,7 @@
             android:text="@string/submit_button"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"></Button>
+            app:layout_constraintStart_toStartOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

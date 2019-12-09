@@ -11,4 +11,7 @@
     <string name="resize_button">RESIZE</string>
     <string name="my_location">MY LOCATION</string>
     <string name="update_weir_open_level">UPDATE OPEN LEVEL</string>
+    <string name="accepted_request">Accepted</string>
+    <string name="ongoing_request">Ongoing</string>
+    <string name="scheduled_request">Scheduled</string>
 </resources>
