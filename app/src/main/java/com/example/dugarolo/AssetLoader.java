@@ -171,7 +171,7 @@ public class AssetLoader {
                             DateTime formattedDateTime = DateTime.parse(dateTime);
                             Integer waterVolume = JSONRequest.getInt("waterVolume");
                             String requestName = field.getFarmName();
-                            Request request = new Request(requestName, formattedDateTime, "scheduled", waterVolume.toString());
+                            Request request = new Request(requestName, formattedDateTime, "ongoing", waterVolume.toString());
                             requests.add(request);
                         }
                     }

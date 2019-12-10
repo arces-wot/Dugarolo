@@ -14,4 +14,6 @@
     <string name="accepted_request">Accepted</string>
     <string name="ongoing_request">Ongoing</string>
     <string name="scheduled_request">Scheduled</string>
+    <string name="cancelled_request_reason">Why was the request cancelled?</string>
+    <string name="reason_hint">Insert reason here</string>
 </resources>

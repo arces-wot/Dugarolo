@@ -3,10 +3,13 @@ package com.example.dugarolo;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -23,12 +26,14 @@ public class RequestDetailsActivity extends AppCompatActivity {
     private ArrayList<Request> requestList = new ArrayList<>();
     private Integer requestId;
     private RadioGroup radioGroup;
+    private ViewGroup vg;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_details);
         radioGroup = findViewById(R.id.radioGroup);
+        vg = findViewById(R.id.detailsForm);
         //RequestLab requestLab = RequestLab.get(this);
         //List<Request> requestList = requestLab.getRequestList();
         requestList = getIntent().getParcelableArrayListExtra("REQUEST_LIST");
@@ -50,9 +55,20 @@ public class RequestDetailsActivity extends AppCompatActivity {
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if(vg.getChildCount() > 0) {
+                    vg.removeAllViews();
+                }
+                LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 switch (checkedId) {
                     case R.id.satisfied:
-                        
+                        View v = vi.inflate(R.layout.satisfied_request_form, null);
+                        vg.addView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        break;
+                    case R.id.cancelled:
+                        View v1 = vi.inflate(R.layout.cancelled_request_form,  null);
+                        vg.addView(v1, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        break;
+                    default:
                 }
             }
         });
