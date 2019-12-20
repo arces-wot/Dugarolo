@@ -43,7 +43,7 @@ public class JSONIntentService extends IntentService {
                     //prendi il json
                     String jsonText = null;
                     try {
-                        jsonText = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/connections"));
+                        jsonText = getJSONFromURL(new URL("http://192.168.1.11:3000/connections"));
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }

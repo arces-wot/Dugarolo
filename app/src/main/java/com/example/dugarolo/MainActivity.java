@@ -185,13 +185,24 @@ public class MainActivity extends AppCompatActivity {
             String status = currentRequest.getStatus();
             switch (status) {
                 case "cancelled":
-                    holder.statusIcon.setColorFilter(Color.RED, PorterDuff.Mode.SRC);
+                    int cancelled = ResourcesCompat.getColor(getResources(), R.color.colorCancelled, null);
+                    holder.statusIcon.setColorFilter(cancelled);
                     break;
                 case "interrupted":
-                    holder.statusIcon.setColorFilter(Color.parseColor("#FFA500"), PorterDuff.Mode.SRC);
+                    int interrupted = ResourcesCompat.getColor(getResources(), R.color.colorInterrupted, null);
+                    holder.statusIcon.setColorFilter(interrupted);
                     break;
                 case "satisfied":
-                    holder.statusIcon.setColorFilter(Color.parseColor("#008000"), PorterDuff.Mode.SRC);
+                    int satisfied = ResourcesCompat.getColor(getResources(), R.color.colorSatisfied, null);
+                    holder.statusIcon.setColorFilter(satisfied);
+                    break;
+                case "accepted":
+                    int accepted = ResourcesCompat.getColor(getResources(), R.color.colorAccepted, null);
+                    holder.statusIcon.setColorFilter(accepted);
+                    break;
+                case "ongoing":
+                    int ongoing = ResourcesCompat.getColor(getResources(), R.color.colorOngoing, null);
+                    holder.statusIcon.setColorFilter(ongoing);
                     break;
                 default:
                     holder.statusIcon.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC);

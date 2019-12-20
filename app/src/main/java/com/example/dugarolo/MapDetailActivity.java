@@ -58,7 +58,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         loadMap();
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
         //carica i valori relativi al livello dell'acqua dei canali tramite intent sevice
-        registerService();
+        //registerService();
         new LoadMapElements().execute();
         loadMapElements();
     }
@@ -245,7 +245,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         @Override
         protected Boolean doInBackground(Void...voids) {
             assetLoader.loadGeoPointsFarms(farms);
-            assetLoader.loadGeoPointsCanals(canals);
+            assetLoader.loadWDN(canals);
             assetLoader.loadGeoPointsWeirs(weirs);
             return true;
         }

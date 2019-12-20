@@ -102,6 +102,31 @@ public class AssetLoader {
         }
     }
 
+    public void loadWDN(ArrayList<Canal> canals) {
+        try {
+
+            JSONArray arrayConnections = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/connections")));
+            for (int i = 0; i < arrayConnections.length(); i++) {
+                JSONObject conn = arrayConnections.getJSONObject(i);
+                if(conn.getString("type").equals("Channel")) {
+                    String id = conn.getString("id");
+                    double geoLanStart = conn.getJSONObject("start").getDouble("lan");
+                    double geoLongStart = conn.getJSONObject("start").getDouble("long");
+                    GeoPoint start = new GeoPoint(geoLanStart, geoLongStart);
+                    double geoLanEnd = conn.getJSONObject("end").getDouble("lan");
+                    double geoLongEnd = conn.getJSONObject("end").getDouble("long");
+                    GeoPoint end = new GeoPoint(geoLanEnd, geoLongEnd);
+                    Canal canal = new Canal(id, start, end, 0);
+                    canals.add(canal);
+                }
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void loadGeoPointsCanals(ArrayList<Canal> canals) {
         try {
             if (canals.isEmpty()) {

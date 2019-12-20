@@ -84,7 +84,7 @@ public class MyMapView extends MapView  {
             geoPoints.add(canal.getStart());
             geoPoints.add(canal.getEnd());
             line.setPoints(geoPoints);
-            line.getOutlinePaint().setColor(Color.parseColor("#ADD8E6"));
+            line.getOutlinePaint().setColor(Color.parseColor("#1abc9c"));
             this.getOverlayManager().add(line);
         }
     }
