@@ -189,15 +189,20 @@ public class AssetLoader {
                 for (Farm farm : farms) {
                     ArrayList<Field> fields = farm.getFields();
                     for (Field field : fields) {
-                        JSONArray jsonArray = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/{field}/irrigation_plan")));
-                        for(int index = 0; index < jsonArray.length(); index++) {
-                            JSONObject JSONRequest = jsonArray.getJSONObject(index);
-                            String dateTime = JSONRequest.getString("start");
-                            DateTime formattedDateTime = DateTime.parse(dateTime);
-                            Integer waterVolume = JSONRequest.getInt("waterVolume");
-                            String requestName = field.getFarmName();
-                            Request request = new Request(requestName, formattedDateTime, "ongoing", waterVolume.toString());
-                            requests.add(request);
+                        String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/{field}/irrigation_plan"));
+                        if(json != null) {
+                            JSONArray jsonArray = new JSONArray(json);
+                            if (!jsonArray.equals(null)) {
+                                for (int index = 0; index < jsonArray.length(); index++) {
+                                    JSONObject JSONRequest = jsonArray.getJSONObject(index);
+                                    String dateTime = JSONRequest.getString("start");
+                                    DateTime formattedDateTime = DateTime.parse(dateTime);
+                                    Integer waterVolume = JSONRequest.getInt("waterVolume");
+                                    String requestName = field.getFarmName();
+                                    Request request = new Request(requestName, formattedDateTime, "ongoing", waterVolume.toString());
+                                    requests.add(request);
+                                }
+                            }
                         }
                     }
                 }

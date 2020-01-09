@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dugarolo</string>
+    <string name="irrigation_scheduling">Richieste Irrigue</string>
+    <string name="request">Richiesta:</string>
+    <string name="select_status">Seleziona stato:</string>
+    <string name="satisfied_request">Soddisfatta</string>
+    <string name="cancelled_request">Cancellata</string>
+    <string name="interrupted_request">Interrotta</string>
+    <string name="submit_button">INVIA</string>
+    <string name="expand_button">ESPANDI</string>
+    <string name="resize_button">RIDIMENSIONA</string>
+    <string name="my_location">MIA POSIZIONE</string>
+    <string name="update_weir_open_level">AGGIORNA LIVELLO APERTURA</string>
+    <string name="accepted_request">Accettata</string>
+    <string name="ongoing_request">In corso</string>
+    <string name="scheduled_request">Programmata</string>
+    <string name="cancelled_request_reason">Perchè la richiesta è stata cancellata?</string>
+    <string name="reason_hint">Inserisci motivazione qui</string>
+</resources>
