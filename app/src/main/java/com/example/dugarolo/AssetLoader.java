@@ -183,23 +183,37 @@ public class AssetLoader {
         }
     }
 
+    public void updateCurrentOpenLevels(ArrayList<Weir> weirs) {
+        try {
+            for (Weir weir : weirs) {
+                String openLevel = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/nodes/" + weir.getId() + "/open_level"));
+                openLevel = openLevel.replace("\n", "");
+                weir.setOpenLevel(Integer.parseInt(openLevel));
+            }
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public void loadRequests(ArrayList<Farm> farms, ArrayList<Request> requests) {
         if(requests.isEmpty()) {
             try {
                 for (Farm farm : farms) {
                     ArrayList<Field> fields = farm.getFields();
                     for (Field field : fields) {
-                        String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/{field}/irrigation_plan"));
+                        String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + field.getId() + "/irrigation_plan"));
                         if(json != null) {
                             JSONArray jsonArray = new JSONArray(json);
                             if (!jsonArray.equals(null)) {
                                 for (int index = 0; index < jsonArray.length(); index++) {
                                     JSONObject JSONRequest = jsonArray.getJSONObject(index);
+                                    String id = JSONRequest.getString("id");
                                     String dateTime = JSONRequest.getString("start");
                                     DateTime formattedDateTime = DateTime.parse(dateTime);
                                     Integer waterVolume = JSONRequest.getInt("waterVolume");
                                     String requestName = field.getFarmName();
-                                    Request request = new Request(requestName, formattedDateTime, "ongoing", waterVolume.toString());
+                                    String status = JSONRequest.getString("status");
+                                    Request request = new Request(id, requestName, formattedDateTime, status, waterVolume.toString(), field);
                                     requests.add(request);
                                 }
                             }

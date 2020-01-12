@@ -13,10 +13,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -74,21 +76,23 @@ public class WeirActivity extends AppCompatActivity {
     }
 
     public void onClickUpdateOpenLevel(View view) {
-        Intent intent = new Intent(WeirActivity.this, MapDetailActivity.class);
-        intent.putExtra("Weir Number", weirToUpdate);
-        intent.putExtra("Open Level", currentLevel);
-        new PostNewOpenLevel().execute();
-        setResult(RESULT_OK, intent);
-        finish();
+        new PostNewOpenLevel(currentLevel).execute();
     }
 
     private class PostNewOpenLevel extends AsyncTask<Void, Void, Boolean> {
+
+        private Integer openLevel;
+
+        public PostNewOpenLevel(Integer newOpenLevel) {
+            openLevel = newOpenLevel;
+        }
 
         @Override
         protected Boolean doInBackground(Void... voids) {
 
             try {
                 URL url = new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/nodes/" + weirToUpdate +"/open_level");
+                /*
                 Map<String, Object> params = new LinkedHashMap<>();
                 params.put("current", currentLevel);
 
@@ -100,17 +104,21 @@ public class WeirActivity extends AppCompatActivity {
                     postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
                 }
                 byte[] postDataBytes = postData.toString().getBytes("UTF-8");
-
+                */
                 HttpURLConnection conn = (HttpURLConnection)url.openConnection();
                 conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                conn.setRequestProperty("Content-Length", String.valueOf(postDataBytes.length));
+                conn.setRequestProperty("Content-Type", "application/json");
                 conn.setDoOutput(true);
                 conn.setConnectTimeout(15000);
                 conn.connect();
-                conn.getOutputStream().write(postDataBytes);
-                conn.getOutputStream().flush();
 
+                String openLevelString = openLevel.toString();
+                try(OutputStream os = conn.getOutputStream()) {
+                    byte[] input = openLevelString.getBytes(StandardCharsets.UTF_8);
+                    os.write(input, 0, input.length);
+                }
+
+                conn.getOutputStream().flush();
                 conn.disconnect();
                 return true;
             } catch (MalformedURLException e) {
@@ -119,6 +127,16 @@ public class WeirActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             return false;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            Intent intent = new Intent(WeirActivity.this, MapDetailActivity.class);
+            intent.putExtra("Weir Number", weirToUpdate);
+            intent.putExtra("Open Level", currentLevel);
+            setResult(RESULT_OK, intent);
+            finish();
         }
     }
 

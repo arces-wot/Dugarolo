@@ -2,9 +2,10 @@ package com.example.dugarolo;
 
 import org.osmdroid.util.GeoPoint;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Field {
+public class Field implements Serializable {
 
     private String farmName;
     private String id;

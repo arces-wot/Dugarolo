@@ -7,17 +7,21 @@ import org.joda.time.DateTime;
 
 public class Request implements Comparable<Request>, Parcelable {
 
+    private String id;
     private String name;
     private String status;
     private DateTime dateTime;
     private String waterVolume;
+    private Field field;
 
-    public Request(String name, DateTime dateTime, String status, String waterVolume) {
+    public Request(String id, String name, DateTime dateTime, String status, String waterVolume, Field field) {
 
+        this.id = id;
         this.name = name;
         this.status = status;
         this.dateTime = dateTime;
         this.waterVolume = waterVolume;
+        this.field = field;
     }
 
     public String getName() {
@@ -44,10 +48,25 @@ public class Request implements Comparable<Request>, Parcelable {
         this.waterVolume = waterVolume;
     }
 
+    public Field getField() {
+        return field;
+    }
+
+    public void setField(Field field) {
+        this.field = field;
+    }
+
     public String toString(){
         return this.name;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     @Override
     public int compareTo(Request o) {
@@ -55,10 +74,12 @@ public class Request implements Comparable<Request>, Parcelable {
     }
 
     protected Request(Parcel in) {
+        id = in.readString();
         name = in.readString();
         status = in.readString();
         dateTime = (DateTime) in.readValue(DateTime.class.getClassLoader());
         waterVolume = in.readString();
+        field = (Field) in.readValue(Field.class.getClassLoader());
     }
 
     @Override
@@ -68,10 +89,12 @@ public class Request implements Comparable<Request>, Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(id);
         dest.writeString(name);
         dest.writeString(status);
         dest.writeValue(dateTime);
         dest.writeString(waterVolume);
+        dest.writeValue(field);
     }
 
     @SuppressWarnings("unused")

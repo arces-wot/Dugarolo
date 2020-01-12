@@ -184,23 +184,23 @@ public class MainActivity extends AppCompatActivity {
                     + " , water: " + currentRequest.getWaterVolume() + " mm" + "</small" + "</small"));
             String status = currentRequest.getStatus();
             switch (status) {
-                case "cancelled":
+                case "Cancelled":
                     int cancelled = ResourcesCompat.getColor(getResources(), R.color.colorCancelled, null);
                     holder.statusIcon.setColorFilter(cancelled);
                     break;
-                case "interrupted":
+                case "Interrupted":
                     int interrupted = ResourcesCompat.getColor(getResources(), R.color.colorInterrupted, null);
                     holder.statusIcon.setColorFilter(interrupted);
                     break;
-                case "satisfied":
+                case "Satisfied":
                     int satisfied = ResourcesCompat.getColor(getResources(), R.color.colorSatisfied, null);
                     holder.statusIcon.setColorFilter(satisfied);
                     break;
-                case "accepted":
+                case "Accepted":
                     int accepted = ResourcesCompat.getColor(getResources(), R.color.colorAccepted, null);
                     holder.statusIcon.setColorFilter(accepted);
                     break;
-                case "ongoing":
+                case "Ongoing":
                     int ongoing = ResourcesCompat.getColor(getResources(), R.color.colorOngoing, null);
                     holder.statusIcon.setColorFilter(ongoing);
                     break;

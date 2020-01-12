@@ -143,6 +143,11 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode != Activity.RESULT_OK) {
+            String num = data.getExtras().getString("Weir Number");
+            Integer newLevel = data.getExtras().getInt("Open Level");
+            for(Weir weir : weirs) {
+                if(weir.getId().equals(num)) weir.setOpenLevel(newLevel);
+            }
             return;
         }
 
@@ -172,7 +177,6 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                             intent.putExtra("Open Level", weir.getOpenLevel());
                             intent.putExtra("Max Level", weir.getMaxLevel());
                             intent.putExtra("Min Level", weir.getMinLevel());
-
                         }
                     }
                     startActivityForResult(intent, REQUEST_CODE_WATER);
@@ -247,6 +251,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             assetLoader.loadGeoPointsFarms(farms);
             assetLoader.loadWDN(canals);
             assetLoader.loadGeoPointsWeirs(weirs);
+            assetLoader.updateCurrentOpenLevels(weirs);
             return true;
         }
 

@@ -5,21 +5,36 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class RequestDetailsActivity extends AppCompatActivity {
 
@@ -27,6 +42,10 @@ public class RequestDetailsActivity extends AppCompatActivity {
     private Integer requestId;
     private RadioGroup radioGroup;
     private ViewGroup vg;
+    private EditText editTextReasonCancelled;
+    private EditText editTextStartDateTimeSatisfied;
+    private EditText editTextEndDateTimeSatisfied;
+    private EditText waterVolumeSatisfied;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,34 +94,57 @@ public class RequestDetailsActivity extends AppCompatActivity {
     }
 
     public void onClickSubmit(View view) {
-        int radioButtonId = radioGroup.getCheckedRadioButtonId();
-        //Request request = Request.requests[requestId];
-        Request request = requestList.get(requestId);
-        //RadioButton radioButton = findViewById(radioButtonId);
-        switch (radioButtonId) {
-            case R.id.cancelled:
-                request.setStatus("cancelled");
-                break;
-            case R.id.interrupted:
-                request.setStatus("interrupted");
-                break;
-            case R.id.satisfied:
-                request.setStatus("satisfied");
-                break;
-            default:
+        try {
+            int radioButtonId = radioGroup.getCheckedRadioButtonId();
+            //Request request = Request.requests[requestId];
+            Request request = requestList.get(requestId);
+            //RadioButton radioButton = findViewById(radioButtonId);
+            JSONObject json = new JSONObject();
+            String message = "";
+            switch (radioButtonId) {
+                case R.id.cancelled:
+                    editTextReasonCancelled = findViewById(R.id.reason_edit_text);
+                    request.setStatus("Cancelled");
+                    message = editTextReasonCancelled.getText().toString();
+                    break;
+                case R.id.interrupted:
+                    request.setStatus("Interrupted");
+                    break;
+                case R.id.satisfied:
+                    request.setStatus("Satisfied");
+                    String sdts = editTextStartDateTimeSatisfied.getText().toString();
+                    String edts = editTextEndDateTimeSatisfied.getText().toString();
+                    String wvs = waterVolumeSatisfied.getText().toString();
+                    message = "Start: " +  sdts + ", End: " + edts + ", Water Volume: " + wvs + " mm";
+                    break;
+                case R.id.accepted:
+                    request.setStatus("Accepted");
+                    message = "The request has been accepted";
+                    break;
+                case R.id.ongoing:
+                    request.setStatus("Ongoing");
+                    break;
+                default:
+            }
+            json.put("message", message);
+            json.put("status", request.getStatus());
+            new PostNewStatus(json, request).execute();
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
-        Intent intent = new Intent(RequestDetailsActivity.this, MainActivity.class);
-        intent.putExtra(MainActivity.REQUEST_STATUS, request.getStatus());
-        startActivity(intent);
+
     }
 
     private void buildRadioGroup(String status) {
+        if(radioGroup.getChildCount() > 0) {
+            radioGroup.removeAllViews();
+        }
         RadioButton radioButton = new RadioButton(this);
         RadioButton radioButton1 = new RadioButton(this);
         RadioButton radioButton2 = new RadioButton(this);
         RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
         switch (status) {
-            case "scheduled":
+            case "Scheduled":
                 radioButton.setText(R.string.accepted_request);
                 radioButton.setId(R.id.accepted);
                 radioGroup.addView(radioButton, params);
@@ -111,16 +153,16 @@ public class RequestDetailsActivity extends AppCompatActivity {
                 radioButton1.setId(R.id.cancelled);
                 radioGroup.addView(radioButton1, params);
                 break;
-            case "accepted":
+            case "Accepted":
                 radioButton.setId(R.id.cancelled);
                 radioButton.setText(R.string.cancelled_request);
                 radioGroup.addView(radioButton, params);
 
                 radioButton1.setId(R.id.ongoing);
                 radioButton1.setText(R.string.ongoing_request);
-                radioGroup.addView(radioButton, params);
+                radioGroup.addView(radioButton1, params);
                 break;
-            case "ongoing":
+            case "Ongoing":
                 radioButton.setId(R.id.cancelled);
                 radioButton.setText(R.string.cancelled_request);
                 radioGroup.addView(radioButton, params);
@@ -135,7 +177,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
 
                 break;
 
-            case "interrupted":
+            case "Interrupted":
                 radioButton.setId(R.id.cancelled);
                 radioButton.setText(R.string.cancelled_request);
                 radioGroup.addView(radioButton, params);
@@ -153,7 +195,80 @@ public class RequestDetailsActivity extends AppCompatActivity {
     public Integer getRequestId() {
         return this.requestId;
     }
+
     public void setRequestId(Integer requestId) {
         this.requestId = requestId;
+    }
+
+    private class PostNewStatus extends AsyncTask<Void, Void, String> {
+
+        private JSONObject jsonObject;
+        private Request request;
+
+        public PostNewStatus(JSONObject newStatus, Request requestToUpdate) {
+            jsonObject = newStatus;
+            request = requestToUpdate;
+        }
+
+        @Override
+        protected String doInBackground(Void... voids) {
+            try {
+                URL url = new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + this.request.getField().getId() + "/irrigation_plan/" + this.request.getId() + "/status");
+                /*
+                Map<String, Object> params = new LinkedHashMap<>();
+                params.put("json", jsonObject);
+
+                StringBuilder postData = new StringBuilder();
+                for (Map.Entry<String, Object> param : params.entrySet()) {
+                    if (postData.length() != 0) postData.append('&');
+                    postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+                    postData.append('=');
+                    postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
+                }
+                byte[] postDataBytes = postData.toString().getBytes("UTF-8");
+                */
+
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+                conn.setConnectTimeout(15000);
+                conn.connect();
+
+                String jsonInputString = jsonObject.toString();
+                try(OutputStream os = conn.getOutputStream()) {
+                    byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                    os.write(input, 0, input.length);
+                }
+                conn.getOutputStream().flush();
+                String res = "";
+                try(BufferedReader br = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                    StringBuilder response = new StringBuilder();
+                    String responseLine = null;
+                    while ((responseLine = br.readLine()) != null) {
+                        response.append(responseLine.trim());
+                    }
+                    res = response.toString();
+                }
+                conn.disconnect();
+                return res;
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String aString) {
+            super.onPostExecute(aString);
+            System.out.println("---- POST REQUEST RESPONSE ----");
+            System.out.print(aString);
+            Intent intent = new Intent(RequestDetailsActivity.this, MainActivity.class);
+            intent.putExtra(MainActivity.REQUEST_STATUS, request.getStatus());
+            startActivity(intent);
+        }
     }
 }
