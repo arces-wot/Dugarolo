@@ -12,7 +12,9 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -119,6 +121,16 @@ public class WeirActivity extends AppCompatActivity {
                 }
 
                 conn.getOutputStream().flush();
+                StringBuilder content = new StringBuilder();
+                try (BufferedReader in = new BufferedReader(
+                        new InputStreamReader(conn.getInputStream()))) {
+                    String line;
+                    while ((line = in.readLine()) != null) {
+                        content.append(line);
+                        content.append(System.lineSeparator());
+                    }
+                }
+                System.out.println(content.toString());
                 conn.disconnect();
                 return true;
             } catch (MalformedURLException e) {

@@ -19,7 +19,7 @@
 
     <ImageButton
         android:src="@drawable/ic_menu_mylocation"
-        android:tint="@android:color/black"
+        android:tint="@android:color/darker_gray"
         android:background="@android:color/transparent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
