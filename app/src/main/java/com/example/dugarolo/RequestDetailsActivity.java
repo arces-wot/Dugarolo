@@ -2,6 +2,7 @@ package com.example.dugarolo;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Context;
 import android.content.Intent;
@@ -143,6 +144,9 @@ public class RequestDetailsActivity extends AppCompatActivity {
         RadioButton radioButton1 = new RadioButton(this);
         RadioButton radioButton2 = new RadioButton(this);
         RadioGroup.LayoutParams params = new RadioGroup.LayoutParams(RadioGroup.LayoutParams.WRAP_CONTENT, RadioGroup.LayoutParams.WRAP_CONTENT);
+
+        ConstraintLayout cl = findViewById(R.id.constraint_layout);
+        TextView select_status = findViewById(R.id.selectStatus);
         switch (status) {
             case "Scheduled":
                 radioButton.setText(R.string.accepted_request);
@@ -187,7 +191,14 @@ public class RequestDetailsActivity extends AppCompatActivity {
                 radioGroup.addView(radioButton1, params);
 
                 break;
-
+            case "Satisfied":
+                select_status.setText("The request has been satisfied.");
+                cl.removeView(findViewById(R.id.submitButton));
+                break;
+            case "Cancelled":
+                select_status.setText("The request has been cancelled");
+                cl.removeView(findViewById(R.id.submitButton));
+                break;
             default:
         }
     }

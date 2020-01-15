@@ -17,4 +17,6 @@
     <string name="scheduled_request">Programmata</string>
     <string name="cancelled_request_reason">Perchè la richiesta è stata cancellata?</string>
     <string name="reason_hint">Inserisci motivazione qui</string>
+    <string name="request_cancelled_message">La richiesta è stata cancellata.</string>
+    <string name="request_satisfied_message">La richiesta è stata soddisfatta.</string>
 </resources>

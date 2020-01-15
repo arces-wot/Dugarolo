@@ -23,9 +23,6 @@ public class JSONIntentService extends IntentService {
     public static final int STATUS_ERROR = 2;
     private static final String TAG = "MapDetailActivity";
 
-    /**
-     * Creates an IntentService.  Invoked by your subclass's constructor.
-     */
     public JSONIntentService() {
         super("JSONIntentService");
     }
