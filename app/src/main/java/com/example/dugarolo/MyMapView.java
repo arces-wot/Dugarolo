@@ -88,29 +88,9 @@ public class MyMapView extends MapView  {
         }
     }
 
-    public void drawTextMarkers(ArrayList<Canal> canals, ArrayList<Marker> textMarkers) {
-        if(textMarkers.size() > 0) {
-            for(Marker textMarker : textMarkers) {
-                textMarker.setVisible(false);
-            }
-        }
-        for(Canal canal : canals) {
-            Marker marker = new Marker(this);
-            marker.setPosition(this.midPoint(canal.getStart(), canal.getEnd()));
-            marker.setTextLabelBackgroundColor(Color.TRANSPARENT);
-            marker.setTextLabelForegroundColor(Color.RED);
-            marker.setTextLabelFontSize(20);
-            marker.setTextIcon(canal.getWaterLevel().toString() + " mm");
-            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
-            marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
-                @Override
-                public boolean onMarkerClick(Marker marker, MapView mapView) {
-                    //nascondo la info window e impedisco lo zoom-in automatico sul click
-                    return true;
-                }
-            });
-            textMarkers.add(marker);
-            this.getOverlayManager().add(marker);
+    public void drawTextMarkers(ArrayList<Marker> textMarkers) {
+        for(Marker textMarker : textMarkers) {
+            this.getOverlayManager().add(textMarker);
             this.invalidate();
         }
     }

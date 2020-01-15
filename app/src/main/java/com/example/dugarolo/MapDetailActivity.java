@@ -29,6 +29,9 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
+import java.math.RoundingMode;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,7 +61,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         loadMap();
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
         //carica i valori relativi al livello dell'acqua dei canali tramite intent sevice
-        //registerService();
+        registerService();
         new LoadMapElements().execute();
         loadMapElements();
     }
@@ -126,6 +129,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     }
 
     public void onClickShowMyLocation(View view) {
+        /*
         gpsMyLocationProvider.addLocationSource(LocationManager.NETWORK_PROVIDER);
         MyLocationNewOverlay locationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
         locationOverlay.enableFollowLocation();
@@ -137,6 +141,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         }
         locationOverlay.setPersonIcon(currentIcon);
         map.getOverlayManager().add(locationOverlay);
+         */
     }
 
     @Override
@@ -222,20 +227,40 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                 if(jsonText == null) {
                     Toast.makeText(MapDetailActivity.this, "No results received, server might be offline", Toast.LENGTH_LONG).show();
                 } else {
+                    if(textMarkers.size() > 0) {
+                        for(Marker textMarker : textMarkers) {
+                            textMarker.setVisible(false);
+                        }
+                        textMarkers.clear();
+                    }
                     jsonText = jsonText.replace("\n", "");
                     JSONArray jsonArray = new JSONArray(jsonText);
                     for (int i = 0; i < jsonArray.length(); i++) {
                         JSONObject jsonArrayElem = jsonArray.getJSONObject(i);
-                        //considero solo i canali
-                        if (jsonArrayElem.getString("type").equals("Channel")) {
-                            for (Canal canal : canals) {
-                                if (jsonArrayElem.getString("id").equals(canal.getId())) {
-                                    canal.setWaterLevel(jsonArrayElem.getInt("waterLevel"));
-                                }
+                        Marker marker = new Marker(map);
+                        JSONObject location = jsonArrayElem.getJSONObject("location");
+                        Double lat = location.getDouble("lat");
+                        Double lon = location.getDouble("lon");
+                        marker.setPosition(new GeoPoint(lat, lon));
+                        marker.setTextLabelBackgroundColor(Color.TRANSPARENT);
+                        marker.setTextLabelForegroundColor(Color.RED);
+                        marker.setTextLabelFontSize(20);
+                        Double level = Double.parseDouble(jsonArrayElem.getString("level"));
+                        DecimalFormat df = new DecimalFormat("#.##");
+                        df.setRoundingMode(RoundingMode.CEILING);
+                        String newLevel = df.format(level);
+                        marker.setTextIcon(jsonArrayElem.getString("id") + ": " + newLevel);
+                        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
+                        marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
+                            @Override
+                            public boolean onMarkerClick(Marker marker, MapView mapView) {
+                                //nascondo la info window e impedisco lo zoom-in automatico sul click
+                                return true;
                             }
-                        }
+                        });
+                        textMarkers.add(marker);
                     }
-                    map.drawTextMarkers(canals, textMarkers);
+                    map.drawTextMarkers(textMarkers);
                 }
                 break;
             case STATUS_ERROR:

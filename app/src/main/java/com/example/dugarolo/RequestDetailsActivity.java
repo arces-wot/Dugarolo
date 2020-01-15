@@ -12,10 +12,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -30,11 +30,8 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class RequestDetailsActivity extends AppCompatActivity {
 
@@ -70,7 +67,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
         String formattedDateTime = dateTime.toString(dtf);
         farmName.setText(Html.fromHtml(request.getName() + "<br />"+ "<small>"  + formattedDateTime
                 + " , water: " + request.getWaterVolume() + " mm" + "</small"));
-        buildRadioGroup(request.getStatus());
+        buildLayout(request.getStatus());
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -112,6 +109,9 @@ public class RequestDetailsActivity extends AppCompatActivity {
                     break;
                 case R.id.satisfied:
                     request.setStatus("Satisfied");
+                    editTextStartDateTimeSatisfied = findViewById(R.id.start_date_time);
+                    editTextEndDateTimeSatisfied = findViewById(R.id.end_date_time);
+                    waterVolumeSatisfied = findViewById(R.id.water_volume);
                     String sdts = editTextStartDateTimeSatisfied.getText().toString();
                     String edts = editTextEndDateTimeSatisfied.getText().toString();
                     String wvs = waterVolumeSatisfied.getText().toString();
@@ -135,7 +135,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
 
     }
 
-    private void buildRadioGroup(String status) {
+    private void buildLayout(String status) {
         if(radioGroup.getChildCount() > 0) {
             radioGroup.removeAllViews();
         }

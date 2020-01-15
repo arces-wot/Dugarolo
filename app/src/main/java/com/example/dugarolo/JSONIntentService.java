@@ -43,7 +43,7 @@ public class JSONIntentService extends IntentService {
                     //prendi il json
                     String jsonText = null;
                     try {
-                        jsonText = getJSONFromURL(new URL("http://192.168.1.11:3000/connections"));
+                        jsonText = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/sensors"));
                     } catch (MalformedURLException e) {
                         e.printStackTrace();
                     }
@@ -54,7 +54,7 @@ public class JSONIntentService extends IntentService {
                         jsonReceiver.send(STATUS_ERROR, bundle);
                     }
                 }
-            }, 1, 5, TimeUnit.SECONDS);
+            }, 1, 60, TimeUnit.SECONDS);
         }
     }
 
