@@ -3,6 +3,7 @@ package com.example.dugarolo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.drm.DrmStore;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -34,7 +35,9 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 
 import static com.example.dugarolo.JSONIntentService.STATUS_ERROR;
@@ -59,6 +62,10 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadMap();
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setDisplayHomeAsUpEnabled(true);
         //disattivo l'hardware acceleration per risolvere i problemi reativi alle icone in Android >= 8
         map.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         gpsMyLocationProvider = new GpsMyLocationProvider(this);

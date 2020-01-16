@@ -2,6 +2,7 @@ package com.example.dugarolo;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.res.ResourcesCompat;
 
@@ -53,6 +54,8 @@ public class RequestDetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_request_details);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         radioGroup = findViewById(R.id.radioGroup);
         vg = findViewById(R.id.detailsForm);
         //RequestLab requestLab = RequestLab.get(this);

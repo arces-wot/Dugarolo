@@ -1,32 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".MapDetailActivity">
+    android:orientation="vertical">
 
-    <com.example.dugarolo.MyMapView android:id="@+id/map"
+    <include
+        layout="@layout/toolbar_main"/>
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-    <Button
-        android:id="@+id/toggle_resize"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/resize_button"
-        android:layout_gravity="bottom|end"
-        android:onClick="onClickResizeMap">
-    </Button>
+        android:layout_height="match_parent"
+        tools:context=".MapDetailActivity">
 
-    <ImageButton
-        android:src="@drawable/ic_menu_mylocation"
-        android:tint="@android:color/darker_gray"
-        android:background="@android:color/transparent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/my_location_button"
-        android:text="@string/my_location"
-        android:layout_gravity="bottom|start"
-        android:onClick="onClickShowMyLocation">
-    </ImageButton>
+        <com.example.dugarolo.MyMapView android:id="@+id/map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <Button
+            android:id="@+id/toggle_resize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/resize_button"
+            android:layout_gravity="bottom|end"
+            android:onClick="onClickResizeMap">
+        </Button>
 
-</FrameLayout>
+        <ImageButton
+            android:src="@drawable/ic_menu_mylocation"
+            android:tint="@android:color/darker_gray"
+            android:background="@android:color/transparent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/my_location_button"
+            android:text="@string/my_location"
+            android:layout_gravity="bottom|start"
+            android:onClick="onClickShowMyLocation">
+        </ImageButton>
+
+    </FrameLayout>
+</LinearLayout>
