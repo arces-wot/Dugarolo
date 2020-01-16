@@ -59,6 +59,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadMap();
+        //disattivo l'hardware acceleration per risolvere i problemi reativi alle icone in Android >= 8
         map.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
         //carica i valori relativi al livello dell'acqua dei canali tramite intent sevice
