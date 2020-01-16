@@ -59,6 +59,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadMap();
+        map.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
         //carica i valori relativi al livello dell'acqua dei canali tramite intent sevice
         registerService();
@@ -148,10 +149,12 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode != Activity.RESULT_OK) {
-            String num = data.getExtras().getString("Weir Number");
-            Integer newLevel = data.getExtras().getInt("Open Level");
-            for(Weir weir : weirs) {
-                if(weir.getId().equals(num)) weir.setOpenLevel(newLevel);
+            if(data != null) {
+                String num = data.getExtras().getString("Weir Number");
+                Integer newLevel = data.getExtras().getInt("Open Level");
+                for(Weir weir : weirs) {
+                    if(weir.getId().equals(num)) weir.setOpenLevel(newLevel);
+                }
             }
             return;
         }

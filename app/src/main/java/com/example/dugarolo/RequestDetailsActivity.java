@@ -3,6 +3,7 @@ package com.example.dugarolo;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.content.res.ResourcesCompat;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -44,6 +46,8 @@ public class RequestDetailsActivity extends AppCompatActivity {
     private EditText editTextStartDateTimeSatisfied;
     private EditText editTextEndDateTimeSatisfied;
     private EditText waterVolumeSatisfied;
+    private TextView currentStatusTextView;
+    private ImageView currentStatusImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,6 +72,9 @@ public class RequestDetailsActivity extends AppCompatActivity {
         String formattedDateTime = dateTime.toString(dtf);
         farmName.setText(Html.fromHtml(request.getName() + "<br />"+ "<small>"  + formattedDateTime
                 + " , water: " + request.getWaterVolume() + " mm" + "</small"));
+        currentStatusTextView = findViewById(R.id.current_status);
+        currentStatusTextView.setText(request.getStatus());
+        colorStatusIcon(request.getStatus());
         buildLayout(request.getStatus());
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -89,6 +96,31 @@ public class RequestDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void colorStatusIcon(String status) {
+        currentStatusImageView = findViewById(R.id.status_icon);
+        switch(status) {
+            case "Ongoing":
+                currentStatusImageView.setColorFilter(ResourcesCompat.getColor(getResources(), R.color.colorOngoing, null));
+                break;
+            case "Accepted":
+                currentStatusImageView.setColorFilter(ResourcesCompat.getColor(getResources(), R.color.colorAccepted, null));
+                break;
+            case "Interrupted":
+                currentStatusImageView.setColorFilter(ResourcesCompat.getColor(getResources(), R.color.colorInterrupted, null));
+                break;
+            case "Satisfied":
+                currentStatusImageView.setColorFilter(ResourcesCompat.getColor(getResources(), R.color.colorSatisfied, null));
+                break;
+            case "Scheduled":
+                currentStatusImageView.setColorFilter(ResourcesCompat.getColor(getResources(), R.color.colorScheduled, null));
+                break;
+            case "Cancelled":
+                currentStatusImageView.setColorFilter(ResourcesCompat.getColor(getResources(), R.color.colorCancelled, null));
+                break;
+        }
+
     }
 
     public void onClickSubmit(View view) {
@@ -196,7 +228,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
                 cl.removeView(findViewById(R.id.submitButton));
                 break;
             case "Cancelled":
-                select_status.setText("The request has been cancelled");
+                select_status.setText("The request has been cancelled.");
                 cl.removeView(findViewById(R.id.submitButton));
                 break;
             default:

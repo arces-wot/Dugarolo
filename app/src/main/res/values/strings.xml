@@ -18,4 +18,5 @@
     <string name="reason_hint">Insert reason here</string>
     <string name="request_cancelled_message">The request has been cancelled.</string>
     <string name="request_satisfied_message">The request has been satisified.</string>
+    <string name="current_status">Current status:</string>
 </resources>
