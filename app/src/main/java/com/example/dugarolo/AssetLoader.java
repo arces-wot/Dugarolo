@@ -209,7 +209,8 @@ public class AssetLoader {
                                     Integer waterVolume = JSONRequest.getInt("waterVolume");
                                     String requestName = field.getFarmName();
                                     String status = JSONRequest.getString("status");
-                                    Request request = new Request(id, requestName, formattedDateTime, status, waterVolume.toString(), field);
+                                    String message = JSONRequest.getString("message");
+                                    Request request = new Request(id, requestName, formattedDateTime, status, waterVolume.toString(), field, message);
                                     requests.add(request);
                                 }
                             }

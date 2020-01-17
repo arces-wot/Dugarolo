@@ -23,4 +23,6 @@
     <string name="show_statuses_key">Show statuses key</string>
     <string name="measurement_unit_meaning">MASL: Meters Above Sea Level</string>
     <string name="measurement_unit">MASL</string>
+    <string name="message_label">Message:</string>
+    <string name="no_message">No message to display</string>
 </resources>

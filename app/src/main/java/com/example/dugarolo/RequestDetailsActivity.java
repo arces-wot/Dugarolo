@@ -49,6 +49,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
     private EditText waterVolumeSatisfied;
     private TextView currentStatusTextView;
     private ImageView currentStatusImageView;
+    private TextView messageTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +78,14 @@ public class RequestDetailsActivity extends AppCompatActivity {
                 + " , water: " + request.getWaterVolume() + " mm" + "</small"));
         currentStatusTextView = findViewById(R.id.current_status);
         currentStatusTextView.setText(request.getStatus());
+        messageTextView = findViewById(R.id.message);
+        String message = request.getMessage();
+        if(message == null || message.equals("")) {
+            messageTextView.setText(getResources().getString(R.string.no_message));
+        }
+        else {
+            messageTextView.setText(message);
+        }
         colorStatusIcon(request.getStatus());
         buildLayout(request.getStatus());
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {

@@ -24,4 +24,6 @@
     <string name="show_statuses_key">Mostra la legenda degli stati</string>
     <string name="measurement_unit">MSLM</string>
     <string name="measurement_unit_meaning">MSLM: Metri Sul Livello del Mare</string>
+    <string name="message_label">"Messaggio: "</string>
+    <string name="no_message">Nessun messaggio da mostrare</string>
 </resources>

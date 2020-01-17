@@ -13,8 +13,9 @@ public class Request implements Comparable<Request>, Parcelable {
     private DateTime dateTime;
     private String waterVolume;
     private Field field;
+    private String message;
 
-    public Request(String id, String name, DateTime dateTime, String status, String waterVolume, Field field) {
+    public Request(String id, String name, DateTime dateTime, String status, String waterVolume, Field field, String message) {
 
         this.id = id;
         this.name = name;
@@ -22,6 +23,7 @@ public class Request implements Comparable<Request>, Parcelable {
         this.dateTime = dateTime;
         this.waterVolume = waterVolume;
         this.field = field;
+        this.message = message;
     }
 
     public String getName() {
@@ -68,6 +70,14 @@ public class Request implements Comparable<Request>, Parcelable {
         this.id = id;
     }
 
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
     @Override
     public int compareTo(Request o) {
         return this.dateTime.toDateTime().compareTo(o.getDateTime().toDateTime());
@@ -80,6 +90,7 @@ public class Request implements Comparable<Request>, Parcelable {
         dateTime = (DateTime) in.readValue(DateTime.class.getClassLoader());
         waterVolume = in.readString();
         field = (Field) in.readValue(Field.class.getClassLoader());
+        message = in.readString();
     }
 
     @Override
@@ -95,6 +106,7 @@ public class Request implements Comparable<Request>, Parcelable {
         dest.writeValue(dateTime);
         dest.writeString(waterVolume);
         dest.writeValue(field);
+        dest.writeString(message);
     }
 
     @SuppressWarnings("unused")
