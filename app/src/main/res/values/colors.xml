@@ -11,4 +11,5 @@
     <color name="colorInterrupted">#d35400</color>
     <color name="colorSatisfied">#2ecc71</color>
     <color name="colorCancelled">#e74c3c</color>
+    <color name="text_map_detail_color">#9b59b6</color>
 </resources>

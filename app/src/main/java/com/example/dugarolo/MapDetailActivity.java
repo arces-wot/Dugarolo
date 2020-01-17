@@ -253,14 +253,14 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                         Double lat = location.getDouble("lat");
                         Double lon = location.getDouble("lon");
                         marker.setPosition(new GeoPoint(lat, lon));
-                        marker.setTextLabelBackgroundColor(Color.TRANSPARENT);
-                        marker.setTextLabelForegroundColor(Color.RED);
-                        marker.setTextLabelFontSize(20);
+                        marker.setTextLabelBackgroundColor(Color.WHITE);
+                        marker.setTextLabelForegroundColor(R.color.text_map_detail_color);
+                        marker.setTextLabelFontSize(25);
                         Double level = Double.parseDouble(jsonArrayElem.getString("level"));
                         DecimalFormat df = new DecimalFormat("#.##");
                         df.setRoundingMode(RoundingMode.CEILING);
                         String newLevel = df.format(level);
-                        marker.setTextIcon(jsonArrayElem.getString("id") + ": " + newLevel);
+                        marker.setTextIcon(newLevel + " " + getResources().getString(R.string.measurement_unit));
                         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_TOP);
                         marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
                             @Override
