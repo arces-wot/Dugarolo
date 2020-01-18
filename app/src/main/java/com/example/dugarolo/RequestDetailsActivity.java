@@ -4,13 +4,18 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.res.ResourcesCompat;
+import androidx.core.view.ViewCompat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
+import android.view.DragAndDropPermissions;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,7 +82,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
         farmName.setText(Html.fromHtml(request.getName() + "<br />"+ "<small>"  + formattedDateTime
                 + " , water: " + request.getWaterVolume() + " mm" + "</small"));
         currentStatusTextView = findViewById(R.id.current_status);
-        currentStatusTextView.setText(request.getStatus());
+        setCurrentStatusTextView(request.getStatus());
         messageTextView = findViewById(R.id.message);
         String message = request.getMessage();
         if(message == null || message.equals("")) {
@@ -108,6 +113,30 @@ public class RequestDetailsActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setCurrentStatusTextView(String status) {
+        switch (status) {
+            case "Accepted":
+                currentStatusTextView.setText(R.string.accepted_request);
+                break;
+            case "Ongoing":
+                currentStatusTextView.setText(R.string.ongoing_request);
+                break;
+            case "Interrupted":
+                currentStatusTextView.setText(R.string.interrupted_request);
+                break;
+            case "Satisfied":
+                currentStatusTextView.setText(R.string.satisfied_request);
+                break;
+            case "Cancelled":
+                currentStatusTextView.setText(R.string.cancelled_request);
+                break;
+            case "Scheduled":
+                currentStatusTextView.setText(R.string.scheduled_request);
+                break;
+            default:
+        }
     }
 
     private void colorStatusIcon(String status) {
@@ -191,6 +220,11 @@ public class RequestDetailsActivity extends AppCompatActivity {
 
         ConstraintLayout cl = findViewById(R.id.constraint_layout);
         TextView select_status = findViewById(R.id.selectStatus);
+
+        ConstraintSet constraintSet = new ConstraintSet();
+        ImageView imageView = new ImageView(this);
+        int id = ViewCompat.generateViewId();
+        imageView.setId(id);
         switch (status) {
             case "Scheduled":
                 radioButton.setText(R.string.accepted_request);
@@ -236,12 +270,41 @@ public class RequestDetailsActivity extends AppCompatActivity {
 
                 break;
             case "Satisfied":
-                select_status.setText("The request has been satisfied.");
+                select_status.setText(getResources().getString(R.string.request_satisfied_message));
                 cl.removeView(findViewById(R.id.submitButton));
+                constraintSet.clone(cl);
+                imageView.setImageResource(R.drawable.request_satisfied);
+                cl.addView(imageView);
+
+                constraintSet.connect(imageView.getId(), ConstraintSet.TOP, select_status.getId(), ConstraintSet.BOTTOM, 8);
+                constraintSet.connect(imageView.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 8);
+                constraintSet.connect(imageView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 16);
+                constraintSet.connect(imageView.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 16);
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+                constraintSet.constrainHeight(imageView.getId(), 400);
+                constraintSet.constrainWidth(imageView.getId(), 400);
+
+                constraintSet.applyTo(cl);
                 break;
             case "Cancelled":
-                select_status.setText("The request has been cancelled.");
+                select_status.setText(getResources().getString(R.string.request_cancelled_message));
                 cl.removeView(findViewById(R.id.submitButton));
+                constraintSet.clone(cl);
+                imageView.setImageResource(R.drawable.request_cancelled);
+                cl.addView(imageView);
+
+                constraintSet.connect(imageView.getId(), ConstraintSet.TOP, select_status.getId(), ConstraintSet.BOTTOM, 8);
+                constraintSet.connect(imageView.getId(), ConstraintSet.BOTTOM, ConstraintSet.PARENT_ID, ConstraintSet.BOTTOM, 8);
+                constraintSet.connect(imageView.getId(), ConstraintSet.START, ConstraintSet.PARENT_ID, ConstraintSet.START, 16);
+                constraintSet.connect(imageView.getId(), ConstraintSet.END, ConstraintSet.PARENT_ID, ConstraintSet.END, 16);
+
+                constraintSet.constrainHeight(imageView.getId(), 400);
+                constraintSet.constrainWidth(imageView.getId(), 400);
+
+                imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+
+
+                constraintSet.applyTo(cl);
                 break;
             default:
         }
