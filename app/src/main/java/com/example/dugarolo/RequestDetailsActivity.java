@@ -8,20 +8,20 @@ import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
-import android.view.DragAndDropPermissions;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -41,6 +41,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class RequestDetailsActivity extends AppCompatActivity {
 
@@ -49,9 +50,11 @@ public class RequestDetailsActivity extends AppCompatActivity {
     private RadioGroup radioGroup;
     private ViewGroup vg;
     private EditText editTextReasonCancelled;
-    private EditText editTextStartDateTimeSatisfied;
-    private EditText editTextEndDateTimeSatisfied;
-    private EditText waterVolumeSatisfied;
+    private TextView textViewStartDate;
+    private DatePickerDialog.OnDateSetListener startDateSetListener;
+    private TextView textViewEndDate;
+    private DatePickerDialog.OnDateSetListener endDateSetListener;
+    private EditText     waterVolumeSatisfied;
     private TextView currentStatusTextView;
     private ImageView currentStatusImageView;
     private TextView messageTextView;
@@ -104,6 +107,62 @@ public class RequestDetailsActivity extends AppCompatActivity {
                     case R.id.satisfied:
                         View v = vi.inflate(R.layout.satisfied_request_form, null);
                         vg.addView(v, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+                        textViewStartDate = findViewById(R.id.start_date_time);
+                        //setUpTextViewDatePicker(textViewStartDate, startDateSetListener);
+                        textViewStartDate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Calendar calendar = Calendar.getInstance();
+                                int year = calendar.get(Calendar.YEAR);
+                                int month = calendar.get(Calendar.MONTH);
+                                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                                        RequestDetailsActivity.this,
+                                        R.style.Theme_AppCompat_DayNight,
+                                        startDateSetListener,
+                                        year, month, day);
+                                //datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                datePickerDialog.show();
+                            }
+                        });
+
+                        startDateSetListener = new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                month = month + 1;
+                                String date = dayOfMonth + "/" + month + "/" + year;
+                                textViewStartDate.setText(date);
+                            }
+                        };
+                        textViewEndDate = findViewById(R.id.end_date_time);
+                        //setUpTextViewDatePicker(textViewEndDate, endDateSetListener);
+                        textViewEndDate.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                Calendar calendar = Calendar.getInstance();
+                                int year = calendar.get(Calendar.YEAR);
+                                int month = calendar.get(Calendar.MONTH);
+                                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                                DatePickerDialog datePickerDialog = new DatePickerDialog(
+                                        RequestDetailsActivity.this,
+                                        R.style.Theme_AppCompat_DayNight,
+                                        endDateSetListener,
+                                        year, month, day);
+                                //datePickerDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                                datePickerDialog.show();
+                            }
+                        });
+
+                        endDateSetListener = new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                                month = month + 1;
+                                String date = dayOfMonth + "/" + month + "/" + year;
+                                textViewEndDate.setText(date);
+                            }
+                        };
                         break;
                     case R.id.cancelled:
                         View v1 = vi.inflate(R.layout.cancelled_request_form,  null);
@@ -183,11 +242,9 @@ public class RequestDetailsActivity extends AppCompatActivity {
                     break;
                 case R.id.satisfied:
                     request.setStatus("Satisfied");
-                    editTextStartDateTimeSatisfied = findViewById(R.id.start_date_time);
-                    editTextEndDateTimeSatisfied = findViewById(R.id.end_date_time);
                     waterVolumeSatisfied = findViewById(R.id.water_volume);
-                    String sdts = editTextStartDateTimeSatisfied.getText().toString();
-                    String edts = editTextEndDateTimeSatisfied.getText().toString();
+                    String sdts = textViewStartDate.getText().toString();
+                    String edts = textViewEndDate.getText().toString();
                     String wvs = waterVolumeSatisfied.getText().toString();
                     message = "Start: " +  sdts + ", End: " + edts + ", Water Volume: " + wvs + " mm";
                     break;
@@ -206,6 +263,10 @@ public class RequestDetailsActivity extends AppCompatActivity {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+    }
+
+    private void setUpTextViewDatePicker(final TextView textView, DatePickerDialog.OnDateSetListener dateSetListener) {
 
     }
 
