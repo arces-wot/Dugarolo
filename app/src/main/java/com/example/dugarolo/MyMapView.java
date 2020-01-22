@@ -6,6 +6,8 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.widget.Toast;
+
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -85,6 +87,24 @@ public class MyMapView extends MapView  {
             line.setPoints(geoPoints);
             line.getOutlinePaint().setColor(Color.parseColor("#1abc9c"));
             this.getOverlayManager().add(line);
+            /*
+            line.setOnClickListener(new Polyline.OnClickListener() {
+                @Override
+                public boolean onClick(Polyline polyline, MapView mapView, GeoPoint eventPos) {
+                    double lat = eventPos.getLatitude();
+                    double lon = eventPos.getLongitude();
+                    //Toast.makeText(getContext(), "Lat: " + lat + ", " + "Lon: " + lon, Toast.LENGTH_LONG).show();
+                    GeoPoint pos = new GeoPoint(lat, lon);
+                    Marker marker = new Marker(mapView);
+                    marker.setPosition(pos);
+                    marker.setTitle("Lat: " + lat + ", " + "Lon: " + lon);
+                    marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                    mapView.getOverlayManager().add(marker);
+                    mapView.invalidate();
+                    return false;
+                }
+            });
+             */
         }
     }
 

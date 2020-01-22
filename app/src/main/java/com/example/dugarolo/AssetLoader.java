@@ -200,19 +200,20 @@ public class AssetLoader {
                         String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + field.getId() + "/irrigation_plan"));
                         if(json != null) {
                             JSONArray jsonArray = new JSONArray(json);
-                            if (!jsonArray.equals(null)) {
-                                for (int index = 0; index < jsonArray.length(); index++) {
-                                    JSONObject JSONRequest = jsonArray.getJSONObject(index);
-                                    String id = JSONRequest.getString("id");
-                                    String dateTime = JSONRequest.getString("start");
-                                    DateTime formattedDateTime = DateTime.parse(dateTime);
-                                    Integer waterVolume = JSONRequest.getInt("waterVolume");
-                                    String requestName = field.getFarmName();
-                                    String status = JSONRequest.getString("status");
-                                    String message = JSONRequest.getString("message");
-                                    Request request = new Request(id, requestName, formattedDateTime, status, waterVolume.toString(), field, message);
-                                    requests.add(request);
+                            for (int index = 0; index < jsonArray.length(); index++) {
+                                JSONObject JSONRequest = jsonArray.getJSONObject(index);
+                                String id = JSONRequest.getString("id");
+                                String dateTime = JSONRequest.getString("start");
+                                DateTime formattedDateTime = DateTime.parse(dateTime);
+                                Integer waterVolume = JSONRequest.getInt("waterVolume");
+                                String requestName = field.getFarmName();
+                                String status = JSONRequest.getString("status");
+                                String message = "";
+                                if(JSONRequest.has("message")){
+                                    message = JSONRequest.getString("message");
                                 }
+                                Request request = new Request(id, requestName, formattedDateTime, status, waterVolume.toString(), field, message);
+                                requests.add(request);
                             }
                         }
                     }
