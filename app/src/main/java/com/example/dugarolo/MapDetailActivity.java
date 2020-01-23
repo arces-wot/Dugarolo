@@ -3,12 +3,7 @@ package com.example.dugarolo;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.drm.DrmStore;
-import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -38,7 +33,6 @@ import java.util.ArrayList;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.res.ResourcesCompat;
 
 import static com.example.dugarolo.JSONIntentService.STATUS_ERROR;
 import static com.example.dugarolo.JSONIntentService.STATUS_FINISHED;
@@ -70,9 +64,8 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         map.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
         //carica i valori relativi al livello dell'acqua dei canali tramite intent sevice
-        registerService();
         new LoadMapElements().execute();
-        loadMapElements();
+        //loadMapElements();
     }
 
     private void loadMap() {
@@ -98,13 +91,6 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         mapController.setZoom(15.0);
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
-    }
-
-    private void loadMapElements() {
-        map.drawCanals(canals);
-        map.drawWeirs(weirs, weirMarkers);
-        map.drawFarms(farms);
-        setWeirListeners(weirMarkers);
     }
 
     public void onPause(){
@@ -300,6 +286,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                 map.drawCanals(canals);
                 map.drawWeirs(weirs, weirMarkers);
                 setWeirListeners(weirMarkers);
+                registerService();
             }
         }
     }

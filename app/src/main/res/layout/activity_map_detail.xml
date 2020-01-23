@@ -44,6 +44,7 @@
             android:textSize="14sp"
             android:textStyle="bold"
             android:layout_gravity="top|start"
+            android:layout_marginStart="16dp"
             android:text="@string/measurement_unit_meaning"/>
 
     </FrameLayout>

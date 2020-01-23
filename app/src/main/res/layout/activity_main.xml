@@ -11,7 +11,8 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="150dp"
-        tools:context=".MainActivity">
+        tools:context=".MainActivity"
+        android:layout_weight="3">
         <com.example.dugarolo.MyMapView android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
@@ -31,7 +32,8 @@
         android:text="@string/irrigation_scheduling"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="16dp"
-        android:textStyle="bold">
+        android:textStyle="bold"
+        android:layout_weight="1">
     </TextView>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -39,6 +41,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="vertical"
-        android:padding="10dp"/>
+        android:padding="10dp"
+        android:layout_weight="6"/>
 
 </LinearLayout>
