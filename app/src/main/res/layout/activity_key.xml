@@ -15,17 +15,17 @@
         android:layout_height="match_parent"
         tools:context=".KeyActivity">
 
+
         <TextView
             android:id="@+id/request_statuses"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
             android:text="@string/request_statuses"
             android:textSize="30sp"
             android:textStyle="bold"
-            android:layout_marginStart="8dp"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/status_accepted_label"
@@ -33,137 +33,159 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:textSize="20sp"
-            android:textColor="@android:color/black"
             android:text="@string/accepted_request"
-            app:layout_constraintTop_toBottomOf="@id/request_statuses"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/request_statuses" />
 
         <ImageView
             android:id="@+id/accepted_icon"
             android:layout_width="30sp"
-            android:layout_marginTop="8dp"
             android:layout_height="30sp"
             android:src="@drawable/request_status"
             android:tint="@color/colorAccepted"
-            app:layout_constraintStart_toEndOf="@id/status_accepted_label"
-            app:layout_constraintTop_toBottomOf="@id/request_statuses"/>
+            app:layout_constraintBottom_toBottomOf="@+id/status_accepted_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/status_accepted_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/status_scheduled_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:textColor="@android:color/black"
+            android:layout_marginTop="6dp"
             android:text="@string/scheduled_request"
-            app:layout_constraintTop_toBottomOf="@id/status_accepted_label"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status_accepted_label" />
 
         <ImageView
             android:id="@+id/scheduled_icon"
             android:layout_width="30sp"
             android:layout_height="30sp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:src="@drawable/request_status"
             android:tint="@color/colorScheduled"
-            app:layout_constraintStart_toEndOf="@id/status_scheduled_label"
-            app:layout_constraintTop_toBottomOf="@id/accepted_icon"/>
+            app:layout_constraintBottom_toBottomOf="@+id/status_scheduled_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/status_scheduled_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/accepted_icon" />
 
         <TextView
             android:id="@+id/status_interrupted_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:textColor="@android:color/black"
+            android:layout_marginTop="6dp"
             android:text="@string/interrupted_request"
-            app:layout_constraintTop_toBottomOf="@id/status_scheduled_label"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status_scheduled_label" />
 
         <ImageView
             android:id="@+id/interrupted_icon"
             android:layout_width="30sp"
             android:layout_height="30sp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:src="@drawable/request_status"
             android:tint="@color/colorInterrupted"
-            app:layout_constraintStart_toEndOf="@id/status_interrupted_label"
-            app:layout_constraintTop_toBottomOf="@id/scheduled_icon"/>
+            app:layout_constraintBottom_toBottomOf="@+id/status_interrupted_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/status_interrupted_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/scheduled_icon"
+            app:layout_constraintVertical_bias="1.0" />
 
         <TextView
             android:id="@+id/status_satisfied_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:textColor="@android:color/black"
+            android:layout_marginTop="6dp"
             android:text="@string/satisfied_request"
-            app:layout_constraintTop_toBottomOf="@id/status_interrupted_label"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status_interrupted_label" />
 
         <ImageView
             android:id="@+id/satisfied_icon"
             android:layout_width="30sp"
             android:layout_height="30sp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:src="@drawable/request_status"
             android:tint="@color/colorSatisfied"
-            app:layout_constraintStart_toEndOf="@id/status_satisfied_label"
-            app:layout_constraintTop_toBottomOf="@id/interrupted_icon"/>
+            app:layout_constraintBottom_toBottomOf="@+id/status_satisfied_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/status_satisfied_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/interrupted_icon"
+            app:layout_constraintVertical_bias="0.0" />
 
         <TextView
             android:id="@+id/status_cancelled_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="20sp"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:textColor="@android:color/black"
+            android:layout_marginTop="6dp"
             android:text="@string/cancelled_request"
-            app:layout_constraintTop_toBottomOf="@id/status_satisfied_label"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status_satisfied_label" />
 
         <ImageView
             android:id="@+id/cancelled_icon"
             android:layout_width="30sp"
             android:layout_height="30sp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:src="@drawable/request_status"
             android:tint="@color/colorCancelled"
-            app:layout_constraintStart_toEndOf="@id/status_cancelled_label"
-            app:layout_constraintTop_toBottomOf="@id/satisfied_icon"/>
+            app:layout_constraintBottom_toBottomOf="@+id/status_cancelled_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/status_cancelled_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/satisfied_icon"
+            app:layout_constraintVertical_bias="0.25" />
 
         <TextView
             android:id="@+id/status_ongoing_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:textSize="20sp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="4dp"
-            android:textColor="@android:color/black"
+            android:layout_marginTop="6dp"
             android:text="@string/ongoing_request"
-            app:layout_constraintTop_toBottomOf="@id/status_cancelled_label"
-            app:layout_constraintStart_toStartOf="parent"/>
+            android:textColor="@android:color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/status_cancelled_label" />
 
         <ImageView
             android:id="@+id/ongoing_icon"
             android:layout_width="30sp"
             android:layout_height="30sp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="6dp"
             android:src="@drawable/request_status"
             android:tint="@color/colorOngoing"
-            app:layout_constraintStart_toEndOf="@id/status_ongoing_label"
-            app:layout_constraintTop_toBottomOf="@id/cancelled_icon"/>
+            app:layout_constraintBottom_toBottomOf="@+id/status_ongoing_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/status_ongoing_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/cancelled_icon"
+            app:layout_constraintVertical_bias="0.25" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
