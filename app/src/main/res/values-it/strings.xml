@@ -26,4 +26,7 @@
     <string name="measurement_unit_meaning">m: Metri</string>
     <string name="message_label">"Messaggio: "</string>
     <string name="no_message">Nessun messaggio da mostrare</string>
+    <string name="open_level_is">Il livello di apertura è</string>
+    <string name="weir">Chiusa</string>
+    <string name="water">acqua</string>
 </resources>

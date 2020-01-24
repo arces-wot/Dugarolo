@@ -48,9 +48,9 @@ public class WeirActivity extends AppCompatActivity {
         maxOpenLevel = getIntent().getExtras().getInt("Max Level");
         currentLevel = getIntent().getExtras().getInt("Open Level");
         weirNumber = findViewById(R.id.weir_number);
-        weirNumber.setText("Weir #" + getIntent().getExtras().get("Number").toString());
+        weirNumber.setText(getResources().getString(R.string.weir) + " #" + getIntent().getExtras().get("Number").toString());
         openLevel = findViewById(R.id.water_level);
-        openLevel.setText("Open level is: " + getIntent().getExtras().get("Open Level").toString() + "m/s");
+        openLevel.setText(getResources().getString(R.string.open_level_is) + ": " + getIntent().getExtras().get("Open Level").toString() + " l/s");
         updateOpenLevelButton = findViewById(R.id.udpate_water_level);
         updateOpenLevelButton.setEnabled(false);
         openLevelSeekBar = findViewById(R.id.new_level);
@@ -68,7 +68,8 @@ public class WeirActivity extends AppCompatActivity {
                 progress = progress / 10;
                 progress = progress * 10;
                 currentLevel = progress;
-                openLevel.setText("Open level is: " + currentLevel + "m/s");
+                seekBar.setProgress(progress);
+                openLevel.setText(getResources().getString(R.string.open_level_is) + ": " + currentLevel + " l/s");
                 updateOpenLevelButton.setEnabled(true);
             }
 

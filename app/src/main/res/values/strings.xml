@@ -25,4 +25,7 @@
     <string name="measurement_unit">m</string>
     <string name="message_label">Message:</string>
     <string name="no_message">No message to display</string>
+    <string name="open_level_is">Open level is</string>
+    <string name="weir">Weir</string>
+    <string name="water">water</string>
 </resources>
