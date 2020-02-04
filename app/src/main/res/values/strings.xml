@@ -30,6 +30,7 @@
     <string name="total_irrigation_time">total irrigation time</string>
     <string name="start">Start</string>
     <string name="end">End</string>
+    <string name="hint_irrigation_time">Insert irrigation time here</string>
     <string name="hint_start_date">Select start date by clicking here</string>
     <string name="hint_end_date">Select end date by clicking here</string>
 </resources>

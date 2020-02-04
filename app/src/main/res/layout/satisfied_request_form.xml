@@ -91,7 +91,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
-            android:hint="Insert water volume here"
+            android:hint="@string/hint_irrigation_time"
             android:inputType="number"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray"
