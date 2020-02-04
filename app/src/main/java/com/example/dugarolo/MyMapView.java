@@ -28,6 +28,7 @@ public class MyMapView extends MapView  {
 
     public void drawWeirs(final ArrayList<Weir> weirs, ArrayList<Marker> weirMarkers) {
         for(Weir weir : weirs) {
+            //Toast.makeText(getContext(), "Drawing weir #" + weir.getId(), Toast.LENGTH_LONG).show();
             Marker marker = new Marker(this);
             marker.setPosition(weir.getPosition());
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);

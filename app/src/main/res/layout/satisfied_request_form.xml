@@ -14,7 +14,7 @@
             android:id="@+id/start_date_time_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Start: "
+            android:text="@string/start"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="8dp"
@@ -31,7 +31,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
-            android:hint="Select start date by clicking here"
+            android:hint="@string/hint_start_date"
             android:inputType="text"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray"
@@ -52,7 +52,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/start_date_time"
             app:layout_constraintBottom_toTopOf="@id/end_date_time"
-            android:text="End: "/>
+            android:text="@string/end"/>
 
         <TextView
             android:id="@+id/end_date_time"
@@ -61,7 +61,7 @@
             android:layout_marginStart="16dp"
             android:layout_marginEnd="16dp"
             android:layout_marginBottom="8dp"
-            android:hint="Select end date by clicking here"
+            android:hint="@string/hint_end_date"
             android:inputType="text"
             android:textColor="@android:color/black"
             android:textColorHint="@android:color/darker_gray"
@@ -82,7 +82,7 @@
             app:layout_constraintTop_toBottomOf="@+id/end_date_time"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toTopOf="@+id/water_volume"
-            android:text="Water Volume: "/>
+            android:text="@string/total_irrigation_time"/>
 
         <EditText
             android:id="@+id/water_volume"

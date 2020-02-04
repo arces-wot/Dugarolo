@@ -28,5 +28,9 @@
     <string name="no_message">Nessun messaggio da mostrare</string>
     <string name="open_level_is">Il livello di apertura è</string>
     <string name="weir">Chiusa</string>
-    <string name="water">acqua</string>
+    <string name="total_irrigation_time">tempo di irrigazione totale</string>
+    <string name="start">Inizio</string>
+    <string name="end">Fine</string>
+    <string name="hint_start_date">Seleziona la data di inizio cliccando qui</string>
+    <string name="hint_end_date">Seleziona la data di fine cliccando qui</string>
 </resources>

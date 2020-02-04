@@ -83,7 +83,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
         String formattedDateTime = dateTime.toString(dtf);
         farmName.setText(Html.fromHtml(request.getName() + "<br />"+ "<small>"  + formattedDateTime
-                + " , " + getResources().getString(R.string.water) + request.getWaterVolume() + " h" + "</small"));
+                + " , " + getResources().getString(R.string.total_irrigation_time) + " " + request.getWaterVolume() + " h" + "</small"));
         currentStatusTextView = findViewById(R.id.current_status);
         setCurrentStatusTextView(request.getStatus());
         messageTextView = findViewById(R.id.message);
@@ -246,7 +246,9 @@ public class RequestDetailsActivity extends AppCompatActivity {
                     String sdts = textViewStartDate.getText().toString();
                     String edts = textViewEndDate.getText().toString();
                     String wvs = waterVolumeSatisfied.getText().toString();
-                    message = "Start: " +  sdts + ", End: " + edts + ", Water Volume: " + wvs + " h";
+                    message = getResources().getString(R.string.start) + ": " +  sdts +
+                            ", " + getResources().getString(R.string.end) + ": " + edts +
+                            ", " + getResources().getString(R.string.total_irrigation_time) + ": " + wvs + " h";
                     break;
                 case R.id.accepted:
                     request.setStatus("Accepted");

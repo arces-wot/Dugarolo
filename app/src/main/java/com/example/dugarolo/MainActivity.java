@@ -205,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
             DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
             String formattedDateTime = dateTime.toString(dtf);
             holder.dateAndFarmName.setText(Html.fromHtml(currentRequest.getName() + "<br />" + "<small>" + "<small>" + formattedDateTime
-                    + " , " + getResources().getString(R.string.water)+ ": " + currentRequest.getWaterVolume() + " h" + "</small" + "</small"));
+                    + " , " + getResources().getString(R.string.total_irrigation_time)+ ": " + currentRequest.getWaterVolume() + " h" + "</small" + "</small"));
             String status = currentRequest.getStatus();
             switch (status) {
                 case "Cancelled":

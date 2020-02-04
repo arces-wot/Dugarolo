@@ -33,7 +33,7 @@ public class AssetLoader {
 
             int code = connection.getResponseCode();
 
-            if (code == 200) {
+                if (code == 200) {
 
                 bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
@@ -182,7 +182,8 @@ public class AssetLoader {
     public void updateCurrentOpenLevels(ArrayList<Weir> weirs) {
         try {
             for (Weir weir : weirs) {
-                String openLevel = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/nodes/" + weir.getId() + "/open_level"));
+                String idForUrl = weir.getId().replace(" ", "%20");
+                String openLevel = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/nodes/" + idForUrl + "/open_level"));
                 openLevel = openLevel.replace("\n", "");
                 weir.setOpenLevel(Integer.parseInt(openLevel));
             }

@@ -103,7 +103,8 @@ public class WeirActivity extends AppCompatActivity {
         protected Boolean doInBackground(Void... voids) {
 
             try {
-                URL url = new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/nodes/" + weirToUpdate +"/open_level");
+                String idForUrl = weirToUpdate.replace(" ", "%20");
+                URL url = new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/nodes/" + idForUrl +"/open_level");
                 /*
                 Map<String, Object> params = new LinkedHashMap<>();
                 params.put("current", currentLevel);

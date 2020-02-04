@@ -40,11 +40,13 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="16dp"
+                android:layout_marginStart="16dp"
+                app:layout_goneMarginTop="8dp"
                 android:textSize="20sp"
                 android:textColor="@android:color/black"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/string_request"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/string_request"
+                app:layout_constraintBottom_toTopOf="@id/current_status"/>
 
             <TextView
                 android:id="@+id/current_status_label"
