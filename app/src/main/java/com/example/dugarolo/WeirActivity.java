@@ -43,7 +43,8 @@ public class WeirActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
-        actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayHomeAsUpEnabled(true);actionBar.setIcon(R.drawable.swamp_leaf);
+        actionBar.setDisplayShowTitleEnabled(false);
         minOpenLevel = getIntent().getExtras().getInt("Min Level");
         maxOpenLevel = getIntent().getExtras().getInt("Max Level");
         currentLevel = getIntent().getExtras().getInt("Open Level");

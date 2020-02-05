@@ -73,6 +73,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
         //abilita il bottone "Up"
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
         //prendi la request dall'intent
         int requestId = (Integer) getIntent().getExtras().get("REQUEST_CLICKED");
         setRequestId(requestId);

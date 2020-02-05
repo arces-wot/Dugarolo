@@ -60,6 +60,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         actionBar.setDisplayHomeAsUpEnabled(true);
+        actionBar.setDisplayShowTitleEnabled(false);
         //disattivo l'hardware acceleration per risolvere i problemi reativi alle icone in Android >= 8
         map.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
