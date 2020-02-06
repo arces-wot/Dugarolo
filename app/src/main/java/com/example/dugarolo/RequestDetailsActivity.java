@@ -84,7 +84,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
         DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
         String formattedDateTime = dateTime.toString(dtf);
         farmName.setText(Html.fromHtml(request.getName() + "<br />"+ "<small>"  + formattedDateTime
-                + " , " + getResources().getString(R.string.total_irrigation_time) + " " + request.getWaterVolume() + " h" + "</small"));
+                + " , " + "<br />" + getResources().getString(R.string.total_irrigation_time) + ": " + request.getWaterVolume() + " h" + "</small"));
         currentStatusTextView = findViewById(R.id.current_status);
         setCurrentStatusTextView(request.getStatus());
         messageTextView = findViewById(R.id.message);
