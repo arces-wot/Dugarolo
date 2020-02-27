@@ -2,8 +2,14 @@ package com.example.dugarolo;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -12,7 +18,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.Toast;
-
+import android.Manifest;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,8 +37,12 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 import static com.example.dugarolo.JSONIntentService.STATUS_ERROR;
 import static com.example.dugarolo.JSONIntentService.STATUS_FINISHED;
@@ -51,7 +61,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     private boolean isInFront;
 
     private static final int REQUEST_CODE_WATER = 0;
-
+    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -125,19 +135,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     }
 
     public void onClickShowMyLocation(View view) {
-        /*
-        gpsMyLocationProvider.addLocationSource(LocationManager.NETWORK_PROVIDER);
-        MyLocationNewOverlay locationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
-        locationOverlay.enableFollowLocation();
-        locationOverlay.enableMyLocation();
-        Drawable currentDraw = ResourcesCompat.getDrawable(getResources(), R.mipmap.ic_launcher, null);
-        Bitmap currentIcon = null;
-        if (currentDraw != null) {
-            currentIcon = ((BitmapDrawable) currentDraw).getBitmap();
-        }
-        locationOverlay.setPersonIcon(currentIcon);
-        map.getOverlayManager().add(locationOverlay);
-         */
+        checkLocationPermission();
     }
 
     @Override
@@ -157,7 +155,11 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         if(requestCode == REQUEST_CODE_WATER) {
             if(data == null) {
                 return;
-            }
+            } gpsMyLocationProvider.addLocationSource(LocationManager.NETWORK_PROVIDER);
+                        MyLocationNewOverlay locationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
+                        locationOverlay.enableFollowLocation();
+                        locationOverlay.enableMyLocation();
+                        map.getOverlayManager().add(locationOverlay);
             String weirNumber = data.getExtras().getString("Weir Number");
             Integer newOpenLevel = data.getExtras().getInt("Open Level");
             for (Weir weir : weirs) {
@@ -267,6 +269,84 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         }
     }
 
+
+    public boolean checkLocationPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_FINE_LOCATION)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    Manifest.permission.ACCESS_FINE_LOCATION)) {
+
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+                new AlertDialog.Builder(this)
+                        .setTitle("Position")
+                        .setMessage("Grant permissions to access your position?")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                //Prompt the user once explanation has been shown
+                                ActivityCompat.requestPermissions(MapDetailActivity.this,
+                                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                        MY_PERMISSIONS_REQUEST_LOCATION);
+                            }
+                        })
+                        .create()
+                        .show();
+
+
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        MY_PERMISSIONS_REQUEST_LOCATION);
+            }
+            return false;
+        } else {
+            gpsMyLocationProvider.addLocationSource(LocationManager.NETWORK_PROVIDER);
+            MyLocationNewOverlay locationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
+            locationOverlay.enableFollowLocation();
+            locationOverlay.enableMyLocation();
+            map.getOverlayManager().add(locationOverlay);
+            return true;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_LOCATION: {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // location-related task you need to do.
+                    if (ContextCompat.checkSelfPermission(this,
+                            Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED) {
+                        gpsMyLocationProvider.addLocationSource(LocationManager.NETWORK_PROVIDER);
+                        MyLocationNewOverlay locationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
+                        locationOverlay.enableFollowLocation();
+                        locationOverlay.enableMyLocation();
+                        map.getOverlayManager().add(locationOverlay);
+                    }
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+
+                }
+                return;
+            }
+
+        }
+    }
     private class LoadMapElements extends AsyncTask<Void, Void, Boolean> {
 
         @Override
