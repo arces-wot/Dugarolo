@@ -15,14 +15,16 @@
         <com.example.dugarolo.MyMapView android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
         <Button
             android:id="@+id/toggle_expand"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/expand_button"
             android:layout_gravity="bottom|end"
-            android:onClick="onClickExpandMap">
-        </Button>
+            android:background="@android:color/transparent"
+            android:drawableEnd="@drawable/sharp_add_black_36"
+            android:onClick="onClickExpandMap"></Button>
+
     </FrameLayout>
     <TextView
         android:layout_width="wrap_content"

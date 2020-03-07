@@ -16,26 +16,15 @@
         <com.example.dugarolo.MyMapView android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
         <Button
             android:id="@+id/toggle_resize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/resize_button"
             android:layout_gravity="bottom|end"
-            android:onClick="onClickResizeMap">
-        </Button>
-
-        <ImageButton
-            android:src="@drawable/ic_menu_mylocation"
-            android:tint="@android:color/darker_gray"
             android:background="@android:color/transparent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/my_location_button"
-            android:text="@string/my_location"
-            android:layout_gravity="bottom|start"
-            android:onClick="onClickShowMyLocation">
-        </ImageButton>
+            android:drawableEnd="@drawable/sharp_remove_black_36"
+            android:onClick="onClickResizeMap"></Button>
 
         <TextView
             android:layout_width="wrap_content"

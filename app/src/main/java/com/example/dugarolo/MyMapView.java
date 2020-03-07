@@ -2,7 +2,9 @@ package com.example.dugarolo;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -15,6 +17,8 @@ import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.graphics.Color.YELLOW;
 
 public class MyMapView extends MapView  {
 
@@ -51,19 +55,22 @@ public class MyMapView extends MapView  {
     private void drawField(Field field) {
         ArrayList<GeoPoint> fieldArea = field.getArea();
         Polygon polygon = new Polygon();
+
         for(GeoPoint point : fieldArea) {
             polygon.addPoint(point);
         }
         switch(field.getFarmName()) {
             case "Bertacchini's Farm":
+                //polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorBertacchini));
                 polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorBertacchini));
+                polygon.setFillColor(getResources().getColor(R.color.colorBertacchini));
                 break;
             case "Ferrari's Farm":
                 polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorFerrari));
+                polygon.setFillColor(getResources().getColor(R.color.colorFerrari));
                 break;
             default:
         }
-        polygon.getFillPaint().setColor(Color.TRANSPARENT);
         polygon.getOutlinePaint().setStrokeWidth(3);
         this.getOverlayManager().add(polygon);
         this.invalidate();
