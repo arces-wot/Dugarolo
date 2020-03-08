@@ -3,8 +3,6 @@
     <color name="colorPrimary">#3498DB</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
-    <color name="colorBertacchini">#f1c40f</color>
-    <color name="colorFerrari">#2980b9</color>
     <color name="colorScheduled">#34495e</color>
     <color name="colorAccepted">#f1c40f</color>
     <color name="colorOngoing">#2980b9</color>
@@ -12,4 +10,8 @@
     <color name="colorSatisfied">#2ecc71</color>
     <color name="colorCancelled">#e74c3c</color>
     <color name="text_map_detail_color">#9b59b6</color>
+
+    //da qui iniziano i colori delle aziende
+    <color name="colorBertacchini">#f1c40f</color>
+    <color name="colorFerrari">#2980b9</color>
 </resources>
