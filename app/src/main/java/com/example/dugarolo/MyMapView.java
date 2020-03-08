@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.widget.Toast;
 
 import org.osmdroid.util.GeoPoint;
@@ -17,10 +18,22 @@ import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.Polyline;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static android.graphics.Color.YELLOW;
 
 public class MyMapView extends MapView  {
+
+    FarmColor[] FarmColor = {
+            new FarmColor(getResources().getColor(R.color.colorBertacchini)),
+            new FarmColor(getResources().getColor(R.color.colorFerrari)),
+            new FarmColor(getResources().getColor(R.color.colorAccepted)),
+            new FarmColor(getResources().getColor(R.color.colorPrimaryDark))
+            //da inserire più colori, tanti quante sono le aziende operative
+    };
+
+    Random random = new Random();
+    int min=0, max=FarmColor.length-1 ,c=0;
 
     public MyMapView(Context context) {
         super(context);
@@ -59,15 +72,20 @@ public class MyMapView extends MapView  {
         for(GeoPoint point : fieldArea) {
             polygon.addPoint(point);
         }
+
+        int randomColor;
+
         switch(field.getFarmName()) {
             case "Bertacchini's Farm":
                 //polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorBertacchini));
-                polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorBertacchini));
-                polygon.setFillColor(getResources().getColor(R.color.colorBertacchini));
+                randomColor = getRandomColor("Bertacchini");
+                polygon.getOutlinePaint().setColor(randomColor);
+                polygon.setFillColor(randomColor);
                 break;
             case "Ferrari's Farm":
-                polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorFerrari));
-                polygon.setFillColor(getResources().getColor(R.color.colorFerrari));
+                randomColor = getRandomColor("Ferrari");
+                polygon.getOutlinePaint().setColor(randomColor);
+                polygon.setFillColor(randomColor);
                 break;
             default:
         }
@@ -120,6 +138,46 @@ public class MyMapView extends MapView  {
         for(Marker textMarker : textMarkers) {
             this.getOverlayManager().add(textMarker);
             this.invalidate();
+        }
+    }
+
+    public int getRandomColor(String nameFarm) {
+
+        int check=0;
+
+        for(int i=0; i<FarmColor.length; i++) {
+            if (nameFarm.equals(FarmColor[i].nameFarm)){
+                check=i;
+            }
+        }
+
+        if (check==0) {
+            c = ((max - min) + 1);
+
+            int randomElement = random.nextInt(c) + min;
+
+            if (FarmColor[randomElement].usedColor == true) {
+                while (FarmColor[randomElement].usedColor == false) {
+                    randomElement = random.nextInt(c) + min;
+                    Log.d("randomElementFor", Integer.toString(randomElement));
+                }
+                FarmColor[randomElement].usedColor = true;
+            } else {
+                FarmColor[randomElement].usedColor = true;
+            }
+
+            FarmColor[randomElement].nameFarm = nameFarm;
+            return FarmColor[randomElement].idColor;
+
+        }else{
+            return FarmColor[check].idColor;
+        }
+
+    }
+
+    public void toStringFarmColor(){
+        for (int i=0; i<FarmColor.length; i++){
+            Log.d("FarmColorToString", FarmColor.toString());
         }
     }
 }
