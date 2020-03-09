@@ -7,6 +7,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -33,10 +34,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.material.tabs.TabLayout;
+
 import net.danlew.android.joda.JodaTimeAndroid;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -60,18 +65,25 @@ public class MainActivity extends AppCompatActivity {
         JodaTimeAndroid.init(this);
         //RequestLab requestLab = RequestLab.get(this);
         //List<Request> requestList = requestLab.getRequestList();
+
         loadMap();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
+        assert actionBar != null;
         actionBar.setDisplayShowTitleEnabled(false);
         new LoadFarmsAndRequests().execute();
         //loadRequestsRecyclerView(requestList);
         if(requestId != null) {
             Request request = requests.get(requestId);
-            String status = (String) getIntent().getExtras().get(REQUEST_STATUS);
+            String status = (String) Objects.requireNonNull(getIntent().getExtras()).get(REQUEST_STATUS);
             request.setStatus(status);
         }
+        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(this, getSupportFragmentManager());
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(tabsPagerAdapter);
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
     }
 
     @Override

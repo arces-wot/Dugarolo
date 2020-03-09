@@ -23,18 +23,10 @@
             android:layout_gravity="bottom|end"
             android:background="@android:color/transparent"
             android:drawableEnd="@drawable/sharp_add_black_36"
-            android:onClick="onClickExpandMap"></Button>
+            android:onClick="onClickExpandMap" />
 
     </FrameLayout>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="@string/irrigation_scheduling"
-        android:layout_marginTop="16dp"
-        android:layout_marginLeft="16dp"
-        android:textStyle="bold">
-    </TextView>
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_requests"
@@ -43,10 +35,19 @@
         android:scrollbars="vertical"
         android:padding="10dp"/>
 
+
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
+        android:id="@+id/tabs"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:background="@android:color/holo_blue_light" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+
+        />
 
 
 </LinearLayout>
