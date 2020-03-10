@@ -76,18 +76,20 @@ public class MyMapView extends MapView  {
                 polygon.addPoint(point);
             }
 
-            fillFarms(field, polygon);
+
+                fillFarms(field, polygon);
+
     }
+
+
 
 
     public void fillFarms(Field field, Polygon polygon) {
 
         int randomColor, finalColor;
 
-        Log.d("finalList3", farmColorsList.toString());
-
-        switch (field.getFarmName()) {
-            case "Bertacchini's Farm":
+            switch (field.getFarmName()) {
+                case "Bertacchini's Farm":
                     //polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorBertacchini));
                     randomColor = getRandomColor("Bertacchini");
                     Log.d("richiestaBert", "richiesta");
@@ -97,19 +99,21 @@ public class MyMapView extends MapView  {
                     //Log.d("intervenuto", "vuoto");
                     break;
 
-            case "Ferrari's Farm":
-                randomColor = getRandomColor("Ferrari");
-                Log.d("richiestaBert", "richiesta");
-                finalColor = checkColorIfExist("Ferrari", randomColor);
-                polygon.getOutlinePaint().setColor(finalColor);
-                polygon.setFillColor(finalColor);
-                break;
-            default:
-        }
-        polygon.getOutlinePaint().setStrokeWidth(3);
-        polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorPrimaryDark));
-        this.getOverlayManager().add(polygon);
-        this.invalidate();
+                case "Ferrari's Farm":
+                    randomColor = getRandomColor("Ferrari");
+                    Log.d("richiestaBert", "richiesta");
+                    finalColor = checkColorIfExist("Ferrari", randomColor);
+                    polygon.getOutlinePaint().setColor(finalColor);
+                    polygon.setFillColor(finalColor);
+                    break;
+                default:
+            }
+
+            polygon.getOutlinePaint().setStrokeWidth(3);
+            polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorPrimaryDark));
+            this.getOverlayManager().add(polygon);
+            this.invalidate();
+
     }
 
     public void drawFarms(ArrayList<Farm> farms, ArrayList<FarmColor> farmColors) {
@@ -117,7 +121,6 @@ public class MyMapView extends MapView  {
         farmColorsList = farmColors;
         farmColor.updateList(farmColorsList);
 
-        Log.d("finalList2", farmColorsList.toString());
 
         for(Farm farm : farms) {
             ArrayList<Field> farmFields = farm.getFields();
