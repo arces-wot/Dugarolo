@@ -24,16 +24,17 @@ import static android.graphics.Color.YELLOW;
 
 public class MyMapView extends MapView  {
 
-    FarmColor[] FarmColor = {
-            new FarmColor(getResources().getColor(R.color.colorBertacchini)),
-            new FarmColor(getResources().getColor(R.color.colorFerrari)),
-            new FarmColor(getResources().getColor(R.color.colorAccepted)),
-            new FarmColor(getResources().getColor(R.color.colorPrimaryDark))
+    int[] FarmColor = {(getResources().getColor(R.color.colorBertacchini)),
+                        (getResources().getColor(R.color.colorFerrari))
+                        //(getResources().getColor(R.color.colorAccepted)),
+                        //(getResources().getColor(R.color.colorPrimaryDark))
             //da inserire più colori, tanti quante sono le aziende operative
     };
 
+    ArrayList<FarmColor> farmColorsList = new ArrayList<FarmColor>();
+
     Random random = new Random();
-    int min=0, max=FarmColor.length-1 ,c=0;
+    int min=0, max=FarmColor.length-1 , c=((max - min) + 1);
 
     public MyMapView(Context context) {
         super(context);
@@ -66,37 +67,57 @@ public class MyMapView extends MapView  {
     }
 
     private void drawField(Field field) {
-        ArrayList<GeoPoint> fieldArea = field.getArea();
-        Polygon polygon = new Polygon();
 
-        for(GeoPoint point : fieldArea) {
-            polygon.addPoint(point);
-        }
+            ArrayList<GeoPoint> fieldArea = field.getArea();
+            Polygon polygon = new Polygon();
 
-        int randomColor;
+            for (GeoPoint point : fieldArea) {
+                polygon.addPoint(point);
+            }
 
-        switch(field.getFarmName()) {
+            fillFarms(field, polygon);
+    }
+
+    //solo per riempire
+    public void fillFarms(Field field, Polygon polygon) {
+
+        int randomColor, finalColor;
+
+        switch (field.getFarmName()) {
             case "Bertacchini's Farm":
-                //polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorBertacchini));
-                randomColor = getRandomColor("Bertacchini");
-                polygon.getOutlinePaint().setColor(randomColor);
-                polygon.setFillColor(randomColor);
-                break;
+                    //polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorBertacchini));
+                    randomColor = getRandomColor("Bertacchini");
+                    Log.d("richiestaBert", "richiesta");
+                    finalColor = checkColorIfExist("Bertacchini", randomColor);
+                    polygon.getOutlinePaint().setColor(finalColor);
+                    polygon.setFillColor(finalColor);
+                    //Log.d("intervenuto", "vuoto");
+                    break;
+
             case "Ferrari's Farm":
                 randomColor = getRandomColor("Ferrari");
-                polygon.getOutlinePaint().setColor(randomColor);
-                polygon.setFillColor(randomColor);
+                Log.d("richiestaBert", "richiesta");
+                finalColor = checkColorIfExist("Ferrari", randomColor);
+                polygon.getOutlinePaint().setColor(finalColor);
+                polygon.setFillColor(finalColor);
                 break;
             default:
         }
         polygon.getOutlinePaint().setStrokeWidth(3);
+        polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorPrimaryDark));
         this.getOverlayManager().add(polygon);
         this.invalidate();
+
     }
 
     public void drawFarms(ArrayList<Farm> farms) {
+
+        FarmColor farmColor = new FarmColor("", 0);
+        farmColorsList = farmColor.getFarmColors();
+
         for(Farm farm : farms) {
             ArrayList<Field> farmFields = farm.getFields();
+            //Log.d("numeroFarm", Integer.toString(farmFields.size()));
             for(Field field : farmFields) {
                 this.drawField(field);
             }
@@ -141,43 +162,71 @@ public class MyMapView extends MapView  {
         }
     }
 
+    //genero colore
     public int getRandomColor(String nameFarm) {
 
-        int check=0;
+        int randomElement=0, color=0, finalColor=0;
 
-        for(int i=0; i<FarmColor.length; i++) {
-            if (nameFarm.equals(FarmColor[i].nameFarm)){
-                check=i;
-            }
-        }
+        //int che sarebbe indice da prendere nell'array vero
+        randomElement = random.nextInt(c) + min;
+        color = FarmColor[randomElement];
 
-        if (check==0) {
-            c = ((max - min) + 1);
+        return color;
+    }
 
-            int randomElement = random.nextInt(c) + min;
+    //faccio i controlli
+    public int checkColorIfExist(String nameFarm, int randomElement){
 
-            if (FarmColor[randomElement].usedColor == true) {
-                while (FarmColor[randomElement].usedColor == false) {
-                    randomElement = random.nextInt(c) + min;
-                    Log.d("randomElementFor", Integer.toString(randomElement));
+        //se la farm non ha un nome allora gli assegno un colore (che non deve essere assegnato a nessun'altro)
+        //se il nome è presente in lista allora gli restituisco il colore che gli ho già dato
+
+
+        if(farmColorsList.size() != 0){
+
+            for(int i=0; i<farmColorsList.size(); i++){
+                if(nameFarm.equals(farmColorsList.get(i).getNameFarm())){
+                    Log.d("richiesta", nameFarm + "ha già un colore");
+                    return farmColorsList.get(i).getIdColor();
                 }
-                FarmColor[randomElement].usedColor = true;
-            } else {
-                FarmColor[randomElement].usedColor = true;
             }
 
-            FarmColor[randomElement].nameFarm = nameFarm;
-            return FarmColor[randomElement].idColor;
+            //se arrivi qua vuol dire che non esiste nell'arraylist un campo con questo nome
+            //ottenere un colore che non è utilizzato
+
+            int check=0;
+
+            for(int i=0; i<farmColorsList.size(); i++){
+                if(randomElement == farmColorsList.get(i).getIdColor()){
+                    check=1;
+                }
+            }
+
+            if(check==0){
+                FarmColor farmColor = new FarmColor(nameFarm, randomElement);
+                farmColorsList.add(farmColor);
+                farmColor.updateList(farmColorsList);
+
+                Log.d("richiesta", nameFarm + "non esisteva e " + randomElement + "non era utilizzato, quindi lo creo");
+
+                return randomElement;
+            }else{
+                Log.d("richiesta", randomElement + "è già utilizzato");
+                getRandomColor(nameFarm);
+            }
 
         }else{
-            return FarmColor[check].idColor;
-        }
+            FarmColor farmColor = new FarmColor(nameFarm, randomElement);
+            farmColorsList.add(farmColor);
+            farmColor.updateList(farmColorsList);
 
+            return randomElement;
+        }
+        return 0;
     }
 
     public void toStringFarmColor(){
-        for (int i=0; i<FarmColor.length; i++){
-            Log.d("FarmColorToString", FarmColor.toString());
+        for (int i=0; i<farmColorsList.size(); i++){
+            Log.d("FarmColorToString", farmColorsList.toString());
         }
     }
 }

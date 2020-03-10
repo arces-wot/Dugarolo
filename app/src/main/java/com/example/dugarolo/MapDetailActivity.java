@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import android.Manifest;
@@ -362,6 +363,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
+
             if(aBoolean) {
                 map.drawFarms(farms);
                 map.drawCanals(canals);

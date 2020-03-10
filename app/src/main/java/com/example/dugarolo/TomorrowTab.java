@@ -11,15 +11,15 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
-public class TomorrowRequest extends Fragment {
+public class TomorrowTab extends Fragment {
     private static final String TAG = "Domani";
     private PageViewModel pageViewModel;
-    public TomorrowRequest() {
+    public TomorrowTab() {
         // Required empty public constructor
     }
 
-    public static TomorrowRequest newInstance() {
-        return new TomorrowRequest();
+    public static TomorrowTab newInstance() {
+        return new TomorrowTab();
     }
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,7 +31,7 @@ public class TomorrowRequest extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_two, container, false);
+        View root = inflater.inflate(R.layout.fragment_tomorrow, container, false);
         final TextView textView = root.findViewById(R.id.section_label);
         pageViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
