@@ -27,6 +27,7 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -156,8 +157,17 @@ public class MainActivity extends AppCompatActivity {
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
+    FarmColor farmColor = new FarmColor("", 0);
+    ArrayList<FarmColor> farmColorsList;
+
     public void onClickExpandMap(View view) {
+        farmColorsList = map.getFinalList();
+
+        Bundle extra = new Bundle();
+        extra.putSerializable("objects", farmColorsList);
+
         Intent intent = new Intent(MainActivity.this, MapDetailActivity.class);
+        intent.putExtra("extra", extra);
         startActivity(intent);
     }
 
@@ -208,7 +218,7 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(@NonNull RequestAdapter.RequestHolder holder, int position) {
-            Request currentRequest = requests.get(position);
+            /*Request currentRequest = requests.get(position);
             holder.farmColor.setImageResource(R.drawable.farm_color);
             String name = currentRequest.getName();
             if(name.equals("Bertacchini's Farm")) {
@@ -247,7 +257,7 @@ public class MainActivity extends AppCompatActivity {
                     break;
                 default:
                     holder.statusIcon.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC);
-            }
+            }*/
         }
 
         @Override

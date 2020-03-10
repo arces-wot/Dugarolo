@@ -31,6 +31,7 @@ public class MyMapView extends MapView  {
                         //(getResources().getColor(R.color.colorPrimaryDark))
     };
 
+    FarmColor farmColor = new FarmColor("", 0);
     ArrayList<FarmColor> farmColorsList = new ArrayList<FarmColor>();
 
     Random random = new Random();
@@ -83,6 +84,8 @@ public class MyMapView extends MapView  {
 
         int randomColor, finalColor;
 
+        Log.d("finalList3", farmColorsList.toString());
+
         switch (field.getFarmName()) {
             case "Bertacchini's Farm":
                     //polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorBertacchini));
@@ -107,13 +110,14 @@ public class MyMapView extends MapView  {
         polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorPrimaryDark));
         this.getOverlayManager().add(polygon);
         this.invalidate();
-
     }
 
-    public void drawFarms(ArrayList<Farm> farms) {
+    public void drawFarms(ArrayList<Farm> farms, ArrayList<FarmColor> farmColors) {
 
-        FarmColor farmColor = new FarmColor("", 0);
-        farmColorsList = farmColor.getFarmColors();
+        farmColorsList = farmColors;
+        farmColor.updateList(farmColorsList);
+
+        Log.d("finalList2", farmColorsList.toString());
 
         for(Farm farm : farms) {
             ArrayList<Field> farmFields = farm.getFields();
@@ -122,7 +126,17 @@ public class MyMapView extends MapView  {
                 this.drawField(field);
             }
         }
+    }
 
+    public void drawFarms(ArrayList<Farm> farms) {
+
+        for(Farm farm : farms) {
+            ArrayList<Field> farmFields = farm.getFields();
+            //Log.d("numeroFarm", Integer.toString(farmFields.size()));
+            for(Field field : farmFields) {
+                this.drawField(field);
+            }
+        }
     }
 
     public void drawCanals(ArrayList<Canal> canals) {
@@ -176,7 +190,6 @@ public class MyMapView extends MapView  {
 
     public int checkColorIfExist(String nameFarm, int randomElement){
 
-
         if(farmColorsList.size() != 0){
 
             for(int i=0; i<farmColorsList.size(); i++){
@@ -215,6 +228,10 @@ public class MyMapView extends MapView  {
             return randomElement;
         }
         return 0;
+    }
+
+    public ArrayList<FarmColor> getFinalList(){
+        return farmColorsList;
     }
 
     public void toStringFarmColor(){
