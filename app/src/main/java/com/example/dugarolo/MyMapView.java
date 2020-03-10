@@ -24,11 +24,11 @@ import static android.graphics.Color.YELLOW;
 
 public class MyMapView extends MapView  {
 
+    //da inserire più colori, tanti quante sono le aziende operative
     int[] FarmColor = {(getResources().getColor(R.color.colorBertacchini)),
                         (getResources().getColor(R.color.colorFerrari))
                         //(getResources().getColor(R.color.colorAccepted)),
                         //(getResources().getColor(R.color.colorPrimaryDark))
-            //da inserire più colori, tanti quante sono le aziende operative
     };
 
     ArrayList<FarmColor> farmColorsList = new ArrayList<FarmColor>();
@@ -78,7 +78,7 @@ public class MyMapView extends MapView  {
             fillFarms(field, polygon);
     }
 
-    //solo per riempire
+
     public void fillFarms(Field field, Polygon polygon) {
 
         int randomColor, finalColor;
@@ -162,23 +162,19 @@ public class MyMapView extends MapView  {
         }
     }
 
-    //genero colore
+
     public int getRandomColor(String nameFarm) {
 
-        int randomElement=0, color=0, finalColor=0;
+        int randomElement=0, color=0;
 
-        //int che sarebbe indice da prendere nell'array vero
         randomElement = random.nextInt(c) + min;
         color = FarmColor[randomElement];
 
         return color;
     }
 
-    //faccio i controlli
-    public int checkColorIfExist(String nameFarm, int randomElement){
 
-        //se la farm non ha un nome allora gli assegno un colore (che non deve essere assegnato a nessun'altro)
-        //se il nome è presente in lista allora gli restituisco il colore che gli ho già dato
+    public int checkColorIfExist(String nameFarm, int randomElement){
 
 
         if(farmColorsList.size() != 0){
@@ -189,9 +185,6 @@ public class MyMapView extends MapView  {
                     return farmColorsList.get(i).getIdColor();
                 }
             }
-
-            //se arrivi qua vuol dire che non esiste nell'arraylist un campo con questo nome
-            //ottenere un colore che non è utilizzato
 
             int check=0;
 
