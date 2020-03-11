@@ -56,10 +56,9 @@ public class MainActivity extends AppCompatActivity {
     private MyMapView map = null;
     private AssetLoader assetLoader = new AssetLoader();
     private ArrayList<Request> requests = new ArrayList<>();
+
     //debug only
     //private static final String TAG = "MainActivity";
-
-
 
     @Override public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -157,17 +156,9 @@ public class MainActivity extends AppCompatActivity {
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
-    FarmColor farmColor = new FarmColor("", 0);
-    ArrayList<FarmColor> farmColorsList;
-
     public void onClickExpandMap(View view) {
-        farmColorsList = map.getFinalList();
-
-        Bundle extra = new Bundle();
-        extra.putSerializable("objects", farmColorsList);
 
         Intent intent = new Intent(MainActivity.this, MapDetailActivity.class);
-        intent.putExtra("extra", extra);
         startActivity(intent);
     }
 
@@ -276,11 +267,14 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
 
+        int check=0;
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
+
             if(aBoolean) {
                 map.drawFarms(farms);
+
                 loadRequestsRecyclerView(requests);
             }
         }

@@ -12,12 +12,13 @@ public class FarmColor implements Serializable {
     String nameFarm;
     int idColor;
 
-    ArrayList<FarmColor> farmColors = new ArrayList<FarmColor>();
+    Globals globals = Globals.getInstance();
 
     public FarmColor(String nameFarm, int idColor){
         this.idColor = idColor;
         this.nameFarm =  nameFarm;
     }
+
 
     public int getIdColor() {
         return idColor;
@@ -26,17 +27,6 @@ public class FarmColor implements Serializable {
     public String getNameFarm() {
         return nameFarm;
     }
-
-    public void updateList(ArrayList<FarmColor> farmColors){
-        this.farmColors = farmColors;
-
-        Log.d("farm", this.farmColors.toString());
-    }
-
-    public ArrayList<FarmColor> getFarmColors(){
-        return this.farmColors;
-    }
-
 
     @NonNull
     @Override

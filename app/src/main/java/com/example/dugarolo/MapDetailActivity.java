@@ -62,8 +62,6 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     private boolean isInFront;
 
 
-
-
     private static final int REQUEST_CODE_WATER = 0;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     @Override
@@ -81,6 +79,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         //carica i valori relativi al livello dell'acqua dei canali tramite intent sevice
         new LoadMapElements().execute();
         //loadMapElements();
+
     }
 
     private void loadMap() {
@@ -133,18 +132,9 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         //drawCanals();
     }
 
-    FarmColor farmColor = new FarmColor("", 0);
-    ArrayList<FarmColor> farmColorsList;
-
     public void onClickResizeMap(View view) {
 
-        farmColorsList = map.getFinalList();
-
-        Bundle extra = new Bundle();
-        extra.putSerializable("objects", farmColorsList);
-
         Intent intent = new Intent(MapDetailActivity.this, MainActivity.class);
-        intent.putExtra("extra", extra);
         startActivity(intent);
     }
 
@@ -372,20 +362,13 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             return true;
         }
 
-        ArrayList<FarmColor> farmColorsList;
-
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
 
             if(aBoolean) {
 
-                Bundle extra = getIntent().getBundleExtra("extra");
-                ArrayList<FarmColor> objects = (ArrayList<FarmColor>) extra.getSerializable("objects");
-
-                Log.d("finalList1", objects.toString());
-
-                map.drawFarms(farms, objects);
+                map.drawFarms(farms);
                 map.drawCanals(canals);
                 map.drawWeirs(weirs, weirMarkers);
                 setWeirListeners(weirMarkers);

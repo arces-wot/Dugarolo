@@ -24,6 +24,9 @@ import static android.graphics.Color.YELLOW;
 
 public class MyMapView extends MapView  {
 
+    Globals sharedData = Globals.getInstance();
+
+
     //da inserire più colori, tanti quante sono le aziende operative
     int[] FarmColor = {(getResources().getColor(R.color.colorBertacchini)),
                         (getResources().getColor(R.color.colorFerrari))
@@ -76,35 +79,69 @@ public class MyMapView extends MapView  {
                 polygon.addPoint(point);
             }
 
-
-                fillFarms(field, polygon);
+            fillFarms(field, polygon);
 
     }
 
-
+    public int getColor(String nameFarm){
+        if(farmColorsList != null) {
+            for (int i = 0; i < farmColorsList.size(); i++) {
+                if (nameFarm.equals(farmColorsList.get(i).getNameFarm())) {
+                    Log.d("FinalList7", "Hoo trovato " +nameFarm);
+                    return farmColorsList.get(i).getIdColor();
+                }
+            }
+        }else{
+            Log.d("FinalList7", "Boh non l'ho più trovato");
+        }
+        return 0;
+    }
 
 
     public void fillFarms(Field field, Polygon polygon) {
+
+        boolean bertCheck = sharedData.isCheckIfAlreadyAssignedBert();
+        boolean ferrCheck = sharedData.isCheckIfAlreadyAssignedFerr();
+
+        if(sharedData.getFarmColors() != null) {
+            farmColorsList = sharedData.getFarmColors();
+            //Log.d("FinalList", "grazie globale " + farmColorsList);
+        }
 
         int randomColor, finalColor;
 
             switch (field.getFarmName()) {
                 case "Bertacchini's Farm":
                     //polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorBertacchini));
-                    randomColor = getRandomColor("Bertacchini");
-                    Log.d("richiestaBert", "richiesta");
-                    finalColor = checkColorIfExist("Bertacchini", randomColor);
-                    polygon.getOutlinePaint().setColor(finalColor);
-                    polygon.setFillColor(finalColor);
-                    //Log.d("intervenuto", "vuoto");
+                    if(bertCheck == false) {
+                        randomColor = getRandomColor("Bertacchini");
+                        finalColor = checkColorIfExist("Bertacchini", randomColor);
+                        polygon.getOutlinePaint().setColor(finalColor);
+                        polygon.setFillColor(finalColor);
+                        sharedData.setCheckIfAlreadyAssignedBert();
+                        Log.d("FinalList5", "assegnato");
+                    }else{
+                        finalColor = getColor("Bertacchini");
+                        polygon.getOutlinePaint().setColor(finalColor);
+                        polygon.setFillColor(finalColor);
+                        Log.d("FinalList5", "sono entrato");
+                    }
                     break;
 
                 case "Ferrari's Farm":
-                    randomColor = getRandomColor("Ferrari");
-                    Log.d("richiestaBert", "richiesta");
-                    finalColor = checkColorIfExist("Ferrari", randomColor);
-                    polygon.getOutlinePaint().setColor(finalColor);
-                    polygon.setFillColor(finalColor);
+                    if(ferrCheck == false) {
+                        randomColor = getRandomColor("Ferrari");
+                        finalColor = checkColorIfExist("Ferrari", randomColor);
+                        polygon.getOutlinePaint().setColor(finalColor);
+                        polygon.setFillColor(finalColor);
+                        sharedData.setCheckIfAlreadyAssignedFerr();
+                        Log.d("FinalList6", "assegnato");
+                    }else{
+                        finalColor = getColor("Ferrari");
+                        polygon.getOutlinePaint().setColor(finalColor);
+                        polygon.setFillColor(finalColor);
+                        Log.d("FinalList6", "sono entrato");
+                    }
                     break;
                 default:
             }
@@ -116,21 +153,6 @@ public class MyMapView extends MapView  {
 
     }
 
-    public void drawFarms(ArrayList<Farm> farms, ArrayList<FarmColor> farmColors) {
-
-        farmColorsList = farmColors;
-        farmColor.updateList(farmColorsList);
-
-
-        for(Farm farm : farms) {
-            ArrayList<Field> farmFields = farm.getFields();
-            //Log.d("numeroFarm", Integer.toString(farmFields.size()));
-            for(Field field : farmFields) {
-                this.drawField(field);
-            }
-        }
-    }
-
     public void drawFarms(ArrayList<Farm> farms) {
 
         for(Farm farm : farms) {
@@ -140,6 +162,12 @@ public class MyMapView extends MapView  {
                 this.drawField(field);
             }
         }
+
+        /*
+        if(farmColorsList != null) {
+            Log.d("FinalList", farmColorsList.toString());
+        }*/
+
     }
 
     public void drawCanals(ArrayList<Canal> canals) {
@@ -193,11 +221,11 @@ public class MyMapView extends MapView  {
 
     public int checkColorIfExist(String nameFarm, int randomElement){
 
-        if(farmColorsList.size() != 0){
+        if(farmColorsList.size() != 0 || farmColorsList != null){
 
             for(int i=0; i<farmColorsList.size(); i++){
                 if(nameFarm.equals(farmColorsList.get(i).getNameFarm())){
-                    Log.d("richiesta", nameFarm + "ha già un colore");
+                    Log.d("FinalList", nameFarm + "ha già un colore");
                     return farmColorsList.get(i).getIdColor();
                 }
             }
@@ -213,28 +241,27 @@ public class MyMapView extends MapView  {
             if(check==0){
                 FarmColor farmColor = new FarmColor(nameFarm, randomElement);
                 farmColorsList.add(farmColor);
-                farmColor.updateList(farmColorsList);
+                sharedData.updateList(farmColor);
 
-                Log.d("richiesta", nameFarm + "non esisteva e " + randomElement + "non era utilizzato, quindi lo creo");
+                Log.d("FinalList", nameFarm + " non esisteva e " + randomElement + " non era utilizzato, quindi lo creo");
 
                 return randomElement;
             }else{
-                Log.d("richiesta", randomElement + "è già utilizzato");
-                getRandomColor(nameFarm);
+                Log.d("FinalList", randomElement + " è già utilizzato " + nameFarm);
+                randomElement = getRandomColor(nameFarm);
+                checkColorIfExist(nameFarm, randomElement);
             }
 
         }else{
             FarmColor farmColor = new FarmColor(nameFarm, randomElement);
             farmColorsList.add(farmColor);
-            farmColor.updateList(farmColorsList);
+            sharedData.updateList(farmColor);
+
+            Log.d("FinalList", "Creato automaticamente " + nameFarm + " " + randomElement);
 
             return randomElement;
         }
         return 0;
-    }
-
-    public ArrayList<FarmColor> getFinalList(){
-        return farmColorsList;
     }
 
     public void toStringFarmColor(){
