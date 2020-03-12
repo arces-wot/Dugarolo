@@ -65,6 +65,30 @@ public class MainActivity extends AppCompatActivity {
         JodaTimeAndroid.init(this);
         //RequestLab requestLab = RequestLab.get(this);
         //List<Request> requestList = requestLab.getRequestList();
+        //trial requests:
+        DateTime date1= new DateTime(2020,12,12,12,12);
+        ArrayList<GeoPoint> geoList1= new ArrayList<GeoPoint>();
+        geoList1.add(new GeoPoint(44.777572,10.715764));
+        geoList1.add(new GeoPoint(44.777201,10.717981));
+        geoList1.add(new GeoPoint(44.778039,10.719505));
+        geoList1.add(new GeoPoint(44.777572,10.715764));
+        Field  f1= new Field("Bertacchini's Farm","001", geoList1);
+        Request r1=new Request("001", "Bertacchini's Farm", date1, "Accepted", "1h", f1, "speriamo bene");
+        requests.add(r1);
+
+        DateTime date2= new DateTime();
+        Request r2=new Request("001", "Bertacchini's Farm", date2, "Accepted", "1h", f1, "speriamo bene");
+        requests.add(r2);
+        Request r3=new Request("001", "Ferrari's Farm", date2, "Accepted", "1h", f1, "speriamo bene");
+        requests.add(r3);
+        Request r4=new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
+        requests.add(r4);
+        Request r5=new Request("001", "Ferrari's Farm", date2, "Accepted", "10h", f1, "speriamo bene");
+        requests.add(r5);
+        Request r6=new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
+        requests.add(r6);
+        Request r7=new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
+        requests.add(r7);
 
         loadMap();
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -79,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
             String status = (String) Objects.requireNonNull(getIntent().getExtras()).get(REQUEST_STATUS);
             request.setStatus(status);
         }
-        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(this, getSupportFragmentManager());
+        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(this, getSupportFragmentManager(),requests);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(tabsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
@@ -129,14 +153,6 @@ public class MainActivity extends AppCompatActivity {
         mapController.setCenter(startPoint);
     }
 
-    private void loadRequestsRecyclerView(List<Request> requestList) {
-        Collections.sort(requestList);
-        requestRecyclerView = findViewById(R.id.list_requests);
-        layoutManager = new LinearLayoutManager(this);
-        requestRecyclerView.setLayoutManager(layoutManager);
-        requestAdapter = new RequestAdapter(requestList);
-        requestRecyclerView.setAdapter(requestAdapter);
-    }
 
     public void onResume(){
         super.onResume();
@@ -163,99 +179,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private class RequestAdapter extends RecyclerView.Adapter<RequestAdapter.RequestHolder> {
 
-        private List<Request> requests;
-
-        private class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-
-            public ImageView farmColor;
-            public ImageView basicIcon;
-            public TextView dateAndFarmName;
-            public ImageView statusIcon;
-
-            public RequestHolder(View itemView) {
-                super(itemView);
-                farmColor = itemView.findViewById(R.id.farm_color);
-                basicIcon = itemView.findViewById(R.id.basic_icon);
-                dateAndFarmName = itemView.findViewById(R.id.farm_name);
-                statusIcon = itemView.findViewById(R.id.status_icon);
-                itemView.setOnClickListener(this);
-            }
-
-            @Override
-            public void onClick(View v) {
-                int position = getLayoutPosition();
-                Intent intent = new Intent(MainActivity.this, RequestDetailsActivity.class);
-                intent.putParcelableArrayListExtra("REQUEST_LIST", (ArrayList<? extends Parcelable>) requests);
-                intent.putExtra("REQUEST_CLICKED", position);
-                requestId = position;
-                startActivity(intent);
-            }
-        }
-
-        public RequestAdapter(List<Request> requests) {
-                this.requests = requests;
-        }
-
-        @NonNull
-        @Override
-        public RequestHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View v = inflater.inflate(R.layout.item_request, parent, false);
-            return new RequestHolder(v);
-        }
-
-
-        @Override
-        public void onBindViewHolder(@NonNull RequestAdapter.RequestHolder holder, int position) {
-            /*Request currentRequest = requests.get(position);
-            holder.farmColor.setImageResource(R.drawable.farm_color);
-            String name = currentRequest.getName();
-            if(name.equals("Bertacchini's Farm")) {
-                int bertacchini = ResourcesCompat.getColor(getResources(), R.color.colorBertacchini, null);
-                holder.farmColor.setColorFilter(bertacchini);
-            } else if(name.equals("Ferrari's Farm")) {
-                int ferrari = ResourcesCompat.getColor(getResources(), R.color.colorFerrari,null);
-                holder.farmColor.setColorFilter(ferrari);
-            }
-            DateTime dateTime = currentRequest.getDateTime();
-            DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
-            String formattedDateTime = dateTime.toString(dtf);
-            holder.dateAndFarmName.setText(Html.fromHtml(currentRequest.getName() + "<br />" + "<small>" + "<small>" + formattedDateTime
-                    + " , " + getResources().getString(R.string.total_irrigation_time)+ ": " + currentRequest.getWaterVolume() + " h" + "</small" + "</small"));
-            String status = currentRequest.getStatus();
-            switch (status) {
-                case "Cancelled":
-                    int cancelled = ResourcesCompat.getColor(getResources(), R.color.colorCancelled, null);
-                    holder.statusIcon.setColorFilter(cancelled);
-                    break;
-                case "Interrupted":
-                    int interrupted = ResourcesCompat.getColor(getResources(), R.color.colorInterrupted, null);
-                    holder.statusIcon.setColorFilter(interrupted);
-                    break;
-                case "Satisfied":
-                    int satisfied = ResourcesCompat.getColor(getResources(), R.color.colorSatisfied, null);
-                    holder.statusIcon.setColorFilter(satisfied);
-                    break;
-                case "Accepted":
-                    int accepted = ResourcesCompat.getColor(getResources(), R.color.colorAccepted, null);
-                    holder.statusIcon.setColorFilter(accepted);
-                    break;
-                case "Ongoing":
-                    int ongoing = ResourcesCompat.getColor(getResources(), R.color.colorOngoing, null);
-                    holder.statusIcon.setColorFilter(ongoing);
-                    break;
-                default:
-                    holder.statusIcon.setColorFilter(Color.DKGRAY, PorterDuff.Mode.SRC);
-            }*/
-        }
-
-        @Override
-        public int getItemCount() {
-            return requests.size();
-        }
-    }
 
 
     private class LoadFarmsAndRequests extends AsyncTask<Void, Void, Boolean> {
@@ -274,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
 
             if(aBoolean) {
                 map.drawFarms(farms);
-                loadRequestsRecyclerView(requests);
+                //loadRequestsRecyclerView(requests);
             }
         }
     }

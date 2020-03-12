@@ -14,8 +14,6 @@
     //da qui iniziano i colori delle aziende
     <color name="colorBertacchini">#f1c40f</color>
     <color name="colorFerrari">#2980b9</color>
+    <color name="colorFarmName">#000000</color>
 
-    //prova, poi vanno messi in string
-    <string name="tab_text_1" translatable="false" tools:ignore="MissingTranslation">Oggi</string>
-    <string name="tab_text_2" translatable="false" tools:ignore="MissingTranslation">Domani</string>
 </resources>

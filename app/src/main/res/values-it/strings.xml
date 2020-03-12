@@ -15,7 +15,7 @@
     <string name="accepted_request">Accettata</string>
     <string name="ongoing_request">In corso</string>
     <string name="scheduled_request">Programmata</string>
-    <string name="cancelled_request_reason">Perchè la richiesta è stata cancellata?</string>
+    <string name="cancelled_request_reason">Perché la richiesta è stata cancellata?</string>
     <string name="reason_hint">Inserisci motivazione qui</string>
     <string name="request_cancelled_message">La richiesta è stata cancellata.</string>
     <string name="request_satisfied_message">La richiesta è stata soddisfatta.</string>
@@ -34,4 +34,8 @@
     <string name="hint_irrigation_time">Inserisci il tempo di irrigazione qui</string>
     <string name="hint_start_date">Seleziona la data di inizio cliccando qui</string>
     <string name="hint_end_date">Seleziona la data di fine cliccando qui</string>
+    <string name="expected_time">Tempo previsto</string>
+
+    <string name="tab_text_1">Oggi</string>
+    <string name="tab_text_2">Domani</string>
 </resources>
