@@ -256,7 +256,7 @@ public class MyMapView extends MapView  {
             this.invalidate();
         }
     }
-    
+
     public void toStringFarmColor(){
         for (int i=0; i<farmColorsList.size(); i++){
             Log.d("FarmColorToString", farmColorsList.toString());
