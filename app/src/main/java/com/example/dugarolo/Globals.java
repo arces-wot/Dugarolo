@@ -1,17 +1,17 @@
 package com.example.dugarolo;
 import android.app.Application;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
-/**
- * Created by kundan on 6/23/2015.
- */
+
 public class Globals {
 
 
     private static Globals instance = new Globals();
 
-    // Getter-Setters
+
     public static Globals getInstance() {
         return instance;
     }
@@ -52,7 +52,5 @@ public class Globals {
     public boolean isCheckIfAlreadyAssignedFerr() {
         return checkIfAlreadyAssignedFerr;
     }
-
-
 
 }

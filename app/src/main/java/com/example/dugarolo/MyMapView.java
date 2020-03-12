@@ -70,104 +70,154 @@ public class MyMapView extends MapView  {
         return GeoPoint.fromCenterBetween(geoPoint1, geoPoint2);
     }
 
-    private void drawField(Field field) {
-
-            ArrayList<GeoPoint> fieldArea = field.getArea();
-            Polygon polygon = new Polygon();
-
-            for (GeoPoint point : fieldArea) {
-                polygon.addPoint(point);
-            }
-
-            fillFarms(field, polygon);
-
-    }
-
-    public int getColor(String nameFarm){
-        if(farmColorsList != null) {
-            for (int i = 0; i < farmColorsList.size(); i++) {
-                if (nameFarm.equals(farmColorsList.get(i).getNameFarm())) {
-                    Log.d("FinalList7", "Hoo trovato " +nameFarm);
-                    return farmColorsList.get(i).getIdColor();
-                }
-            }
-        }else{
-            Log.d("FinalList7", "Boh non l'ho più trovato");
-        }
-        return 0;
-    }
-
-
-    public void fillFarms(Field field, Polygon polygon) {
-
-        boolean bertCheck = sharedData.isCheckIfAlreadyAssignedBert();
-        boolean ferrCheck = sharedData.isCheckIfAlreadyAssignedFerr();
-
-        if(sharedData.getFarmColors() != null) {
-            farmColorsList = sharedData.getFarmColors();
-            //Log.d("FinalList", "grazie globale " + farmColorsList);
-        }
-
-        int randomColor, finalColor;
-
-            switch (field.getFarmName()) {
-                case "Bertacchini's Farm":
-                    //polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorBertacchini));
-                    if(bertCheck == false) {
-                        randomColor = getRandomColor("Bertacchini");
-                        finalColor = checkColorIfExist("Bertacchini", randomColor);
-                        polygon.getOutlinePaint().setColor(finalColor);
-                        polygon.setFillColor(finalColor);
-                        sharedData.setCheckIfAlreadyAssignedBert();
-                        Log.d("FinalList5", "assegnato");
-                    }else{
-                        finalColor = getColor("Bertacchini");
-                        polygon.getOutlinePaint().setColor(finalColor);
-                        polygon.setFillColor(finalColor);
-                        Log.d("FinalList5", "sono entrato");
-                    }
-                    break;
-
-                case "Ferrari's Farm":
-                    if(ferrCheck == false) {
-                        randomColor = getRandomColor("Ferrari");
-                        finalColor = checkColorIfExist("Ferrari", randomColor);
-                        polygon.getOutlinePaint().setColor(finalColor);
-                        polygon.setFillColor(finalColor);
-                        sharedData.setCheckIfAlreadyAssignedFerr();
-                        Log.d("FinalList6", "assegnato");
-                    }else{
-                        finalColor = getColor("Ferrari");
-                        polygon.getOutlinePaint().setColor(finalColor);
-                        polygon.setFillColor(finalColor);
-                        Log.d("FinalList6", "sono entrato");
-                    }
-                    break;
-                default:
-            }
-
-            polygon.getOutlinePaint().setStrokeWidth(3);
-            polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorPrimaryDark));
-            this.getOverlayManager().add(polygon);
-            this.invalidate();
-
-    }
-
+    //everything starts here
     public void drawFarms(ArrayList<Farm> farms) {
 
         for(Farm farm : farms) {
             ArrayList<Field> farmFields = farm.getFields();
-            //Log.d("numeroFarm", Integer.toString(farmFields.size()));
             for(Field field : farmFields) {
                 this.drawField(field);
             }
         }
+    }
 
-        /*
-        if(farmColorsList != null) {
-            Log.d("FinalList", farmColorsList.toString());
-        }*/
+    //here I set the area where the field is in the map
+    private void drawField(Field field) {
 
+        ArrayList<GeoPoint> fieldArea = field.getArea();
+        Polygon polygon = new Polygon();
+
+        for (GeoPoint point : fieldArea) {
+            polygon.addPoint(point);
+        }
+
+        fillFarms(field, polygon);
+    }
+
+    //this method is used to fill with color the polygon I just draw
+    public void fillFarms(Field field, Polygon polygon) {
+
+        //If true it means that this owner has already a color assigned, else, it needs a color
+        boolean bertCheck = sharedData.isCheckIfAlreadyAssignedBert();
+        boolean ferrCheck = sharedData.isCheckIfAlreadyAssignedFerr();
+        int randomColor, finalColor;
+
+        //if the arrayList I use to assign color to owner is empty it means that it's the first time
+        //the program get in this method
+        if(sharedData.getFarmColors() != null) {
+            farmColorsList = sharedData.getFarmColors();
+        }
+
+        switch (field.getFarmName()) {
+            case "Bertacchini's Farm":
+                if(bertCheck == false) {
+                    //In randomColor I get the color which is random generated by the array 'Color'
+                    randomColor = getRandomColor("Bertacchini");
+                    //in finalColor I get the color which I know was never assigned to any company
+                    //If 'Bertacchini' already exist I return the color which it has already
+                    finalColor = checkColorIfExist("Bertacchini", randomColor);
+
+                    //polygon.getOutlinePaint().setColor(finalColor);
+                    //filling the polygon
+                    polygon.setFillColor(finalColor);
+                    //this company has now the color assigned, it means that the program doesn't have to
+                    //get in this statement case, setting boolean variable to true!
+                    sharedData.setCheckIfAlreadyAssignedBert();
+                }else{
+                    finalColor = checkColorIfExist("Bertacchini", 0);
+                    polygon.getOutlinePaint().setColor(finalColor);
+                    polygon.setFillColor(finalColor);
+                }
+                break;
+
+            case "Ferrari's Farm":
+                if(ferrCheck == false) {
+                    randomColor = getRandomColor("Ferrari");
+                    finalColor = checkColorIfExist("Ferrari", randomColor);
+                    polygon.getOutlinePaint().setColor(finalColor);
+                    polygon.setFillColor(finalColor);
+                    sharedData.setCheckIfAlreadyAssignedFerr();
+                }else{
+                    finalColor = checkColorIfExist("Ferrari", 0);
+                    polygon.getOutlinePaint().setColor(finalColor);
+                    polygon.setFillColor(finalColor);
+                }
+                break;
+            default:
+        }
+
+        polygon.getOutlinePaint().setStrokeWidth(5);
+        polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorPrimaryDark));
+        this.getOverlayManager().add(polygon);
+        this.invalidate();
+
+    }
+
+    //this method is used to assign a random color from the array made by color
+    //to variable 'color' which return
+    public int getRandomColor(String nameFarm) {
+
+        int randomElement=0, color=0;
+
+        randomElement = random.nextInt(c) + min;
+        color = FarmColor[randomElement];
+
+        return color;
+    }
+
+
+    //this method does different kind of control in order to dodge double color assignment
+    public int checkColorIfExist(String nameFarm, int randomElement){
+
+        int check=0;
+
+
+        if(farmColorsList.size() != 0 || farmColorsList != null){
+
+            //if the arraylist isn't empty, atleast one company has a color
+            for(int i=0; i<farmColorsList.size(); i++){
+                if(nameFarm.equals(farmColorsList.get(i).getNameFarm())){
+                    //Check if this company has already a color, if it has, I return his own color
+                    return farmColorsList.get(i).getIdColor();
+                }
+            }
+
+            //In order to check if the color is already used, I use a variable check
+            for(int i=0; i<farmColorsList.size(); i++){
+                if(randomElement == farmColorsList.get(i).getIdColor()){
+                    check=1;
+                }
+            }
+
+            //if color is not used
+            if(check==0){
+                //I instance an object of FarmColor type
+                FarmColor farmColor = new FarmColor(nameFarm, randomElement);
+                //adding in the local list
+                farmColorsList.add(farmColor);
+                //adding in the global list
+                sharedData.updateList(farmColor);
+
+                //return the color
+                return randomElement;
+            }else{
+                //If already used
+                //Recalling the random color method
+                randomElement = getRandomColor(nameFarm);
+                //checking again if the color is already use
+                checkColorIfExist(nameFarm, randomElement);
+            }
+
+        }else{
+            //if the arraylist is empty it means that I have to create the first element with any color,
+            //that's why I didn't put any checks in the color used
+            FarmColor farmColor = new FarmColor(nameFarm, randomElement);
+            farmColorsList.add(farmColor);
+            sharedData.updateList(farmColor);
+
+            return randomElement;
+        }
+        return 0;
     }
 
     public void drawCanals(ArrayList<Canal> canals) {
@@ -206,64 +256,7 @@ public class MyMapView extends MapView  {
             this.invalidate();
         }
     }
-
-
-    public int getRandomColor(String nameFarm) {
-
-        int randomElement=0, color=0;
-
-        randomElement = random.nextInt(c) + min;
-        color = FarmColor[randomElement];
-
-        return color;
-    }
-
-
-    public int checkColorIfExist(String nameFarm, int randomElement){
-
-        if(farmColorsList.size() != 0 || farmColorsList != null){
-
-            for(int i=0; i<farmColorsList.size(); i++){
-                if(nameFarm.equals(farmColorsList.get(i).getNameFarm())){
-                    Log.d("FinalList", nameFarm + "ha già un colore");
-                    return farmColorsList.get(i).getIdColor();
-                }
-            }
-
-            int check=0;
-
-            for(int i=0; i<farmColorsList.size(); i++){
-                if(randomElement == farmColorsList.get(i).getIdColor()){
-                    check=1;
-                }
-            }
-
-            if(check==0){
-                FarmColor farmColor = new FarmColor(nameFarm, randomElement);
-                farmColorsList.add(farmColor);
-                sharedData.updateList(farmColor);
-
-                Log.d("FinalList", nameFarm + " non esisteva e " + randomElement + " non era utilizzato, quindi lo creo");
-
-                return randomElement;
-            }else{
-                Log.d("FinalList", randomElement + " è già utilizzato " + nameFarm);
-                randomElement = getRandomColor(nameFarm);
-                checkColorIfExist(nameFarm, randomElement);
-            }
-
-        }else{
-            FarmColor farmColor = new FarmColor(nameFarm, randomElement);
-            farmColorsList.add(farmColor);
-            sharedData.updateList(farmColor);
-
-            Log.d("FinalList", "Creato automaticamente " + nameFarm + " " + randomElement);
-
-            return randomElement;
-        }
-        return 0;
-    }
-
+    
     public void toStringFarmColor(){
         for (int i=0; i<farmColorsList.size(); i++){
             Log.d("FarmColorToString", farmColorsList.toString());

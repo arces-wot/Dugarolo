@@ -367,7 +367,6 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             super.onPostExecute(aBoolean);
 
             if(aBoolean) {
-
                 map.drawFarms(farms);
                 map.drawCanals(canals);
                 map.drawWeirs(weirs, weirMarkers);

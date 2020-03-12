@@ -274,7 +274,6 @@ public class MainActivity extends AppCompatActivity {
 
             if(aBoolean) {
                 map.drawFarms(farms);
-
                 loadRequestsRecyclerView(requests);
             }
         }

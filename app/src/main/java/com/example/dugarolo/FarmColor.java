@@ -28,11 +28,5 @@ public class FarmColor implements Serializable {
         return nameFarm;
     }
 
-    @NonNull
-    @Override
-    public String toString() {
-        String toReturn = "NameFarm : "+this.nameFarm+", IdColor : "+this.idColor+"";
-        //Log.d("FarmColorStampa", toReturn);
-        return toReturn;
-    }
+
 }
