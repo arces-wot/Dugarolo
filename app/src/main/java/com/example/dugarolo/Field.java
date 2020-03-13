@@ -11,6 +11,7 @@ public class Field implements Serializable {
     private String id;
     private ArrayList<GeoPoint> area;
 
+
     public Field(String farmName, String id, ArrayList<GeoPoint> area) {
         this.farmName = farmName;
         this.id = id;
@@ -28,4 +29,9 @@ public class Field implements Serializable {
     public String getId() {
         return id;
     }
+
+
+
+
 }
+

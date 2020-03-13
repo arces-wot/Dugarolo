@@ -72,6 +72,7 @@ public class TodayTab extends Fragment {
     private class RequestAdapter extends RecyclerView.Adapter<TodayTab.RequestAdapter.RequestHolder> {
 
         private List<Request> requests;
+        private Globals sharedData = Globals.getInstance();
 
         private class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
@@ -88,8 +89,9 @@ public class TodayTab extends Fragment {
                 basicIcon = itemView.findViewById(R.id.basic_icon);
                 farmName = itemView.findViewById(R.id.farm_name);
                 time = itemView.findViewById(R.id.time);
-                irrigationTime= itemView.findViewById(R.id.irrigation_time);
+                irrigationTime = itemView.findViewById(R.id.irrigation_time);
                 itemView.setOnClickListener(this);
+
             }
 
             @Override
@@ -123,32 +125,36 @@ public class TodayTab extends Fragment {
             //holder.farmColor.setImageResource(R.drawable.farm_color);
             String name = currentRequest.getName();
             DateTime dateTime = currentRequest.getDateTime();
+            //for (FarmColor f : sharedData.getFarmColors())
+               // if(f.getNameFarm().equalsIgnoreCase(name))
+                    if (name.equals("Bertacchini's Farm")) {
+                        int bertacchini = ResourcesCompat.getColor(getResources(), R.color.colorCompany1, null);
+                        //holder.farmColor.setColorFilter(bertacchini);
+                        holder.basicIcon.setBackgroundResource(R.drawable.ic_farmercolor1);
+                    } else if (name.equals("Ferrari's Farm")) {
+                        int ferrari = ResourcesCompat.getColor(getResources(), R.color.colorCompany2, null);
+                        //holder.farmColor.setColorFilter(ferrari);
+                        holder.basicIcon.setBackgroundResource(R.drawable.ic_farmercolor2);
+                    }
 
 
-            if (name.equals("Bertacchini's Farm")) {
-                int bertacchini = ResourcesCompat.getColor(getResources(), R.color.colorBertacchini, null);
-                //holder.farmColor.setColorFilter(bertacchini);
-                holder.basicIcon.setBackgroundResource(R.drawable.ic_farmercolor1);
-            } else if (name.equals("Ferrari's Farm")) {
-                int ferrari = ResourcesCompat.getColor(getResources(), R.color.colorFerrari, null);
-                //holder.farmColor.setColorFilter(ferrari);
-                holder.basicIcon.setBackgroundResource(R.drawable.ic_farmercolor2);
-            }
             DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
             String formattedDateTime = dateTime.toString(dtf);
-            holder.farmName.setText(currentRequest.getName() );
-            holder.time.setText(getResources().getString(R.string.expected_time) + ": "+formattedDateTime );
-            holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume() );
+            holder.farmName.setText(currentRequest.getName());
+            holder.time.setText(getResources().getString(R.string.expected_time) + ": " + formattedDateTime);
+            holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume());
 
         }
 
 
         @Override
-        public int getItemCount () {
+        public int getItemCount() {
 
             return requests.size();
         }
 
 
     }
+
+
 }

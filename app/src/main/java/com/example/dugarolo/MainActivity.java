@@ -17,6 +17,8 @@ import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
+import org.osmdroid.views.overlay.Marker;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -56,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
     private MyMapView map = null;
     private AssetLoader assetLoader = new AssetLoader();
     private ArrayList<Request> requests = new ArrayList<>();
+    private ArrayList<Marker> farmerMarkers = new ArrayList<>();
 
     //debug only
     //private static final String TAG = "MainActivity";
@@ -108,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(tabsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
+
     }
 
     @Override
@@ -198,6 +202,7 @@ public class MainActivity extends AppCompatActivity {
 
             if(aBoolean) {
                 map.drawFarms(farms);
+                map.drawIcon(farms,farmerMarkers,60);
                 //loadRequestsRecyclerView(requests);
             }
         }

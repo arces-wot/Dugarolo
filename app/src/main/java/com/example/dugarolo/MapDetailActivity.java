@@ -56,6 +56,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     private ArrayList<Weir> weirs = new ArrayList<>();
     private ArrayList<Marker> textMarkers = new ArrayList<>();
     private ArrayList<Marker> weirMarkers = new ArrayList<>();
+    private ArrayList<Marker> farmerMarkers = new ArrayList<>();
     private ArrayList<Farm> farms = new ArrayList<>();
     private AssetLoader assetLoader = new AssetLoader();
     private JSONReceiver jsonReceiver;
@@ -370,6 +371,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                 map.drawFarms(farms);
                 map.drawCanals(canals);
                 map.drawWeirs(weirs, weirMarkers);
+                map.drawIcon(farms,farmerMarkers,30);
                 setWeirListeners(weirMarkers);
                 registerService();
             }
