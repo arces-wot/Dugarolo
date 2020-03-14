@@ -183,9 +183,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
-
-
     private class LoadFarmsAndRequests extends AsyncTask<Void, Void, Boolean> {
 
         @Override

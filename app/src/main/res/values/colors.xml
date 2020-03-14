@@ -14,6 +14,8 @@
     //da qui iniziano i colori delle aziende
     <color name="colorCompany1">#f1c40f</color>
     <color name="colorCompany2">#2980b9</color>
+    <color name="colorCompany3">#16a085</color>
+    <color name="colorCompany4">#8e44ad</color>
     <color name="colorFarmName">#000000</color>
 
 </resources>

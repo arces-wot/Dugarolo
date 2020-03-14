@@ -1,5 +1,7 @@
 package com.example.dugarolo;
 import android.app.Application;
+import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -20,14 +22,11 @@ public class Globals {
         Globals.instance = instance;
     }
 
-    boolean checkIfAlreadyAssignedBert = false;
-    boolean checkIfAlreadyAssignedFerr = false;
+    MyMapView myMapView = null;
 
     ArrayList<FarmColor> farmColors = new ArrayList<FarmColor>();
 
-    private Globals() {
-
-    }
+    private Globals() {}
 
     public void updateList(FarmColor farmColor){
         farmColors.add(farmColor);
@@ -37,20 +36,13 @@ public class Globals {
         return this.farmColors;
     }
 
-    public void setCheckIfAlreadyAssignedBert() {
-        checkIfAlreadyAssignedBert = true;
-    }
+    public boolean searchForAssignedFarm(String nameFarm) {
 
-    public boolean isCheckIfAlreadyAssignedBert() {
-        return checkIfAlreadyAssignedBert;
+        for(int i=0; i<farmColors.size(); i++)
+        {
+            if(nameFarm.equals(farmColors.get(i).nameFarm))
+                return true;
+        }
+        return false;
     }
-
-    public void setCheckIfAlreadyAssignedFerr() {
-        this.checkIfAlreadyAssignedFerr = true;
-    }
-
-    public boolean isCheckIfAlreadyAssignedFerr() {
-        return checkIfAlreadyAssignedFerr;
-    }
-
 }
