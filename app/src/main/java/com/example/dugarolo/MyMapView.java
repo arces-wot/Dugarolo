@@ -74,12 +74,14 @@ public class MyMapView extends MapView {
             Marker marker = new Marker(this);
             marker.setPosition(farm.getIconPosition());
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+
             if (farm.getName().equalsIgnoreCase("Bertacchini's Farm"))
                 farmerIcon = getResources().getDrawable(R.drawable.farmericon1);
             else if (farm.getName().equalsIgnoreCase("Ferrari's Farm"))
                 farmerIcon = getResources().getDrawable(R.drawable.farmer_icon2);
             else
                 farmerIcon = getResources().getDrawable(R.drawable.farmericon1);
+
             Bitmap bitmap = ((BitmapDrawable) farmerIcon).getBitmap();
             Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, size, size, true));
             marker.setIcon(resizedWeirIcon);
@@ -133,7 +135,7 @@ public class MyMapView extends MapView {
 
         //Log.d("nomeFarm", field.getFarmName());
 
-        if(sharedData.searchForAssignedFarm(field.getFarmName())==true) {
+        if(sharedData.searchForAssignedFarm(field.getFarmName())!=0) {
             finalColor = checkColorIfExist(field.getFarmName(), 0);
             polygon.getOutlinePaint().setColor(finalColor);
             polygon.setFillColor(finalColor);
@@ -147,8 +149,6 @@ public class MyMapView extends MapView {
         polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorPrimaryDark));
         this.getOverlayManager().add(polygon);
         this.invalidate();
-
-        toStringFarmColor();
     }
 
     //this method is used to assign a random color from the array made by color

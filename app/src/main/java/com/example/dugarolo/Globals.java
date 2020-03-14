@@ -36,13 +36,14 @@ public class Globals {
         return this.farmColors;
     }
 
-    public boolean searchForAssignedFarm(String nameFarm) {
+    public int searchForAssignedFarm(String nameFarm) {
 
         for(int i=0; i<farmColors.size(); i++)
         {
             if(nameFarm.equals(farmColors.get(i).nameFarm))
-                return true;
+                return farmColors.get(i).idColor;
         }
-        return false;
+        return 0;
     }
+
 }
