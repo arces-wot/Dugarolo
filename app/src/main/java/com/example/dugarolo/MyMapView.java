@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import static android.graphics.Color.YELLOW;
-
 public class MyMapView extends MapView {
 
     Globals sharedData = Globals.getInstance();
@@ -137,21 +135,40 @@ public class MyMapView extends MapView {
 
         if(sharedData.searchForAssignedFarm(field.getFarmName())!=0) {
             finalColor = checkColorIfExist(field.getFarmName(), 0);
+            getStringColor(finalColor);
             polygon.getOutlinePaint().setColor(finalColor);
             polygon.setFillColor(finalColor);
         }else{
             randomColor = getRandomColor(field.getFarmName());
             finalColor = checkColorIfExist(field.getFarmName(), randomColor);
+            getStringColor(finalColor);
             polygon.setFillColor(finalColor);
         }
 
-        int strokeColor = finalColor - 100;
+        int strokeColor = getStringColor(finalColor);
+        Log.d("StudyColor3", finalColor + " || " + strokeColor);
 
-        Log.d("colorStroke", Integer.toString(finalColor));
         polygon.getOutlinePaint().setStrokeWidth(5);
         polygon.getOutlinePaint().setColor(strokeColor);
         this.getOverlayManager().add(polygon);
         this.invalidate();
+    }
+
+    public int getStringColor(int finalColor){
+        String hexColor = String.format("#%06X", (0xFFFFFF & finalColor));
+
+        int color = Color.parseColor(hexColor);
+
+        int red = Color.red(color);
+        int green = Color.green(color);
+        int blue = Color.blue(color);
+
+        green-=30;
+        blue-=30;
+
+        int fC = Color.rgb(red, green, blue);
+
+        return fC;
     }
 
     //this method is used to assign a random color from the array made by color
