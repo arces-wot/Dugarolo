@@ -12,10 +12,10 @@
     <color name="text_map_detail_color">#9b59b6</color>
 
     //da qui iniziano i colori delle aziende
-    <color name="colorCompany1">#f1c40f</color>
-    <color name="colorCompany2">#2980b9</color>
-    <color name="colorCompany3">#16a085</color>
-    <color name="colorCompany4">#8e44ad</color>
+    <color name="colorCompany1">#ffcccc</color>
+    <color name="colorCompany2">#7efff5</color>
+    <color name="colorCompany3">#cd84f1</color>
+    <color name="colorCompany4">#32ff7e</color>
     <color name="colorFarmName">#000000</color>
 
 </resources>

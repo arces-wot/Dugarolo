@@ -145,8 +145,11 @@ public class MyMapView extends MapView {
             polygon.setFillColor(finalColor);
         }
 
+        int strokeColor = finalColor - 100;
+
+        Log.d("colorStroke", Integer.toString(finalColor));
         polygon.getOutlinePaint().setStrokeWidth(5);
-        polygon.getOutlinePaint().setColor(getResources().getColor(R.color.colorPrimaryDark));
+        polygon.getOutlinePaint().setColor(strokeColor);
         this.getOverlayManager().add(polygon);
         this.invalidate();
     }
