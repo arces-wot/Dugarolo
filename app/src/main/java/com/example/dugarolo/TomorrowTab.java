@@ -7,6 +7,7 @@ import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -79,6 +80,7 @@ public class TomorrowTab extends Fragment {
             public TextView farmName;
             public TextView time;
             public TextView irrigationTime;
+            public ImageView check;
 
 
             @SuppressLint("ResourceType")
@@ -88,6 +90,7 @@ public class TomorrowTab extends Fragment {
                 farmName = itemView.findViewById(R.id.farm_name);
                 time = itemView.findViewById(R.id.time);
                 irrigationTime = itemView.findViewById(R.id.irrigation_time);
+                check = itemView.findViewById(R.id.check);
                 itemView.setOnClickListener(this);
 
             }
@@ -141,6 +144,13 @@ public class TomorrowTab extends Fragment {
             holder.farmName.setText(currentRequest.getName());
             holder.time.setText(getResources().getString(R.string.expected_time) + ": " + formattedDateTime);
             holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume());
+
+            if(currentRequest.getStatus() == "Scheduled"){
+                holder.check.setVisibility(View.INVISIBLE);
+            }else{
+                holder.check.setBackgroundResource(R.drawable.check);
+                holder.check.setVisibility(View.VISIBLE);
+            }
 
         }
 

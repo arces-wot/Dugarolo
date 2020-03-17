@@ -8,6 +8,16 @@
 
 
     <ImageView
+        android:id="@+id/check"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_marginStart="280dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.514" />
+
+    <ImageView
         android:id="@+id/basic_icon"
         android:layout_width="45dp"
         android:layout_height="45dp"
