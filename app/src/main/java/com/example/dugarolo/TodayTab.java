@@ -39,7 +39,6 @@ import org.joda.time.format.DateTimeFormatter;
 
 public class TodayTab extends Fragment {
 
-
     public TodayTab() {
         // Required empty public constructor
     }

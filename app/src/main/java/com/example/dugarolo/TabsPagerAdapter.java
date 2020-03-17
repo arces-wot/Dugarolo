@@ -1,6 +1,7 @@
 package com.example.dugarolo;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
@@ -31,7 +32,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
             case 0:
                 return TodayTab.newInstance(todayRequests(requests));
             case 1:
-                return TomorrowTab.newInstance();
+                return TomorrowTab.newInstance(tomorrowRequests(requests));
             default:
                 return null;
         }
@@ -54,13 +55,22 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         for (Request r : requests)
             if ((r.getDateTime().dayOfYear().equals(now.dayOfYear()))&&(r.getStatus().equalsIgnoreCase("accepted")))
                 todayRequests.add(r);
-        /*for (Request r1 : requests)
-            for (Request r2 : requests)
-                if(r1.getName().equals(r2.getName()))
-                    requests.remove(r2);*/
-
 
         return todayRequests;
 
     }
+
+    public ArrayList<Request> tomorrowRequests(ArrayList<Request> requests) {
+        DateTime now = new DateTime();
+        ArrayList<Request> tomorrowRequests = new ArrayList<>();
+        for (Request r : requests) {
+
+            if ((r.getDateTime().getDayOfYear())>(now.getDayOfYear())){
+                tomorrowRequests.add(r);
+            }
+        }
+
+        return tomorrowRequests;
+    }
 }
+
