@@ -98,7 +98,7 @@ public class TomorrowTab extends Fragment {
             @Override
             public void onClick(View v) {
                 int position = getLayoutPosition();
-                Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplication(), RequestDetailsActivity.class);
+                Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplication(), InfoTomorrowRequest.class);
                 intent.putParcelableArrayListExtra("REQUEST_LIST", (ArrayList<? extends Parcelable>) requests);
                 intent.putExtra("REQUEST_CLICKED", position);
                 int requestId = position;

@@ -17,19 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-
-        <activity android:name=".KeyActivity"
-            android:parentActivityName=".MainActivity"
-            android:label="SWAMP"
-        />
+        <activity android:name=".InfoTomorrowRequest"></activity>
         <activity
-            android:name=".MainActivity">
+            android:name=".KeyActivity"
+            android:label="SWAMP"
+            android:parentActivityName=".MainActivity" />
+        <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".RequestDetailsActivity"
             android:parentActivityName=".MainActivity" />
@@ -38,7 +37,7 @@
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".WeirActivity"
-            android:parentActivityName=".MapDetailActivity"/>
+            android:parentActivityName=".MapDetailActivity" />
 
         <service android:name=".JSONIntentService" />
     </application>

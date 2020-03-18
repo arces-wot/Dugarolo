@@ -4,6 +4,8 @@ import android.app.IntentService;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.ResultReceiver;
+import android.util.Log;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -72,7 +74,6 @@ public class JSONIntentService extends IntentService {
             if(code == 200) {
 
                 bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-
                 String line = "";
 
                 while ((line = bufferedReader.readLine()) != null) {
