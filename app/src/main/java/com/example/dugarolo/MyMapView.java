@@ -2,14 +2,20 @@ package com.example.dugarolo;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.RequiresApi;
+import androidx.core.content.ContextCompat;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -65,23 +71,42 @@ public class MyMapView extends MapView {
             this.invalidate();
         }
     }
+    private static Bitmap getBitmap(VectorDrawable vectorDrawable) {
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return bitmap;
+    }
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    private static Bitmap getBitmap(Context context, int drawableId) {
 
-    public void drawIcon(ArrayList<Farm> farms, ArrayList<Marker> farmerMarkers,int size) {
+        Drawable drawable = ContextCompat.getDrawable(context, drawableId);
+        if (drawable instanceof BitmapDrawable) {
+            return BitmapFactory.decodeResource(context.getResources(), drawableId);
+        } else if (drawable instanceof VectorDrawable) {
+            return getBitmap((VectorDrawable) drawable);
+        } else {
+            throw new IllegalArgumentException("unsupported drawable type");
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public void drawIcon(ArrayList<Farm> farms, ArrayList<Marker> farmerMarkers, int size) {
         Drawable farmerIcon;
         for (Farm farm : farms) {
             Marker marker = new Marker(this);
             marker.setPosition(farm.getIconPosition());
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-
-            if (farm.getName().equalsIgnoreCase("Bertacchini's Farm"))
+            /*if (farm.getName().equalsIgnoreCase("Bertacchini's Farm"))
                 farmerIcon = getResources().getDrawable(R.drawable.farmericon1);
             else if (farm.getName().equalsIgnoreCase("Ferrari's Farm"))
                 farmerIcon = getResources().getDrawable(R.drawable.farmer_icon2);
             else
-                farmerIcon = getResources().getDrawable(R.drawable.farmericon1);
+                farmerIcon = getResources().getDrawable(R.drawable.farmericon1);*/
 
-            Bitmap bitmap = ((BitmapDrawable) farmerIcon).getBitmap();
-            Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(bitmap, size, size, true));
+            Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(getBitmap(getContext(),R.drawable.ic_farmercolor1), size, size, true));
             marker.setIcon(resizedWeirIcon);
             marker.setInfoWindow(null);
             marker.setId(farm.getName());
