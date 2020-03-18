@@ -17,7 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".InfoTomorrowRequest"></activity>
+        <activity android:name=".Planning"></activity>
+        <activity android:name=".InfoTomorrowRequest" />
         <activity
             android:name=".KeyActivity"
             android:label="SWAMP"

@@ -1,5 +1,7 @@
 package com.example.dugarolo;
 
+import android.util.Log;
+
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -193,7 +195,8 @@ public class AssetLoader {
     }
 
     public void loadRequests(ArrayList<Farm> farms, ArrayList<Request> requests) {
-        if(requests.isEmpty()) {
+        //if(requests.isEmpty()) {
+        if(true) {
             try {
                 for (Farm farm : farms) {
                     ArrayList<Field> fields = farm.getFields();
@@ -218,6 +221,7 @@ public class AssetLoader {
                             }
                         }
                     }
+
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();

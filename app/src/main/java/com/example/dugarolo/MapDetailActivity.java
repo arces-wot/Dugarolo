@@ -13,6 +13,7 @@ import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -37,6 +38,7 @@ import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -363,6 +365,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             return true;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
         @Override
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
@@ -371,7 +374,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                 map.drawFarms(farms);
                 map.drawCanals(canals);
                 map.drawWeirs(weirs, weirMarkers);
-                map.drawIcon(farms,farmerMarkers,30);
+                map.drawIcon(farms,farmerMarkers,80);
                 setWeirListeners(weirMarkers);
                 registerService();
             }
