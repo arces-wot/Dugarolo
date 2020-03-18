@@ -77,9 +77,9 @@ public class MainActivity extends AppCompatActivity {
         geoList1.add(new GeoPoint(44.777572,10.715764));
 
         Field  f1= new Field("Bertacchini's Farm","001", geoList1);
-        Request r1=new Request("001", "Bertacchini's Farm", date1, "Scheduled", "1h", f1, "speriamo bene");
+        Request r1=new Request("001", "Bertacchini's Farm", date1, "Accepted", "1h", f1, "speriamo bene");
         requests.add(r1);
-
+/*
         DateTime date2= new DateTime();
         Request r2=new Request("001", "Bertacchini's Farm", date1, "Accepted", "1h", f1, "speriamo bene");
         requests.add(r2);
@@ -92,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         Request r6=new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
         requests.add(r6);
         Request r7=new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r7);
+        requests.add(r7);*/
 
         loadMap();
         Toolbar toolbar = findViewById(R.id.toolbar);
