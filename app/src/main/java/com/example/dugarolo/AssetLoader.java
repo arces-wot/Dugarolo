@@ -195,14 +195,18 @@ public class AssetLoader {
     }
 
     public void loadRequests(ArrayList<Farm> farms, ArrayList<Request> requests) {
-        //if(requests.isEmpty()) {
-        if(true) {
+
+        if(requests.isEmpty()) {
             try {
                 for (Farm farm : farms) {
                     ArrayList<Field> fields = farm.getFields();
+                    Log.d("ProvaLoad1", "ciao");
                     for (Field field : fields) {
+                        Log.d("ProvaLoad", field.getId());
                         String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + field.getId() + "/irrigation_plan"));
+                        Log.d("ProvaLoad2", "ciao");
                         if(json != null) {
+                            Log.d("ProvaLoad3", "ciao");
                             JSONArray jsonArray = new JSONArray(json);
                             for (int index = 0; index < jsonArray.length(); index++) {
                                 JSONObject JSONRequest = jsonArray.getJSONObject(index);
@@ -219,6 +223,8 @@ public class AssetLoader {
                                 Request request = new Request(id, requestName, formattedDateTime, status, waterVolume.toString(), field, message);
                                 requests.add(request);
                             }
+                        }else{
+                            Log.d("ProvaLoad4", "ciao");
                         }
                     }
 
@@ -228,6 +234,8 @@ public class AssetLoader {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }else{
+            Log.d("ProvaLoad5", "ciao");
         }
     }
 }

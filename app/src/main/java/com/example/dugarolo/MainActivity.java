@@ -76,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         //List<Request> requestList = requestLab.getRequestList();
         //trial requests:
 
+
         DateTime date1 = new DateTime(2020, 12, 12, 12, 12);
         ArrayList<GeoPoint> geoList1 = new ArrayList<GeoPoint>();
         geoList1.add(new GeoPoint(44.777572, 10.715764));
@@ -98,8 +99,10 @@ public class MainActivity extends AppCompatActivity {
         requests.add(r5);
         Request r6 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
         requests.add(r6);
+
         Request r7 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
         requests.add(r7);
+
 
         loadMap();
         Toolbar toolbar = findViewById(R.id.toolbar);
