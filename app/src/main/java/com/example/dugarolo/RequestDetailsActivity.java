@@ -49,15 +49,12 @@ public class RequestDetailsActivity extends AppCompatActivity {
     private Integer requestId;
     private RadioGroup radioGroup;
     private ViewGroup vg;
-    private EditText editTextReasonCancelled;
-    private TextView textViewStartDate;
-    private DatePickerDialog.OnDateSetListener startDateSetListener;
-    private TextView textViewEndDate;
-    private DatePickerDialog.OnDateSetListener endDateSetListener;
-    private EditText     waterVolumeSatisfied;
-    private TextView currentStatusTextView;
+    private EditText editTextReasonCancelled, waterVolumeSatisfied;
+    private TextView textViewStartDate, messageToShow, currentStatusToShow, nameFarm, irrigationLabel, dateLabel;
+    private DatePickerDialog.OnDateSetListener startDateSetListener, endDateSetListener;
+    private TextView textViewEndDate, currentStatusTextView, messageTextView;
     private ImageView currentStatusImageView;
-    private TextView messageTextView;
+    PostNewStatus postNewStatus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +64,11 @@ public class RequestDetailsActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         radioGroup = findViewById(R.id.radioGroup);
         vg = findViewById(R.id.detailsForm);
+        messageToShow = findViewById(R.id.message);
+        currentStatusToShow = findViewById(R.id.current_status);
+        nameFarm = findViewById(R.id.nameFarm);
+        irrigationLabel = findViewById(R.id.irrigation_time);
+        dateLabel = findViewById(R.id.dateLabel);
         //RequestLab requestLab = RequestLab.get(this);
         //List<Request> requestList = requestLab.getRequestList();
         requestList = getIntent().getParcelableArrayListExtra("REQUEST_LIST");
@@ -79,12 +81,19 @@ public class RequestDetailsActivity extends AppCompatActivity {
         setRequestId(requestId);
         //Request request = Request.requests[requestId];
         Request request = requestList.get(requestId);
-        TextView farmName = findViewById(R.id.request);
+
+        messageToShow.setText(request.getMessage());
+        currentStatusToShow.setText(request.getStatus());
+        nameFarm.setText(request.getName());
+        irrigationLabel.setText(request.getWaterVolume());
+
+
         DateTime dateTime = request.getDateTime();
         DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
         String formattedDateTime = dateTime.toString(dtf);
-        farmName.setText(Html.fromHtml(request.getName() + "<br />"+ "<small>"  + formattedDateTime
-                + " , " + "<br />" + getResources().getString(R.string.total_irrigation_time) + ": " + request.getWaterVolume() + " h" + "</small"));
+
+        dateLabel.setText(formattedDateTime);
+
         currentStatusTextView = findViewById(R.id.current_status);
         setCurrentStatusTextView(request.getStatus());
         messageTextView = findViewById(R.id.message);
@@ -229,6 +238,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
             int radioButtonId = radioGroup.getCheckedRadioButtonId();
             //Request request = Request.requests[requestId];
             Request request = requestList.get(requestId);
+
             //RadioButton radioButton = findViewById(radioButtonId);
             JSONObject json = new JSONObject();
             String message = "";
@@ -399,7 +409,6 @@ public class RequestDetailsActivity extends AppCompatActivity {
                 /*
                 Map<String, Object> params = new LinkedHashMap<>();
                 params.put("json", jsonObject);
-
                 StringBuilder postData = new StringBuilder();
                 for (Map.Entry<String, Object> param : params.entrySet()) {
                     if (postData.length() != 0) postData.append('&');

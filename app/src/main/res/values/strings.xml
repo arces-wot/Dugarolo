@@ -18,12 +18,12 @@
     <string name="reason_hint">Insert reason here</string>
     <string name="request_cancelled_message">The request has been cancelled.</string>
     <string name="request_satisfied_message">The request has been satisified.</string>
-    <string name="current_status">Current status:</string>
+    <string name="current_status">Current status</string>
     <string name="request_statuses">Request statuses</string>
     <string name="show_statuses_key">Show statuses key</string>
     <string name="measurement_unit_meaning">m: Meters</string>
     <string name="measurement_unit">m</string>
-    <string name="message_label">Message:</string>
+    <string name="message_label">Message</string>
     <string name="no_message">No message to display</string>
     <string name="open_level_is">Open level is</string>
     <string name="weir">Weir</string>

@@ -171,7 +171,6 @@ public class MyMapView extends MapView {
         }
 
         int strokeColor = getStringColor(finalColor);
-        Log.d("StudyColor3", finalColor + " || " + strokeColor);
 
         polygon.getOutlinePaint().setStrokeWidth(5);
         polygon.getOutlinePaint().setColor(strokeColor);

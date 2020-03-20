@@ -15,10 +15,9 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
             android:text="@string/cancelled_request_reason"
             android:textColor="@android:color/black"
-            android:textSize="20sp"
+            android:textSize="20dp"
             app:layout_constraintBottom_toTopOf="@id/reason_edit_text"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

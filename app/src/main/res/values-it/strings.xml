@@ -19,12 +19,12 @@
     <string name="reason_hint">Inserisci motivazione qui</string>
     <string name="request_cancelled_message">La richiesta è stata cancellata.</string>
     <string name="request_satisfied_message">La richiesta è stata soddisfatta.</string>
-    <string name="current_status">Stato corrente:</string>
+    <string name="current_status">Stato corrente </string>
     <string name="request_statuses">Stati delle richieste:</string>
     <string name="show_statuses_key">Mostra la legenda degli stati</string>
     <string name="measurement_unit">m</string>
     <string name="measurement_unit_meaning">m: Metri</string>
-    <string name="message_label">"Messaggio: "</string>
+    <string name="message_label">"Messaggio "</string>
     <string name="no_message">Nessun messaggio da mostrare</string>
     <string name="open_level_is">Il livello di apertura è</string>
     <string name="weir">Chiusa</string>
