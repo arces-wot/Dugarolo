@@ -42,7 +42,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="489dp"
         tools:context=".MainActivity">
 
         <androidx.viewpager.widget.ViewPager
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="491dp"
 
-           />
+            />
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
@@ -62,7 +62,6 @@
             android:clickable="true"
             android:focusable="true"
             app:backgroundTint="#009688" />
-
 
 
     </FrameLayout>

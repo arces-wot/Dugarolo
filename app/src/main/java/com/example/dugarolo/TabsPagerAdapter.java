@@ -53,7 +53,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         DateTime now = new DateTime();
         ArrayList<Request> todayRequests = new ArrayList<>();
         for (Request r : requests)
-            if ((r.getDateTime().dayOfYear().equals(now.dayOfYear()))&&(r.getStatus().equalsIgnoreCase("accepted")))
+           if ((r.getDateTime().dayOfYear().equals(now.dayOfYear()))&&(r.getStatus().equalsIgnoreCase("accepted")))
                 todayRequests.add(r);
 
         return todayRequests;

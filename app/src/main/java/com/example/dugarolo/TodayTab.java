@@ -2,11 +2,8 @@ package com.example.dugarolo;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,31 +11,24 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.devs.vectorchildfinder.VectorChildFinder;
+import com.devs.vectorchildfinder.VectorDrawableCompat;
+
 import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Objects;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import java.util.concurrent.atomic.AtomicReference;
 
 public class TodayTab extends Fragment {
-
     public TodayTab() {
         // Required empty public constructor
     }
@@ -117,16 +107,30 @@ public class TodayTab extends Fragment {
         }
 
 
-        @SuppressLint("SetTextI18n")
+        @SuppressLint({"SetTextI18n", "ResourceType"})
         @Override
         public void onBindViewHolder(@NonNull TodayTab.RequestAdapter.RequestHolder holder, int position) {
             Request currentRequest = requests.get(position);
             //holder.farmColor.setImageResource(R.drawable.farm_color);
             String name = currentRequest.getName();
             DateTime dateTime = currentRequest.getDateTime();
+            int color=ResourcesCompat.getColor(getResources(),R.color.colorCompany4, null);  //sembra una variabile final perche' nel ciclo non viene modificata pur entrando nel if
+
+            for (FarmColor f : sharedData.getFarmColors())
+                if(f.getNameFarm().equalsIgnoreCase(name)){
+                   // color= f.getIdColor();// <<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------------------------------------------------------------ QUA   PROBLEMA
+                break;
+                }
+             //funzioni importate da GIT
+            VectorChildFinder vector;
+            vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor1, holder.basicIcon);
+            VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background"); // Path coinvolta con label background
+            path1.setFillColor(color);    // funzione che colora la path
+
+           
             //for (FarmColor f : sharedData.getFarmColors())
                // if(f.getNameFarm().equalsIgnoreCase(name))
-                    if (name.equals("Bertacchini's Farm")) {
+                   /* if (name.equals("Bertacchini's Farm")) {
                         int bertacchini = ResourcesCompat.getColor(getResources(), R.color.colorCompany1, null);
                         //holder.farmColor.setColorFilter(bertacchini);
                         holder.basicIcon.setBackgroundResource(R.drawable.ic_farmercolor1);
@@ -134,7 +138,7 @@ public class TodayTab extends Fragment {
                         int ferrari = ResourcesCompat.getColor(getResources(), R.color.colorCompany2, null);
                         //holder.farmColor.setColorFilter(ferrari);
                         holder.basicIcon.setBackgroundResource(R.drawable.ic_farmercolor2);
-                    }
+                    }*/
 
 
             DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");

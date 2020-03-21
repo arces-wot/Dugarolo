@@ -1,5 +1,6 @@
 package com.example.dugarolo;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,10 +13,14 @@ import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
+
+import com.devs.vectorchildfinder.VectorChildFinder;
+import com.devs.vectorchildfinder.VectorDrawableCompat;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
@@ -79,8 +84,13 @@ public class MyMapView extends MapView {
         vectorDrawable.draw(canvas);
         return bitmap;
     }
+    @SuppressLint("ResourceAsColor")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    private static Bitmap getBitmap(Context context, int drawableId) {
+    private Bitmap getBitmap(Context context, int drawableId) {
+        //Drawable farmer=getResources().getDrawable(drawableId);
+        //farmer.setTint(R.color.colorCompany2);
+
+
 
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
         if (drawable instanceof BitmapDrawable) {
@@ -92,9 +102,11 @@ public class MyMapView extends MapView {
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     public void drawIcon(ArrayList<Farm> farms, ArrayList<Marker> farmerMarkers, int size) {
-        Drawable farmerIcon;
+
+
         for (Farm farm : farms) {
             Marker marker = new Marker(this);
             marker.setPosition(farm.getIconPosition());
