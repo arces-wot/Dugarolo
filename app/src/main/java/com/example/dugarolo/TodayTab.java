@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,9 +16,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
 
-import com.devs.vectorchildfinder.VectorChildFinder;
-import com.devs.vectorchildfinder.VectorDrawableCompat;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -116,18 +116,19 @@ public class TodayTab extends Fragment {
             DateTime dateTime = currentRequest.getDateTime();
             int color=ResourcesCompat.getColor(getResources(),R.color.colorCompany4, null);  //sembra una variabile final perche' nel ciclo non viene modificata pur entrando nel if
 
-            for (FarmColor f : sharedData.getFarmColors())
-                if(f.getNameFarm().equalsIgnoreCase(name)){
-                   // color= f.getIdColor();// <<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------------------------------------------------------------ QUA   PROBLEMA
-                break;
+            for (FarmColor f : sharedData.getFarmColors()) {
+                if (f.getNameFarm().equalsIgnoreCase(name)) {
+                    f.getIdColor();// <<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------------------------------------------------------------ QUA   PROBLEMA
+                    break;
                 }
+            }
              //funzioni importate da GIT
-            VectorChildFinder vector;
-            vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor1, holder.basicIcon);
-            VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background"); // Path coinvolta con label background
-            path1.setFillColor(color);    // funzione che colora la path
+            //VectorChildFinder vector;
+            //vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor1, holder.basicIcon);
+            //VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background"); // Path coinvolta con label background
+            //path1.setFillColor(color);    // funzione che colora la path
 
-           
+
             //for (FarmColor f : sharedData.getFarmColors())
                // if(f.getNameFarm().equalsIgnoreCase(name))
                    /* if (name.equals("Bertacchini's Farm")) {

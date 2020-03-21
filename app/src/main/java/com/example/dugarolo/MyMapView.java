@@ -19,9 +19,6 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
-import com.devs.vectorchildfinder.VectorChildFinder;
-import com.devs.vectorchildfinder.VectorDrawableCompat;
-
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -155,6 +152,9 @@ public class MyMapView extends MapView {
         }
 
         fillFarms(field, polygon);
+        TodayTab todayTab;
+        //INSERISCI QUA IL METODO CHE RICHIAMA L'ASSEGNAZIONE DEI COLORI IN TODAY TAB <-------------------------------------------
+        //l'ho inserito qua perchè quando l'esecuzione arriva a questo punto l'array in shareData è riempito
     }
 
     //this method is used to fill with color the polygon I just draw

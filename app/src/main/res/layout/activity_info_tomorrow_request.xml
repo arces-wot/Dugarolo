@@ -138,14 +138,16 @@
 
     <Button
         android:id="@+id/refusePlanning"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="150dp"
+        android:layout_height="53dp"
         android:layout_marginStart="76dp"
         android:layout_marginTop="573dp"
         android:layout_marginEnd="81dp"
         android:layout_marginBottom="54dp"
+        android:background="@android:color/transparent"
         android:onClick="onClickRefusePlanning"
         android:text="Rifiuta"
+        android:textColor="@color/infoTomorrowRequestButtonColor"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/acceptPlanning"
         app:layout_constraintStart_toStartOf="parent"
@@ -153,16 +155,18 @@
 
     <Button
         android:id="@+id/acceptPlanning"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
+        android:layout_width="132dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="40dp"
         android:layout_marginTop="573dp"
         android:layout_marginEnd="79dp"
         android:layout_marginBottom="54dp"
+        android:background="@color/infoTomorrowRequestButtonColor"
+        android:onClick="onClickAcceptPlanning"
         android:text="Accetta"
+        android:textColor="@android:color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:onClick="onClickAcceptPlanning"
         app:layout_constraintStart_toEndOf="@+id/refusePlanning"
         app:layout_constraintTop_toBottomOf="@+id/include" />
 
