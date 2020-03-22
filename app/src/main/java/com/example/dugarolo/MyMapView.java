@@ -6,15 +6,12 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
@@ -118,7 +115,7 @@ public class MyMapView extends MapView {
             else
                 farmerIcon = getResources().getDrawable(R.drawable.farmericon1);*/
 
-            Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(getBitmap(getContext(),R.drawable.ic_farmercolor1), size, size, true));
+            Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(getBitmap(getContext(),R.drawable.ic_farmercolor_no_backgroud), size, size, true));
             marker.setIcon(resizedWeirIcon);
             marker.setInfoWindow(null);
             marker.setId(farm.getName());

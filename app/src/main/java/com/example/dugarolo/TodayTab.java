@@ -25,7 +25,6 @@ import org.joda.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.concurrent.atomic.AtomicReference;
 
 public class TodayTab extends Fragment {
     public TodayTab() {
@@ -110,38 +109,25 @@ public class TodayTab extends Fragment {
         @Override
         public void onBindViewHolder(@NonNull TodayTab.RequestAdapter.RequestHolder holder, int position) {
             Request currentRequest = requests.get(position);
-            //holder.farmColor.setImageResource(R.drawable.farm_color);
             String name = currentRequest.getName();
             DateTime dateTime = currentRequest.getDateTime();
             int color1=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null);
-            int color2=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null); //sembra una variabile final perche' nel ciclo non viene modificata pur entrando nel if
+            int color2=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null);
 
             for (FarmColor f : sharedData.getFarmColors())
                 if(f.getNameFarm().equalsIgnoreCase(name)){
                     color1= f.getIdColor();
-                    color2= manipulateColor(f.getIdColor(),0.8f);// <<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------------------------------------------------------------ QUA   PROBLEMA
+                    color2= manipulateColor(f.getIdColor(),0.8f);
                     break;
                 }
             //funzioni importate da GIT
             VectorChildFinder vector;
-            vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor1, holder.basicIcon);
-            VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background"); // Path coinvolta con label background
-            VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow"); // Path coinvolta con label background
-            path1.setFillColor(color1);    // funzione che colora la path
-            path2.setFillColor(color2);    // funzione che colora la path
+            vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor, holder.basicIcon);
+            VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
+            VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
+            path1.setFillColor(color1);
+            path2.setFillColor(color2);
 
-
-            //for (FarmColor f : sharedData.getFarmColors())
-            // if(f.getNameFarm().equalsIgnoreCase(name))
-                   /* if (name.equals("Bertacchini's Farm")) {
-                        int bertacchini = ResourcesCompat.getColor(getResources(), R.color.colorCompany1, null);
-                        //holder.farmColor.setColorFilter(bertacchini);
-                        holder.basicIcon.setBackgroundResource(R.drawable.ic_farmercolor1);
-                    } else if (name.equals("Ferrari's Farm")) {
-                        int ferrari = ResourcesCompat.getColor(getResources(), R.color.colorCompany2, null);
-                        //holder.farmColor.setColorFilter(ferrari);
-                        holder.basicIcon.setBackgroundResource(R.drawable.ic_farmercolor2);
-                    }*/
 
 
             DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
