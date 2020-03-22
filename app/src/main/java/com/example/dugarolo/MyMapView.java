@@ -19,6 +19,9 @@ import android.widget.Toast;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
+
+
+
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -152,9 +155,6 @@ public class MyMapView extends MapView {
         }
 
         fillFarms(field, polygon);
-        TodayTab todayTab;
-        //INSERISCI QUA IL METODO CHE RICHIAMA L'ASSEGNAZIONE DEI COLORI IN TODAY TAB <-------------------------------------------
-        //l'ho inserito qua perchè quando l'esecuzione arriva a questo punto l'array in shareData è riempito
     }
 
     //this method is used to fill with color the polygon I just draw
@@ -172,17 +172,17 @@ public class MyMapView extends MapView {
 
         if(sharedData.searchForAssignedFarm(field.getFarmName())!=0) {
             finalColor = checkColorIfExist(field.getFarmName(), 0);
-            getStringColor(finalColor);
+            manipulateColor(finalColor,0.8f);
             polygon.getOutlinePaint().setColor(finalColor);
             polygon.setFillColor(finalColor);
         }else{
             randomColor = getRandomColor(field.getFarmName());
             finalColor = checkColorIfExist(field.getFarmName(), randomColor);
-            getStringColor(finalColor);
+            manipulateColor(finalColor,0.8f);
             polygon.setFillColor(finalColor);
         }
 
-        int strokeColor = getStringColor(finalColor);
+        int strokeColor = manipulateColor(finalColor,0.8f);
 
         polygon.getOutlinePaint().setStrokeWidth(5);
         polygon.getOutlinePaint().setColor(strokeColor);
@@ -190,22 +190,17 @@ public class MyMapView extends MapView {
         this.invalidate();
     }
 
-    public int getStringColor(int finalColor){
-        String hexColor = String.format("#%06X", (0xFFFFFF & finalColor));
-
-        int color = Color.parseColor(hexColor);
-
-        int red = Color.red(color);
-        int green = Color.green(color);
-        int blue = Color.blue(color);
-
-        green-=30;
-        blue-=30;
-
-        int fC = Color.rgb(red, green, blue);
-
-        return fC;
+    public  int manipulateColor(int color, float factor) {
+        int a = Color.alpha(color);
+        int r = Math.round(Color.red(color) * factor);
+        int g = Math.round(Color.green(color) * factor);
+        int b = Math.round(Color.blue(color) * factor);
+        return Color.argb(a,
+                Math.min(r,255),
+                Math.min(g,255),
+                Math.min(b,255));
     }
+
 
     //this method is used to assign a random color from the array made by color
     //to variable 'color' which return

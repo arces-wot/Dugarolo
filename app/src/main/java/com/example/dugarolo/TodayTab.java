@@ -2,9 +2,9 @@ package com.example.dugarolo;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +16,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.vectordrawable.graphics.drawable.VectorDrawableCompat;
-
-
+import com.devs.vectorchildfinder.VectorChildFinder;
+import com.devs.vectorchildfinder.VectorDrawableCompat;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -114,23 +113,26 @@ public class TodayTab extends Fragment {
             //holder.farmColor.setImageResource(R.drawable.farm_color);
             String name = currentRequest.getName();
             DateTime dateTime = currentRequest.getDateTime();
-            int color=ResourcesCompat.getColor(getResources(),R.color.colorCompany4, null);  //sembra una variabile final perche' nel ciclo non viene modificata pur entrando nel if
+            int color1=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null);
+            int color2=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null); //sembra una variabile final perche' nel ciclo non viene modificata pur entrando nel if
 
-            for (FarmColor f : sharedData.getFarmColors()) {
-                if (f.getNameFarm().equalsIgnoreCase(name)) {
-                    f.getIdColor();// <<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------------------------------------------------------------ QUA   PROBLEMA
+            for (FarmColor f : sharedData.getFarmColors())
+                if(f.getNameFarm().equalsIgnoreCase(name)){
+                    color1= f.getIdColor();
+                    color2= manipulateColor(f.getIdColor(),0.8f);// <<<<<<<<<<<<<<<<<<<<<<<<<<<<------------------------------------------------------------------------ QUA   PROBLEMA
                     break;
                 }
-            }
-             //funzioni importate da GIT
-            //VectorChildFinder vector;
-            //vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor1, holder.basicIcon);
-            //VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background"); // Path coinvolta con label background
-            //path1.setFillColor(color);    // funzione che colora la path
+            //funzioni importate da GIT
+            VectorChildFinder vector;
+            vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor1, holder.basicIcon);
+            VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background"); // Path coinvolta con label background
+            VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow"); // Path coinvolta con label background
+            path1.setFillColor(color1);    // funzione che colora la path
+            path2.setFillColor(color2);    // funzione che colora la path
 
 
             //for (FarmColor f : sharedData.getFarmColors())
-               // if(f.getNameFarm().equalsIgnoreCase(name))
+            // if(f.getNameFarm().equalsIgnoreCase(name))
                    /* if (name.equals("Bertacchini's Farm")) {
                         int bertacchini = ResourcesCompat.getColor(getResources(), R.color.colorCompany1, null);
                         //holder.farmColor.setColorFilter(bertacchini);
@@ -148,6 +150,17 @@ public class TodayTab extends Fragment {
             holder.time.setText(getResources().getString(R.string.expected_time) + ": " + formattedDateTime);
             holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume());
 
+        }
+
+        public  int manipulateColor(int color, float factor) {
+            int a = Color.alpha(color);
+            int r = Math.round(Color.red(color) * factor);
+            int g = Math.round(Color.green(color) * factor);
+            int b = Math.round(Color.blue(color) * factor);
+            return Color.argb(a,
+                    Math.min(r,255),
+                    Math.min(g,255),
+                    Math.min(b,255));
         }
 
 

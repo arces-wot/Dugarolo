@@ -8,6 +8,7 @@
       android:pathData="M256,256m-256,0a256,256 0,1 1,512 0a256,256 0,1 1,-512 0"
       android:fillColor="#F1C40F"/>
   <path
+      android:name="backgroundShadow"
       android:pathData="M512,256c0,-4 -0.1,-7.9 -0.3,-11.8l-35.3,-33l-1.5,32.5l-60.2,-63l-21.2,7.1l-80.4,-82.7l-20.9,54.3L97.4,184l59.5,60.5l1.7,3.3l44.8,44l-5.5,2.8l46.9,46.9l138.6,136.7C460.2,433.9 512,351 512,256z"
       android:fillColor="#A08615"/>
   <path

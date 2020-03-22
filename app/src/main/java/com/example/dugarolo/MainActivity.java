@@ -119,11 +119,7 @@ public class MainActivity extends AppCompatActivity {
             request.setStatus(status);
         }
 
-        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(this, getSupportFragmentManager(), requests);
-        ViewPager viewPager = findViewById(R.id.view_pager);
-        viewPager.setAdapter(tabsPagerAdapter);
-        TabLayout tabs = findViewById(R.id.tabs);
-        tabs.setupWithViewPager(viewPager);
+
 
 
         fab = findViewById(R.id.floatingActionButton);
@@ -208,6 +204,12 @@ public class MainActivity extends AppCompatActivity {
             if (aBoolean) {
                 map.drawFarms(farms);
                 map.drawIcon(farms, farmerMarkers, 70);
+                TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests);
+                ViewPager viewPager = findViewById(R.id.view_pager);
+                viewPager.setAdapter(tabsPagerAdapter);
+                TabLayout tabs = findViewById(R.id.tabs);
+                tabs.setupWithViewPager(viewPager);
+
             }
         }
     }
