@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.devs.vectorchildfinder.VectorChildFinder;
 import com.devs.vectorchildfinder.VectorDrawableCompat;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;

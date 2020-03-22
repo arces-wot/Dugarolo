@@ -102,6 +102,17 @@ public class MainActivity extends AppCompatActivity {
 
         Request r7 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
         requests.add(r7);
+        Request r8 = new Request("001", "Bonaccini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
+        requests.add(r8);
+        Request r9 = new Request("001", "Ferrari's Farm", date2, "Accepted", "10h", f1, "speriamo bene");
+        requests.add(r9);
+        Request r10 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
+        requests.add(r10);
+
+        Request r11 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
+        requests.add(r11);
+        Request r12 = new Request("001", "Bonaccini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
+        requests.add(r12);
 
 
         loadMap();
@@ -118,6 +129,7 @@ public class MainActivity extends AppCompatActivity {
             String status = (String) Objects.requireNonNull(getIntent().getExtras()).get(REQUEST_STATUS);
             request.setStatus(status);
         }
+
 
 
 
@@ -209,6 +221,17 @@ public class MainActivity extends AppCompatActivity {
                 viewPager.setAdapter(tabsPagerAdapter);
                 TabLayout tabs = findViewById(R.id.tabs);
                 tabs.setupWithViewPager(viewPager);
+                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                    public void onPageScrollStateChanged(int state) {}
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+                    public void onPageSelected(int position) {
+                        if (position==0)
+                            fab.show();
+                        else
+                            fab.hide();
+                    }
+                });
 
             }
         }

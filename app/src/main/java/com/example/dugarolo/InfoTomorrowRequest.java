@@ -63,7 +63,6 @@ public class InfoTomorrowRequest extends AppCompatActivity {
         if(requestState.equals("Accepted")){
             acceptPlanning.setVisibility(View.INVISIBLE);
             refusePlanning.setVisibility(View.INVISIBLE);
-
             acceptPlanning.setEnabled(false);
             refusePlanning.setEnabled(false);
         }

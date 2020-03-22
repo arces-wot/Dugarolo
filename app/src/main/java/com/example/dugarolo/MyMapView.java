@@ -17,8 +17,6 @@ import androidx.annotation.RequiresApi;
 import androidx.core.content.ContextCompat;
 
 
-
-
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -73,6 +71,7 @@ public class MyMapView extends MapView {
             this.invalidate();
         }
     }
+
     private static Bitmap getBitmap(VectorDrawable vectorDrawable) {
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
                 vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
@@ -81,12 +80,12 @@ public class MyMapView extends MapView {
         vectorDrawable.draw(canvas);
         return bitmap;
     }
+
     @SuppressLint("ResourceAsColor")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     private Bitmap getBitmap(Context context, int drawableId) {
         //Drawable farmer=getResources().getDrawable(drawableId);
         //farmer.setTint(R.color.colorCompany2);
-
 
 
         Drawable drawable = ContextCompat.getDrawable(context, drawableId);
@@ -101,6 +100,28 @@ public class MyMapView extends MapView {
 
     @SuppressLint("ResourceAsColor")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+   /* public void drawIcon(ArrayList<Farm> farms, ArrayList<Marker> farmerMarkers, int size) {
+        ArrayList<GeoPoint> iconsPosition = new ArrayList<>();
+
+
+        for (Farm farm : farms) {
+            Marker marker = new Marker(this);
+            iconsPosition = farm.getIconsPositionList();
+            for (int i = 0; i <= iconsPosition.size(); i++) {
+
+                marker.setPosition(iconsPosition.get(i));
+                marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+
+                Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(getBitmap(getContext(), R.drawable.ic_farmercolor_no_backgroud), size, size, true));
+                marker.setIcon(resizedWeirIcon);
+                marker.setInfoWindow(null);
+                marker.setId(farm.getName());
+                farmerMarkers.add(marker);
+                this.getOverlays().add(marker);
+                this.invalidate();
+            }
+        }
+    }*/
     public void drawIcon(ArrayList<Farm> farms, ArrayList<Marker> farmerMarkers, int size) {
 
 
@@ -108,14 +129,8 @@ public class MyMapView extends MapView {
             Marker marker = new Marker(this);
             marker.setPosition(farm.getIconPosition());
             marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-            /*if (farm.getName().equalsIgnoreCase("Bertacchini's Farm"))
-                farmerIcon = getResources().getDrawable(R.drawable.farmericon1);
-            else if (farm.getName().equalsIgnoreCase("Ferrari's Farm"))
-                farmerIcon = getResources().getDrawable(R.drawable.farmer_icon2);
-            else
-                farmerIcon = getResources().getDrawable(R.drawable.farmericon1);*/
 
-            Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(getBitmap(getContext(),R.drawable.ic_farmercolor_no_backgroud), size, size, true));
+            Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(getBitmap(getContext(), R.drawable.ic_farmercolor_no_backgroud), size, size, true));
             marker.setIcon(resizedWeirIcon);
             marker.setInfoWindow(null);
             marker.setId(farm.getName());
@@ -124,6 +139,8 @@ public class MyMapView extends MapView {
             this.invalidate();
         }
     }
+
+
 
 
     public GeoPoint midPoint(GeoPoint geoPoint1, GeoPoint geoPoint2) {
@@ -167,19 +184,19 @@ public class MyMapView extends MapView {
 
         //Log.d("nomeFarm", field.getFarmName());
 
-        if(sharedData.searchForAssignedFarm(field.getFarmName())!=0) {
+        if (sharedData.searchForAssignedFarm(field.getFarmName()) != 0) {
             finalColor = checkColorIfExist(field.getFarmName(), 0);
-            manipulateColor(finalColor,0.8f);
+            manipulateColor(finalColor, 0.8f);
             polygon.getOutlinePaint().setColor(finalColor);
             polygon.setFillColor(finalColor);
-        }else{
+        } else {
             randomColor = getRandomColor(field.getFarmName());
             finalColor = checkColorIfExist(field.getFarmName(), randomColor);
-            manipulateColor(finalColor,0.8f);
+            manipulateColor(finalColor, 0.8f);
             polygon.setFillColor(finalColor);
         }
 
-        int strokeColor = manipulateColor(finalColor,0.8f);
+        int strokeColor = manipulateColor(finalColor, 0.8f);
 
         polygon.getOutlinePaint().setStrokeWidth(5);
         polygon.getOutlinePaint().setColor(strokeColor);
@@ -187,15 +204,15 @@ public class MyMapView extends MapView {
         this.invalidate();
     }
 
-    public  int manipulateColor(int color, float factor) {
+    public int manipulateColor(int color, float factor) {
         int a = Color.alpha(color);
         int r = Math.round(Color.red(color) * factor);
         int g = Math.round(Color.green(color) * factor);
         int b = Math.round(Color.blue(color) * factor);
         return Color.argb(a,
-                Math.min(r,255),
-                Math.min(g,255),
-                Math.min(b,255));
+                Math.min(r, 255),
+                Math.min(g, 255),
+                Math.min(b, 255));
     }
 
 
@@ -309,7 +326,7 @@ public class MyMapView extends MapView {
         }
     }
 
-    public int getFarmColorSize(){
+    public int getFarmColorSize() {
         return FarmColor.length;
     }
 }
