@@ -1,13 +1,17 @@
 package com.example.dugarolo;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
+import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.joda.time.DateTime;
 
@@ -19,6 +23,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
             new int[]{R.string.tab_text_1, R.string.tab_text_2};
     private final Context mContext;
     private ArrayList<Request> requests;
+    private FloatingActionButton fab;
 
     public TabsPagerAdapter(Context context, FragmentManager fm, ArrayList<Request> requests) {
         super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
@@ -26,6 +31,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         this.requests = requests;
     }
 
+    @SuppressLint("RestrictedApi")
     @Override
     public Fragment getItem(int position) {
         switch (position) {
