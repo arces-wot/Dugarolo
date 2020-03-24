@@ -19,11 +19,11 @@ public class Farm implements Parcelable {
 
 
 
-    public Farm(String name, ArrayList<Field> fields) {
+    public Farm(String name, ArrayList<Field> fields,GeoPoint iconPosition) {
         this.name = name;
         this.fields = fields;
         //this.iconsPosition=iconsPosition();
-        this.iconPosition=iconPosition();
+        this.iconPosition=iconPosition;
         }
 
     public ArrayList<Field> getFields() {
@@ -85,7 +85,7 @@ public class Farm implements Parcelable {
         return icons;
 
     }*/
-    public GeoPoint iconPosition() {
+    /*public GeoPoint iconPosition() {
         int i=0;
         double lat=0;
         double lon=0;
@@ -98,5 +98,5 @@ public class Farm implements Parcelable {
 
         return new GeoPoint(lat/i,lon/i);
 
-    }
+    }*/
 }
