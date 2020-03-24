@@ -16,6 +16,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,10 +83,9 @@ public class RequestDetailsActivity extends AppCompatActivity {
         //Request request = Request.requests[requestId];
         Request request = requestList.get(requestId);
 
-        messageToShow.setText(request.getMessage());
         currentStatusToShow.setText(request.getStatus());
         nameFarm.setText(request.getName());
-        irrigationLabel.setText(request.getWaterVolume());
+        irrigationLabel.setText(request.getWaterVolume() + " h");
 
 
         DateTime dateTime = request.getDateTime();
@@ -95,7 +95,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
         dateLabel.setText(formattedDateTime);
 
         currentStatusTextView = findViewById(R.id.current_status);
-        setCurrentStatusTextView(request.getStatus());
+        //setCurrentStatusTextView(request.getStatus());
         messageTextView = findViewById(R.id.message);
         String message = request.getMessage();
         if(message == null || message.equals("")) {
@@ -104,7 +104,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
         else {
             messageTextView.setText(message);
         }
-        colorStatusIcon(request.getStatus());
+        //colorStatusIcon(request.getStatus());
         buildLayout(request.getStatus());
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -184,6 +184,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
         });
     }
 
+    /*
     private void setCurrentStatusTextView(String status) {
         switch (status) {
             case "Accepted":
@@ -208,6 +209,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
         }
     }
 
+
     private void colorStatusIcon(String status) {
         currentStatusImageView = findViewById(R.id.status_icon);
         switch(status) {
@@ -231,7 +233,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
                 break;
         }
 
-    }
+    }*/
 
     public void onClickSubmit(View view) {
         try {

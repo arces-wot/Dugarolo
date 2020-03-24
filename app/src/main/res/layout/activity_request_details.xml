@@ -57,18 +57,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/current_status_label"
                 tools:text="@string/total_irrigation_time" />
 
-            <ImageView
-                android:id="@+id/status_icon"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="76dp"
-                android:layout_marginEnd="224dp"
-                android:src="@drawable/request_status"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/current_status_label"
-                app:layout_constraintTop_toBottomOf="@+id/nameFarm" />
-
             <TextView
                 android:id="@+id/message_label"
                 android:layout_width="wrap_content"
@@ -124,8 +112,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
+                android:background="#009688"
                 android:onClick="onClickSubmit"
                 android:text="@string/submit_button"
+                android:textColor="#FFFFFF"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -144,13 +134,13 @@
 
             <TextView
                 android:id="@+id/current_status"
-                android:layout_width="69dp"
-                android:layout_height="22dp"
-                android:layout_marginStart="40dp"
+                android:layout_width="60dp"
+                android:layout_height="21dp"
+                android:layout_marginStart="50dp"
                 android:layout_marginTop="84dp"
                 android:text="TextView"
                 android:textColor="#000000"
-                app:layout_constraintStart_toEndOf="@+id/status_icon"
+                app:layout_constraintStart_toEndOf="@+id/current_status_label"
                 app:layout_constraintTop_toBottomOf="@+id/nameFarm" />
 
             <TextView

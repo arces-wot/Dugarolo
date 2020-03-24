@@ -3,6 +3,7 @@ package com.example.dugarolo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Button;
@@ -53,12 +54,15 @@ public class InfoTomorrowRequest extends AppCompatActivity {
         String timeToIrrigate = Integer.toString(dateTime.getHourOfDay()) + ":" + Integer.toString(dateTime.getMinuteOfHour());
 
         companyName.setText(requests.get(positionRequest).getName());
-        requestNumber.setText("Richiesta n°" + requests.get(positionRequest).getId());
-        requestVolume.setText(requests.get(positionRequest).getWaterVolume());
+        requestNumber.setText("Richiesta n°\n" + requests.get(positionRequest).getId());
+        requestVolume.setText(requests.get(positionRequest).getWaterVolume() + " h");
         requestDateTime.setText(timeToIrrigate);
         requestStateView.setText(requests.get(positionRequest).getStatus());
-        requestMessage.setText(requests.get(positionRequest).getMessage());
-
+        if(requests.get(positionRequest).getMessage().equals("")) {
+            requestMessage.setText(requests.get(positionRequest).getMessage());
+        }else {
+            requestMessage.setText("Ciao: " + requests.get(positionRequest).getMessage());
+        }
 
         if(requestState.equals("Accepted")){
             acceptPlanning.setVisibility(View.INVISIBLE);

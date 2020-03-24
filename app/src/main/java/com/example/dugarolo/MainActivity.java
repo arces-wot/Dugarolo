@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         //trial requests:
 
 
-        DateTime date1 = new DateTime(2020, 12, 12, 12, 12);
+        /*DateTime date1 = new DateTime(2020, 12, 12, 12, 12);
         ArrayList<GeoPoint> geoList1 = new ArrayList<GeoPoint>();
         geoList1.add(new GeoPoint(44.777572, 10.715764));
         geoList1.add(new GeoPoint(44.777201, 10.717981));
@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         Request r11 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
         requests.add(r11);
         Request r12 = new Request("001", "Bonaccini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r12);
+        requests.add(r12);*/
 
 
         loadMap();
