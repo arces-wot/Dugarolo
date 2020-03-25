@@ -3,11 +3,13 @@ package com.example.dugarolo;
 import android.graphics.drawable.Drawable;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.overlay.Polygon;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Farm implements Parcelable {
 
@@ -16,14 +18,11 @@ public class Farm implements Parcelable {
     //private ArrayList<GeoPoint> iconsPosition=new ArrayList<>();
     private GeoPoint iconPosition;
 
-
-
-
-    public Farm(String name, ArrayList<Field> fields) {
+    public Farm(String name, ArrayList<Field> fields, GeoPoint iconPosition) {
         this.name = name;
         this.fields = fields;
         //this.iconsPosition=iconsPosition();
-        this.iconPosition=iconPosition();
+        this.iconPosition=iconPosition;
         }
 
     public ArrayList<Field> getFields() {
@@ -85,18 +84,20 @@ public class Farm implements Parcelable {
         return icons;
 
     }*/
-    public GeoPoint iconPosition() {
+    /*public GeoPoint iconPosition() {
+
         int i=0;
         double lat=0;
         double lon=0;
-        for (Field f : fields)
+        for (Field f : fields){
             for (GeoPoint g : f.getArea()) {
                 i = i + 1;
                 lat = g.getLatitude() + lat;
                 lon = g.getLongitude() + lon;
             }
+        }
 
         return new GeoPoint(lat/i,lon/i);
 
-    }
+    }*/
 }

@@ -59,12 +59,12 @@ public class TodayTab extends Fragment {
         return root;
     }
 
-    private class RequestAdapter extends RecyclerView.Adapter<TodayTab.RequestAdapter.RequestHolder> {
+    public class RequestAdapter extends RecyclerView.Adapter<TodayTab.RequestAdapter.RequestHolder> {
 
-        private List<Request> requests;
-        private Globals sharedData = Globals.getInstance();
+        public List<Request> requests;
+        public Globals sharedData = Globals.getInstance();
 
-        private class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
 
             public ImageView basicIcon;
@@ -97,6 +97,10 @@ public class TodayTab extends Fragment {
 
         RequestAdapter(List<Request> requests) {
             this.requests = requests;
+        }
+
+        public List<Request> getRequests(){
+            return this.requests;
         }
 
         @NonNull
@@ -137,7 +141,7 @@ public class TodayTab extends Fragment {
             String formattedDateTime = dateTime.toString(dtf);
             holder.farmName.setText(currentRequest.getName());
             holder.time.setText(getResources().getString(R.string.expected_time) + ": " + formattedDateTime);
-            holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume());
+            holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume() + "h");
 
         }
 

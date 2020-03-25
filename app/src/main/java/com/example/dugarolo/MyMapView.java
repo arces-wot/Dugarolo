@@ -124,7 +124,6 @@ public class MyMapView extends MapView {
     }*/
     public void drawIcon(ArrayList<Farm> farms, ArrayList<Marker> farmerMarkers, int size) {
 
-
         for (Farm farm : farms) {
             Marker marker = new Marker(this);
             marker.setPosition(farm.getIconPosition());
@@ -139,8 +138,6 @@ public class MyMapView extends MapView {
             this.invalidate();
         }
     }
-
-
 
 
     public GeoPoint midPoint(GeoPoint geoPoint1, GeoPoint geoPoint2) {

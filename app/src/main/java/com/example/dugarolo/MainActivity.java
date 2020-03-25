@@ -72,48 +72,6 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
-        //RequestLab requestLab = RequestLab.get(this);
-        //List<Request> requestList = requestLab.getRequestList();
-        //trial requests:
-
-
-        /*DateTime date1 = new DateTime(2020, 12, 12, 12, 12);
-        ArrayList<GeoPoint> geoList1 = new ArrayList<GeoPoint>();
-        geoList1.add(new GeoPoint(44.777572, 10.715764));
-        geoList1.add(new GeoPoint(44.777201, 10.717981));
-        geoList1.add(new GeoPoint(44.778039, 10.719505));
-        geoList1.add(new GeoPoint(44.777572, 10.715764));
-
-        Field f1 = new Field("Bertacchini's Farm", "001", geoList1);
-        Request r1 = new Request("001", "Bertacchini's Farm", date1, "Scheduled", "1h", f1, "speriamo bene");
-        requests.add(r1);
-
-        DateTime date2 = new DateTime();
-        Request r2 = new Request("001", "Bertacchini's Farm", date1, "Accepted", "1h", f1, "speriamo bene");
-        requests.add(r2);
-        Request r3 = new Request("001", "Ferrari's Farm", date1, "Accepted", "1h", f1, "speriamo bene");
-        requests.add(r3);
-        Request r4 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r4);
-        Request r5 = new Request("001", "Ferrari's Farm", date2, "Accepted", "10h", f1, "speriamo bene");
-        requests.add(r5);
-        Request r6 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r6);
-
-        Request r7 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r7);
-        Request r8 = new Request("001", "Bonaccini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r8);
-        Request r9 = new Request("001", "Ferrari's Farm", date2, "Accepted", "10h", f1, "speriamo bene");
-        requests.add(r9);
-        Request r10 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r10);
-
-        Request r11 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r11);
-        Request r12 = new Request("001", "Bonaccini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r12);*/
-
 
         loadMap();
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -129,10 +87,6 @@ public class MainActivity extends AppCompatActivity {
             String status = (String) Objects.requireNonNull(getIntent().getExtras()).get(REQUEST_STATUS);
             request.setStatus(status);
         }
-
-
-
-
 
         fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
