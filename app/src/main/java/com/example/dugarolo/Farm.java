@@ -18,14 +18,8 @@ public class Farm implements Parcelable {
     //private ArrayList<GeoPoint> iconsPosition=new ArrayList<>();
     private GeoPoint iconPosition;
 
-<<<<<<< HEAD
+
     public Farm(String name, ArrayList<Field> fields, GeoPoint iconPosition) {
-=======
-
-
-
-    public Farm(String name, ArrayList<Field> fields,GeoPoint iconPosition) {
->>>>>>> fa72bf77f8c15404669ce4c982beb6a0bba02d88
         this.name = name;
         this.fields = fields;
         //this.iconsPosition=iconsPosition();

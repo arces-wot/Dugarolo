@@ -14,6 +14,12 @@ public class Request implements Comparable<Request>, Parcelable {
     private String waterVolume;
     private Field field;
     private String message;
+    //variabile che mi dice se è in corso o in attesa
+    //non la metto nel costruttore perchè se no faccio danni
+    private String currentStat;
+    //variabile che mi dice se la richiesta è stata fatta da farmer
+    //o dall'algoritmo
+    private String whoDidTheRequest;
 
     public Request(String id, String name, DateTime dateTime, String status, String waterVolume, Field field, String message) {
 
@@ -33,6 +39,12 @@ public class Request implements Comparable<Request>, Parcelable {
     public String getStatus() {
         return status;
     }
+
+    //getters variabili da aggiungere
+    public String getCurrentStat() {
+        return currentStat;
+    }
+    public String getWhoDidTheRequest(){return whoDidTheRequest; };
 
     public DateTime getDateTime() {
         return dateTime;

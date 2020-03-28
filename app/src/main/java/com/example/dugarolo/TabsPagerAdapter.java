@@ -24,11 +24,13 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     private final Context mContext;
     private ArrayList<Request> requests;
     private FloatingActionButton fab;
+    private MyMapView map;
 
-    public TabsPagerAdapter(Context context, FragmentManager fm, ArrayList<Request> requests) {
+    public TabsPagerAdapter(Context context, FragmentManager fm, ArrayList<Request> requests, MyMapView map) {
         super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mContext = context;
         this.requests = requests;
+        this.map = map;
     }
 
     @SuppressLint("RestrictedApi")
@@ -36,7 +38,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return TodayTab.newInstance(todayRequests(requests));
+                return TodayTab.newInstance(todayRequests(requests), map);
             case 1:
                 return TomorrowTab.newInstance(tomorrowRequests(requests));
             default:

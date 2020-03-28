@@ -59,11 +59,12 @@ public class MainActivity extends AppCompatActivity {
     public static final String REQUEST_STATUS = "id";
     private Integer requestId;
     private ArrayList<Farm> farms = new ArrayList<>();
-    private MyMapView map = null;
+    private MyMapView map;
     private AssetLoader assetLoader = new AssetLoader();
     private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<Marker> farmerMarkers = new ArrayList<>();
     private FloatingActionButton fab;
+
 
     //debug only
     //private static final String TAG = "MainActivity";
@@ -72,8 +73,9 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
-
-        loadMap();
+        GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
+        Context ctx = getApplicationContext();
+        loadMap(startPoint, ctx);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -101,9 +103,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void loadMap() {
+    public void loadMap(GeoPoint startPoint, Context ctx) {
         //load/initialize the osmdroid configuration, this can be done
-        Context ctx = getApplicationContext();
+
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
         //setting this before the layout is inflated is a good idea
         //it 'should' ensure that the map has a writable location for the map cache, even without permissions
@@ -119,9 +121,9 @@ public class MainActivity extends AppCompatActivity {
         map.setTilesScaledToDpi(true);
         map.setClickable(true);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
+        map = findViewById(R.id.map);
         IMapController mapController = map.getController();
         mapController.setZoom(14.0);
-        GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         mapController.setCenter(startPoint);
     }
 
@@ -170,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
             if (aBoolean) {
                 map.drawFarms(farms);
                 map.drawIcon(farms, farmerMarkers, 70);
-                TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests);
+                TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests, map);
                 ViewPager viewPager = findViewById(R.id.view_pager);
                 viewPager.setAdapter(tabsPagerAdapter);
                 TabLayout tabs = findViewById(R.id.tabs);

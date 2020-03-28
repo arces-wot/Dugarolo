@@ -19,7 +19,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.devs.vectorchildfinder.VectorChildFinder;
 import com.devs.vectorchildfinder.VectorDrawableCompat;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -81,7 +80,7 @@ public class TomorrowTab extends Fragment {
                 farmName = itemView.findViewById(R.id.farm_name);
                 time = itemView.findViewById(R.id.time);
                 irrigationTime = itemView.findViewById(R.id.irrigation_time);
-                check = itemView.findViewById(R.id.check);
+                //check = itemView.findViewById(R.id.check);
                 itemView.setOnClickListener(this);
 
             }
@@ -105,7 +104,7 @@ public class TomorrowTab extends Fragment {
         @Override
         public TomorrowTab.RequestAdapter.RequestHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            View v = inflater.inflate(R.layout.item_request, parent, false);
+            View v = inflater.inflate(R.layout.item_request_tomorrow, parent, false);
             return new TomorrowTab.RequestAdapter.RequestHolder(v);
         }
 
@@ -140,12 +139,13 @@ public class TomorrowTab extends Fragment {
             holder.time.setText(getResources().getString(R.string.expected_time) + ": " + formattedDateTime);
             holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume());
 
-            if(currentRequest.getStatus() == "Scheduled"){
+            //CHECK CONTROL
+            /*if(currentRequest.getStatus() == "Scheduled"){
                 holder.check.setVisibility(View.INVISIBLE);
             }else{
                 holder.check.setBackgroundResource(R.drawable.check);
                 holder.check.setVisibility(View.VISIBLE);
-            }
+            }*/
 
         }
 
@@ -163,7 +163,6 @@ public class TomorrowTab extends Fragment {
 
         @Override
         public int getItemCount() {
-
             return requests.size();
         }
 

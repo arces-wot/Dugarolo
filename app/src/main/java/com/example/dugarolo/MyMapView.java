@@ -10,6 +10,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.VectorDrawable;
 import android.os.Build;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.util.Log;
 
@@ -27,7 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MyMapView extends MapView {
+public class MyMapView extends MapView implements Parcelable
+{
 
     Globals sharedData = Globals.getInstance();
 
@@ -325,5 +328,15 @@ public class MyMapView extends MapView {
 
     public int getFarmColorSize() {
         return FarmColor.length;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+
     }
 }

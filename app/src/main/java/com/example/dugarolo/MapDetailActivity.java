@@ -63,6 +63,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     private AssetLoader assetLoader = new AssetLoader();
     private JSONReceiver jsonReceiver;
     private boolean isInFront;
+    GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
 
 
     private static final int REQUEST_CODE_WATER = 0;
@@ -70,7 +71,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        loadMap();
+        loadMap(startPoint);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -85,7 +86,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
 
     }
 
-    private void loadMap() {
+    private void loadMap(GeoPoint startPoint) {
         //load/initialize the osmdroid configuration, this can be done
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
@@ -104,10 +105,13 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         map.setTilesScaledToDpi(true);
         map.setClickable(true);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
+        centerMap(startPoint);
+    }
+
+    public void centerMap(GeoPoint g) {
         IMapController mapController = map.getController();
         mapController.setZoom(15.0);
-        GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
-        mapController.setCenter(startPoint);
+        mapController.setCenter(g);
     }
 
     public void onPause(){

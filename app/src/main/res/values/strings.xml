@@ -27,8 +27,8 @@
     <string name="no_message">No message to display</string>
     <string name="open_level_is">Open level is</string>
     <string name="weir">Weir</string>
-    <string name="total_irrigation_time">Total irrigation time</string>
-    <string name="expected_time">Expected Time</string>
+    <string name="total_irrigation_time">Total time</string>
+    <string name="expected_time">Hour</string>
     <string name="start">Start</string>
     <string name="end">End</string>
     <string name="hint_irrigation_time">Insert irrigation time here</string>

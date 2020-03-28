@@ -11,6 +11,7 @@
     <color name="colorCancelled">#e74c3c</color>
     <color name="text_map_detail_color">#9b59b6</color>
     <color name="infoTomorrowRequestButtonColor">#27ae60</color>
+    <color name="greyShadow">#e6e6e6</color>
 
     //da qui iniziano i colori delle aziende
     <color name="colorCompany1">#f1c40f</color>
