@@ -64,7 +64,9 @@ public class TodayTab extends Fragment{
         map = getArguments().getParcelable("Mappa");
 
         return root;
+
     }
+
 
     public class RequestAdapter extends RecyclerView.Adapter<TodayTab.RequestAdapter.RequestHolder>{
 

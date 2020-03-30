@@ -4,213 +4,225 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linearLayoutToday"
     android:layout_width="match_parent"
-    android:background="@drawable/border"
-    android:layout_height="170dp">
+
+    android:layout_height="165dp">
 
 
-    <ImageView
-        android:id="@+id/statusWaitingImage"
-        android:layout_width="60dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="132dp"
-        android:layout_marginTop="21dp"
-        android:layout_marginEnd="43dp"
-        android:layout_marginBottom="124dp"
-        android:clickable="true"
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="387dp"
+        android:layout_height="155dp"
+        app:cardCornerRadius="4dp"
+        app:cardElevation="3dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/mapsImage"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/attesa" />
-
-    <ImageView
-        android:id="@+id/statusOperatingImage"
-        android:layout_width="60dp"
-        android:layout_height="25dp"
-        android:layout_marginStart="132dp"
-        android:layout_marginTop="21dp"
-        android:layout_marginEnd="43dp"
-        android:layout_marginBottom="124dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/mapsImage"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/incorso" />
-
-    <TextView
-        android:id="@+id/nAppezamento"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="84dp"
-        android:layout_marginBottom="1dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/time"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <TextView
-        android:id="@+id/cancelText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:layout_marginEnd="58dp"
-        android:layout_marginBottom="20dp"
-        android:text="Annulla"
-        android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/cancelImage" />
-
-    <TextView
-        android:id="@+id/mapsText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="3dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginBottom="20dp"
-        android:text="Posizione"
-        android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/cancelImage"
-        app:layout_constraintStart_toEndOf="@+id/mapsImage" />
-
-    <ImageView
-        android:id="@+id/playImage"
-        android:layout_width="33dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/play" />
+        app:layout_constraintTop_toTopOf="parent" >
 
-    <ImageView
-        android:id="@+id/pauseImage"
-        android:layout_width="33dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/pause" />
 
-    <ImageView
-        android:id="@+id/mapsImage"
-        android:layout_width="33dp"
-        android:layout_height="21dp"
-        android:layout_marginStart="90dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/mapsText"
-        app:layout_constraintStart_toEndOf="@+id/playImage"
-        app:srcCompat="@drawable/maps_icon" />
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/farm_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="84dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/canal_name"
-        app:layout_constraintVertical_bias="0.0" />
+            <ImageView
+                android:id="@+id/statusWaitingImage"
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="21dp"
+                android:layout_marginEnd="28dp"
+                android:layout_marginBottom="124dp"
+                android:clickable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.466"
+                app:srcCompat="@drawable/attesa" />
 
-    <ImageView
-        android:id="@+id/basic_icon"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
-        android:layout_marginStart="20dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.219" />
+            <ImageView
+                android:id="@+id/statusOperatingImage"
+                android:layout_width="60dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="21dp"
+                android:layout_marginEnd="28dp"
+                android:layout_marginBottom="124dp"
+                android:clickable="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.4"
+                app:srcCompat="@drawable/incorso" />
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginStart="15dp"
-        android:layout_marginTop="115dp"
-        android:layout_marginEnd="15dp"
-        android:background="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:id="@+id/nAppezamento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                app:layout_constraintStart_toStartOf="@+id/farm_name"
+                app:layout_constraintTop_toBottomOf="@+id/farm_name" />
 
-    <TextView
-        android:id="@+id/canal_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="18dp"
-        android:text="TextView"
-        android:textColor="@color/colorFarmName"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/basic_icon"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.092" />
+            <TextView
+                android:id="@+id/cancelText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:text="Annulla"
+                android:textColor="@color/greyButton"
+                android:textSize="14dp"
+                app:layout_constraintStart_toEndOf="@+id/cancelImage"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
 
-    <TextView
-        android:id="@+id/time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="84dp"
-        android:layout_marginBottom="34dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/mapsImage"
-        app:layout_constraintStart_toStartOf="parent" />
+            <TextView
+                android:id="@+id/mapsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:text="Posizione"
+                android:textColor="@color/greyButton"
+                android:textSize="14dp"
+                app:layout_constraintStart_toEndOf="@+id/mapsImage"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
 
-    <TextView
-        android:id="@+id/irrigation_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="165dp"
-        android:layout_marginBottom="34dp"
-        android:text="TextView"
-        app:layout_constraintBottom_toTopOf="@+id/mapsImage"
-        app:layout_constraintStart_toStartOf="parent" />
+            <ImageView
+                android:id="@+id/playImage"
+                android:layout_width="33dp"
+                android:layout_height="21dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="14dp"
+                android:clickable="true"
+                android:tint="@color/greyButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view"
+                app:srcCompat="@drawable/play" />
 
-    <ImageView
-        android:id="@+id/cancelImage"
-        android:layout_width="30dp"
-        android:layout_height="18dp"
-        android:layout_marginStart="110dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/cancelText"
-        app:layout_constraintStart_toEndOf="@+id/mapsImage"
-        app:srcCompat="@drawable/cancel" />
+            <ImageView
+                android:id="@+id/pauseImage"
+                android:layout_width="33dp"
+                android:layout_height="21dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="14dp"
+                android:clickable="true"
+                android:tint="@color/greyButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/view"
+                app:srcCompat="@drawable/pause" />
 
-    <TextView
-        android:id="@+id/pauseText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginBottom="20dp"
-        android:text="Pausa"
-        android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/mapsImage"
-        app:layout_constraintStart_toEndOf="@+id/playImage" />
+            <ImageView
+                android:id="@+id/mapsImage"
+                android:layout_width="33dp"
+                android:layout_height="21dp"
+                android:layout_marginStart="36dp"
+                android:layout_marginTop="14dp"
+                android:clickable="true"
+                android:tint="@color/greyButton"
+                app:layout_constraintStart_toEndOf="@+id/playText"
+                app:layout_constraintTop_toBottomOf="@+id/view"
+                app:srcCompat="@drawable/maps_icon" />
 
-    <TextView
-        android:id="@+id/playText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="52dp"
-        android:layout_marginBottom="20dp"
-        android:clickable="true"
-        android:text="Attiva"
-        android:textSize="12dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/mapsImage"
-        app:layout_constraintStart_toEndOf="@+id/playImage" />
+            <TextView
+                android:id="@+id/farm_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textStyle="bold"
+                app:layout_constraintStart_toStartOf="@+id/canal_name"
+                app:layout_constraintTop_toBottomOf="@+id/canal_name" />
+
+            <ImageView
+                android:id="@+id/basic_icon"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:layout_marginStart="20dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.181" />
+
+            <View
+                android:id="@+id/view"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="15dp"
+                android:layout_marginTop="104dp"
+                android:layout_marginEnd="15dp"
+                android:background="@color/greyShadow"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                app:layout_constraintStart_toStartOf="@+id/nAppezamento"
+                app:layout_constraintTop_toBottomOf="@+id/nAppezamento" />
+
+            <TextView
+                android:id="@+id/irrigation_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="TextView"
+                app:layout_constraintBottom_toBottomOf="@+id/time"
+                app:layout_constraintStart_toEndOf="@+id/time" />
+
+            <ImageView
+                android:id="@+id/cancelImage"
+                android:layout_width="30dp"
+                android:layout_height="18dp"
+                android:layout_marginStart="36dp"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:tint="@color/greyButton"
+                app:layout_constraintStart_toEndOf="@+id/mapsText"
+                app:layout_constraintTop_toTopOf="@+id/view"
+                app:srcCompat="@drawable/cancel" />
+
+            <TextView
+                android:id="@+id/pauseText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="52dp"
+                android:text="Pausa"
+                android:textColor="@color/greyButton"
+                android:textSize="14dp"
+                app:layout_constraintEnd_toStartOf="@+id/mapsImage"
+                app:layout_constraintStart_toEndOf="@+id/playImage"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
+
+            <TextView
+                android:id="@+id/playText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:clickable="true"
+                android:text="Attiva"
+                android:textColor="@color/greyButton"
+                android:textSize="14dp"
+                app:layout_constraintStart_toEndOf="@+id/playImage"
+                app:layout_constraintTop_toBottomOf="@+id/view" />
+
+            <TextView
+                android:id="@+id/canal_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="10dp"
+                android:text="TextView"
+                android:textColor="@color/colorFarmName"
+                android:textSize="18sp"
+                app:layout_constraintStart_toEndOf="@+id/basic_icon"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
