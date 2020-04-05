@@ -14,14 +14,15 @@ public class Request implements Comparable<Request>, Parcelable {
     private String waterVolume;
     private Field field;
     private String message;
+    private String type;
+    private String channel;
     //variabile che mi dice se è in corso o in attesa
     //non la metto nel costruttore perchè se no faccio danni
-    private String currentStat;
-    //variabile che mi dice se la richiesta è stata fatta da farmer
-    //o dall'algoritmo
-    private String whoDidTheRequest;
+    private int currentStat;
 
-    public Request(String id, String name, DateTime dateTime, String status, String waterVolume, Field field, String message) {
+
+    public Request(String id, String name, DateTime dateTime, String status, String waterVolume, Field field, String message,
+                   String channel, String type) {
 
         this.id = id;
         this.name = name;
@@ -30,6 +31,8 @@ public class Request implements Comparable<Request>, Parcelable {
         this.waterVolume = waterVolume;
         this.field = field;
         this.message = message;
+        this.channel = channel;
+        this.type = type;
     }
 
     public String getName() {
@@ -40,11 +43,14 @@ public class Request implements Comparable<Request>, Parcelable {
         return status;
     }
 
-    //getters variabili da aggiungere
+    /*getters variabili da aggiungere
     public String getCurrentStat() {
         return currentStat;
-    }
-    public String getWhoDidTheRequest(){return whoDidTheRequest; };
+    }*/
+
+    public String getChannel(){return channel;}
+
+    public String getType(){return type; };
 
     public DateTime getDateTime() {
         return dateTime;
@@ -69,6 +75,8 @@ public class Request implements Comparable<Request>, Parcelable {
     public void setField(Field field) {
         this.field = field;
     }
+
+    public void setCurrentStat(int status){this.currentStat = status;}
 
     public String toString(){
         return this.name;

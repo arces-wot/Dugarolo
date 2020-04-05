@@ -61,7 +61,9 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         DateTime now = new DateTime();
         ArrayList<Request> todayRequests = new ArrayList<>();
         for (Request r : requests) {
-            if ((r.getDateTime().getDayOfYear()) == (now.getDayOfYear()) && r.getStatus().equals("Accepted")) {
+            //
+            if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear())) &&
+                    (r.getStatus().equals("Accepted") ||  r.getStatus().equals("Ongoing")) ) {
                 todayRequests.add(r);
             }
         }

@@ -45,6 +45,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -119,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
         requests.add(r11);
         Request r12 = new Request("001", "Bonaccini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
         requests.add(r12);*/
-        
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -216,9 +217,8 @@ public class MainActivity extends AppCompatActivity {
             if (aBoolean) {
                 map.drawFarms(farms);
                 map.drawIcon(farms, farmerMarkers, 70);
-                TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests, map);
-                ViewPager viewPager = findViewById(R.id.view_pager);
-                viewPager.setAdapter(tabsPagerAdapter);
+                TabsPagerAdapter tabsPagerAdapter = getTabsPagerAdapter(requests, map);
+                ViewPager viewPager = getViewPager(tabsPagerAdapter);
                 TabLayout tabs = findViewById(R.id.tabs);
                 tabs.setupWithViewPager(viewPager);
                 viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -234,6 +234,18 @@ public class MainActivity extends AppCompatActivity {
                 });
 
             }
+        }
+
+        public TabsPagerAdapter getTabsPagerAdapter(ArrayList<Request> requests, MyMapView map){
+            TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(),
+                    requests, map);
+            return tabsPagerAdapter;
+        }
+
+        public ViewPager getViewPager(TabsPagerAdapter tabsPagerAdapter){
+            ViewPager viewPager = findViewById(R.id.view_pager);
+            viewPager.setAdapter(tabsPagerAdapter);
+            return  viewPager;
         }
     }
 }

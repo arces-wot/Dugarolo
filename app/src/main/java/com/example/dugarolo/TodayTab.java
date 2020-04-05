@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.util.Log;
@@ -24,9 +25,19 @@ import com.devs.vectorchildfinder.VectorDrawableCompat;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.util.GeoPoint;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -70,7 +81,7 @@ public class TodayTab extends Fragment{
 
     public class RequestAdapter extends RecyclerView.Adapter<TodayTab.RequestAdapter.RequestHolder>{
 
-        public List<Request> requests;
+        public ArrayList<Request> requests;
         public Globals sharedData = Globals.getInstance();
 
         public class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -115,7 +126,7 @@ public class TodayTab extends Fragment{
             }
         }
 
-        RequestAdapter(List<Request> requests) {
+        RequestAdapter(ArrayList<Request> requests) {
             this.requests = requests;
         }
 
@@ -148,6 +159,7 @@ public class TodayTab extends Fragment{
                     break;
                 }
 
+
             VectorChildFinder vector;
             vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor, holder.basicIcon);
             VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
@@ -158,22 +170,21 @@ public class TodayTab extends Fragment{
             //qui viene definito il farmer, deve essere aggiunto un campo in request che mi dice
             //se la richiesta è fatta da farmer o dall'algoritmo
             //da attivare quando ci sarà la variabile in request
-            /*
-            VectorChildFinder vector;
-                if(currentRequest.getWhoDidTheRequest()=="farmer"){
+
+            /*VectorChildFinder vector;
+                if(currentRequest.getType()=="farmer"){
                     vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor, holder.basicIcon);
                     VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
                     VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
                     path1.setFillColor(color1);
                     path2.setFillColor(color2);
-                }else if(currentRequest.getWhoDidTheRequest() == "algorithm"){
-                    vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor, holder.basicIcon);
+                }else if(currentRequest.getType() == "criteria"){
+                    vector = new VectorChildFinder(getContext(),R.drawable.ic_algorithmrequest, holder.basicIcon);
                     VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
                     VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
                     path1.setFillColor(color1);
                     path2.setFillColor(color2);
-                }
-            */
+                }*/
 
             DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
             String formattedDateTime = dateTime.toString(dtf);
@@ -181,39 +192,33 @@ public class TodayTab extends Fragment{
             holder.time.setText(getResources().getString(R.string.expected_time) + ": " + formattedDateTime);
             holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume() + "h");
             //poi li scrivo in strings
-            holder.canalName.setText("Canale Sample");
+            holder.canalName.setText(currentRequest.getChannel());
             holder.nAppezamento.setText("Appezzamento n°");
 
-            //da cancellare quando abbiamo la variabili getCurrentStat su Request
-            holder.pauseText.setVisibility(View.INVISIBLE);
-            holder.pauseImage.setVisibility(View.INVISIBLE);
 
-            //suppongo che tutto sia in attesa, aspetto i dati di cri
-            holder.statusOperatingImage.setVisibility(View.INVISIBLE);
-
-
-
-            //da attivare quando abbiamo la variabili getCurrentStat su Request
-            /*
-            if(currentRequest.getCurrentStat()=="Attesa"){
+            if(currentRequest.getStatus().equals("Accepted")){
+                //Log.d("ProvaEx", currentRequest.getChannel() + currentRequest.getStatus());
                 holder.pauseText.setVisibility(View.INVISIBLE);
                 holder.pauseImage.setVisibility(View.INVISIBLE);
                 holder.statusWaitingImage.setVisibility(View.VISIBLE);
                 holder.statusOperatingImage.setVisibility(View.INVISIBLE);
-            }else if(currentRequest.getCurrentStat()=="In corso"){
+            }else if(currentRequest.getStatus().equals("Ongoing")){
+                //Log.d("ProvaEx", currentRequest.getChannel() + currentRequest.getStatus());
                 holder.playText.setVisibility(View.INVISIBLE);
                 holder.playImage.setVisibility(View.INVISIBLE);
-                holder.statusWaitingImage.setVisibility(View.VISIBLE);
-                holder.statusOperatingImage.setVisibility(View.INVISIBLE);
-            }*/
+                holder.statusWaitingImage.setVisibility(View.INVISIBLE);
+                holder.statusOperatingImage.setVisibility(View.VISIBLE);
+                holder.cancelImage.setVisibility(View.INVISIBLE);
+                holder.cancelText.setVisibility(View.INVISIBLE);
+            }
 
 
-            //Sezione Onclick delle varie immagini
+            //Sezione Onclick delle varie sezioni
 
             holder.playImage.setOnClickListener(new View.OnClickListener() {
                 //@Override
                 public void onClick(View v) {
-                    playClicked(v, holder.statusWaitingImage, holder.statusOperatingImage,
+                    playClicked(v, currentRequest, holder.statusWaitingImage, holder.statusOperatingImage,
                             holder.playImage, holder.playText, holder.pauseImage, holder. pauseText, holder.cancelImage, holder.cancelText);
                 }
             });
@@ -221,7 +226,7 @@ public class TodayTab extends Fragment{
             holder.playText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    playClicked(v, holder.statusWaitingImage, holder.statusOperatingImage,
+                    playClicked(v, currentRequest, holder.statusWaitingImage, holder.statusOperatingImage,
                             holder.playImage, holder.playText, holder.pauseImage, holder. pauseText, holder.cancelImage, holder.cancelText);
                 }
             });
@@ -229,7 +234,7 @@ public class TodayTab extends Fragment{
             holder.pauseImage.setOnClickListener(new View.OnClickListener() {
                 //@Override
                 public void onClick(View v) {
-                    pauseClicked(v, holder.statusWaitingImage, holder.statusOperatingImage,
+                    pauseClicked(v, currentRequest, holder.statusWaitingImage, holder.statusOperatingImage,
                             holder.playImage, holder.playText, holder.pauseImage, holder. pauseText, holder.cancelImage, holder.cancelText);
                 }
             });
@@ -237,7 +242,7 @@ public class TodayTab extends Fragment{
             holder.pauseText.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    pauseClicked(v, holder.statusWaitingImage, holder.statusOperatingImage,
+                    pauseClicked(v, currentRequest, holder.statusWaitingImage, holder.statusOperatingImage,
                             holder.playImage, holder.playText, holder.pauseImage, holder. pauseText, holder.cancelImage, holder.cancelText);
                 }
             });
@@ -259,14 +264,14 @@ public class TodayTab extends Fragment{
             holder.cancelImage.setOnClickListener(new View.OnClickListener() {
                 //@Override
                 public void onClick(View v) {
-
+                    deleteClicked(requests, currentRequest);
                 }
             });
 
         }
 
 
-        public void playClicked(View v, ImageView waitingImage, ImageView operatingImage, ImageView playImage,
+        public void playClicked(View v, Request currentRequest, ImageView waitingImage, ImageView operatingImage, ImageView playImage,
                                 TextView playText, ImageView pauseImage, TextView pauseText, ImageView cancelImage, TextView cancelText){
             waitingImage.setVisibility(View.INVISIBLE);
             operatingImage.setVisibility(View.VISIBLE);
@@ -279,9 +284,11 @@ public class TodayTab extends Fragment{
 
             cancelImage.setVisibility(View.INVISIBLE);
             cancelText.setVisibility(View.INVISIBLE);
+
+            sendInfoToServerActivate(currentRequest);
         }
 
-        public void pauseClicked(View v, ImageView waitingImage, ImageView operatingImage, ImageView playImage,
+        public void pauseClicked(View v, Request currentRequest, ImageView waitingImage, ImageView operatingImage, ImageView playImage,
                                 TextView playText, ImageView pauseImage, TextView pauseText, ImageView cancelImage, TextView cancelText){
             waitingImage.setVisibility(View.VISIBLE);
             operatingImage.setVisibility(View.INVISIBLE);
@@ -294,6 +301,14 @@ public class TodayTab extends Fragment{
 
             cancelImage.setVisibility(View.VISIBLE);
             cancelText.setVisibility(View.VISIBLE);
+
+            sendInfoToServerStop(currentRequest);
+        }
+
+        public void deleteClicked(ArrayList<Request> requests, Request currentRequest){
+            sendInfoToServerStop(currentRequest);
+            requests.remove(currentRequest);
+            
         }
 
         public void centerMapWithPosition(Request currentRequest){
@@ -317,6 +332,163 @@ public class TodayTab extends Fragment{
                     Math.min(g,255),
                     Math.min(b,255));
         }
+
+
+        PostNewStatus postNewStatus;
+
+        //metodo che manda
+        public void sendInfoToServerActivate(Request currentRequest){
+            JSONObject json = new JSONObject();
+            currentRequest.setCurrentStat(1);
+            currentRequest.setStatus("Ongoing");
+
+            try {
+                json.put("message", "Changing status from Accepted to Ongoing");
+                json.put("status", currentRequest.getStatus());
+                postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        public void sendInfoToServerStop(Request currentRequest){
+            JSONObject json = new JSONObject();
+            currentRequest.setCurrentStat(1);
+            currentRequest.setStatus("Accepted"); //(?)
+
+            try {
+                json.put("message", "Changing status from Ongoing to Accepted");
+                json.put("status", currentRequest.getStatus());
+                postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void sendInfoToServerDelete(Request currentRequest){
+            JSONObject json = new JSONObject();
+            currentRequest.setCurrentStat(1);
+            currentRequest.setStatus("Cancelled"); //(?)
+
+            try {
+                json.put("message", "Cancelled request");
+                json.put("status", currentRequest.getStatus());
+                postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        private class PostNewStatus extends AsyncTask<Void, Void, String> {
+
+            private JSONObject jsonObject;
+            private Request request;
+
+            public PostNewStatus(JSONObject newStatus, Request requestToUpdate) {
+                jsonObject = newStatus;
+                request = requestToUpdate;
+            }
+
+            @Override
+            protected String doInBackground(Void... voids) {
+                try {
+                    URL url = new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + this.request.getField().getId() + "/irrigation_plan/" + this.request.getId() + "/status");
+
+                    Log.d("ProvaExcIdField", this.request.getField().getId());
+                    Log.d("ProvaExc",  this.request.getId());
+
+                    HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                    conn.setRequestMethod("POST");
+                    conn.setRequestProperty("Content-Type", "application/json");
+                    conn.setDoOutput(true);
+                    conn.setConnectTimeout(15000);
+                    conn.connect();
+
+                    String jsonInputString = jsonObject.toString();
+                    try(OutputStream os = conn.getOutputStream()) {
+                        byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
+                        os.write(input, 0, input.length);
+                    }
+                    conn.getOutputStream().flush();
+                    String res = "";
+                    try(BufferedReader br = new BufferedReader(
+                            new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
+                        StringBuilder response = new StringBuilder();
+                        String responseLine = null;
+                        while ((responseLine = br.readLine()) != null) {
+                            response.append(responseLine.trim());
+                        }
+                        res = response.toString();
+                    }
+                    conn.disconnect();
+                    return res;
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(String aString) {
+                super.onPostExecute(aString);
+                System.out.println("---- POST REQUEST RESPONSE ----");
+                System.out.print(aString);
+                Log.d("ProvaExc", "---- POST REQUEST RESPONSE ----");
+                Log.d("ProvaExc", aString);
+            }
+        }
+
+        /*
+        public void onClickSubmit(View view) {
+        try {
+            int radioButtonId = radioGroup.getCheckedRadioButtonId();
+            //Request request = Request.requests[requestId];
+            Request request = requestList.get(requestId);
+
+            //RadioButton radioButton = findViewById(radioButtonId);
+            JSONObject json = new JSONObject();
+            String message = "";
+            switch (radioButtonId) {
+                case R.id.cancelled:
+                    editTextReasonCancelled = findViewById(R.id.reason_edit_text);
+                    request.setStatus("Cancelled");
+                    message = editTextReasonCancelled.getText().toString();
+                    break;
+                case R.id.interrupted:
+                    request.setStatus("Interrupted");
+                    break;
+                case R.id.satisfied:
+                    request.setStatus("Satisfied");
+                    waterVolumeSatisfied = findViewById(R.id.water_volume);
+                    String sdts = textViewStartDate.getText().toString();
+                    String edts = textViewEndDate.getText().toString();
+                    String wvs = waterVolumeSatisfied.getText().toString();
+                    message = getResources().getString(R.string.start) + ": " +  sdts +
+                            ", " + getResources().getString(R.string.end) + ": " + edts +
+                            ", " + getResources().getString(R.string.total_irrigation_time) + ": " + wvs + " h";
+                    break;
+                case R.id.accepted:
+                    request.setStatus("Accepted");
+                    message = "The request has been accepted";
+                    break;
+                case R.id.ongoing:
+                    request.setStatus("Ongoing");
+                    break;
+                default:
+            }
+            json.put("message", message);
+            json.put("status", request.getStatus());
+            new PostNewStatus(json, request).execute();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+         */
 
 
         @Override
