@@ -18,17 +18,29 @@ public class Planning extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_planning);
-        ArrayList<String> animalNames = new ArrayList<>();
-        animalNames.add("Horse");
-        animalNames.add("Cow");
-        animalNames.add("Camel");
-        animalNames.add("Sheep");
-        animalNames.add("Goat");
+        ArrayList<String> place = new ArrayList<>();
+        place.add("San Michele");
+        place.add("Fosdondo Nord");
+        place.add("Guaspari");
+        place.add("San Michele");
+        place.add("Fosdondo Sud");
+        ArrayList<String> flow = new ArrayList<>();
+        flow.add("3 l/s");
+        flow.add("4 l/s");;
+        flow.add("1 l/s");
+        flow.add("2 l/s");
+        flow.add("3 l/s");
+        ArrayList<String> time = new ArrayList<>();
+        time.add("6:30");
+        time.add("7:30");
+        time.add("9:00");
+        time.add("11:30");
+        time.add("12:00");
 
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.timeLine);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new AdapterPlan( animalNames);
+        adapter = new AdapterPlan( place,flow,time);
         //adapter.setClickListener(this);
         recyclerView.setAdapter(adapter);
     }
