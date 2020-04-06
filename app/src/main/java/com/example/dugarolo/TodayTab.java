@@ -1,7 +1,9 @@
 package com.example.dugarolo;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -45,6 +47,7 @@ import java.util.Objects;
 public class TodayTab extends Fragment{
 
     MyMapView map;
+    RequestAdapter mAdapter;
 
     public TodayTab() {
         // Required empty public constructor
@@ -69,7 +72,7 @@ public class TodayTab extends Fragment{
         final RecyclerView recyclerView = root.findViewById(R.id.list_requests);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
-        RequestAdapter mAdapter = new RequestAdapter(requests);
+        mAdapter = new RequestAdapter(requests);
         recyclerView.setAdapter(mAdapter);
 
         map = getArguments().getParcelable("Mappa");
@@ -145,7 +148,7 @@ public class TodayTab extends Fragment{
 
         @SuppressLint({"SetTextI18n", "ResourceType"})
         @Override
-        public void onBindViewHolder(@NonNull final TodayTab.RequestAdapter.RequestHolder holder, int position) {
+        public void onBindViewHolder(@NonNull final TodayTab.RequestAdapter.RequestHolder holder, final int position) {
             final Request currentRequest = requests.get(position);
             String name = currentRequest.getName();
             DateTime dateTime = currentRequest.getDateTime();
@@ -160,31 +163,33 @@ public class TodayTab extends Fragment{
                 }
 
 
-            VectorChildFinder vector;
+            /*VectorChildFinder vector;
             vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor, holder.basicIcon);
             VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
             VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
             path1.setFillColor(color1);
-            path2.setFillColor(color2);
+            path2.setFillColor(color2);*/
 
             //qui viene definito il farmer, deve essere aggiunto un campo in request che mi dice
             //se la richiesta è fatta da farmer o dall'algoritmo
             //da attivare quando ci sarà la variabile in request
 
-            /*VectorChildFinder vector;
-                if(currentRequest.getType()=="farmer"){
-                    vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor, holder.basicIcon);
-                    VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
-                    VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
-                    path1.setFillColor(color1);
-                    path2.setFillColor(color2);
-                }else if(currentRequest.getType() == "criteria"){
-                    vector = new VectorChildFinder(getContext(),R.drawable.ic_algorithmrequest, holder.basicIcon);
-                    VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
-                    VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
-                    path1.setFillColor(color1);
-                    path2.setFillColor(color2);
-                }*/
+            Log.d("Exxxx", currentRequest.getType());
+
+            VectorChildFinder vector;
+            if(currentRequest.getType().equals("cbec")){
+                vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor, holder.basicIcon);
+                VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
+                VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
+                path1.setFillColor(color1);
+                path2.setFillColor(color2);
+            }else if(currentRequest.getType().equals("criteria")){
+                vector = new VectorChildFinder(getContext(),R.drawable.ic_requestcriteria, holder.basicIcon);
+                VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
+                VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
+                path1.setFillColor(color1);
+                path2.setFillColor(color2);
+            }
 
             DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
             String formattedDateTime = dateTime.toString(dtf);
@@ -264,7 +269,7 @@ public class TodayTab extends Fragment{
             holder.cancelImage.setOnClickListener(new View.OnClickListener() {
                 //@Override
                 public void onClick(View v) {
-                    deleteClicked(requests, currentRequest);
+                    deleteClicked(v, requests, currentRequest, position);
                 }
             });
 
@@ -305,11 +310,32 @@ public class TodayTab extends Fragment{
             sendInfoToServerStop(currentRequest);
         }
 
-        public void deleteClicked(ArrayList<Request> requests, Request currentRequest){
-            sendInfoToServerStop(currentRequest);
-            requests.remove(currentRequest);
-            
+        public void deleteClicked(View v, final ArrayList<Request> requests, final Request currentRequest, final int position) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
+
+            // set title
+            alertDialogBuilder.setTitle("Vuoi sicuro di voler cancellare questa richiesta?");
+
+            // set dialog message
+            alertDialogBuilder
+                    .setCancelable(false)
+                    .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            sendInfoToServerDelete(currentRequest);
+                            requests.remove(currentRequest);
+                            mAdapter.notifyItemRemoved(position);
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
         }
+
 
         public void centerMapWithPosition(Request currentRequest){
 
@@ -441,55 +467,6 @@ public class TodayTab extends Fragment{
                 Log.d("ProvaExc", aString);
             }
         }
-
-        /*
-        public void onClickSubmit(View view) {
-        try {
-            int radioButtonId = radioGroup.getCheckedRadioButtonId();
-            //Request request = Request.requests[requestId];
-            Request request = requestList.get(requestId);
-
-            //RadioButton radioButton = findViewById(radioButtonId);
-            JSONObject json = new JSONObject();
-            String message = "";
-            switch (radioButtonId) {
-                case R.id.cancelled:
-                    editTextReasonCancelled = findViewById(R.id.reason_edit_text);
-                    request.setStatus("Cancelled");
-                    message = editTextReasonCancelled.getText().toString();
-                    break;
-                case R.id.interrupted:
-                    request.setStatus("Interrupted");
-                    break;
-                case R.id.satisfied:
-                    request.setStatus("Satisfied");
-                    waterVolumeSatisfied = findViewById(R.id.water_volume);
-                    String sdts = textViewStartDate.getText().toString();
-                    String edts = textViewEndDate.getText().toString();
-                    String wvs = waterVolumeSatisfied.getText().toString();
-                    message = getResources().getString(R.string.start) + ": " +  sdts +
-                            ", " + getResources().getString(R.string.end) + ": " + edts +
-                            ", " + getResources().getString(R.string.total_irrigation_time) + ": " + wvs + " h";
-                    break;
-                case R.id.accepted:
-                    request.setStatus("Accepted");
-                    message = "The request has been accepted";
-                    break;
-                case R.id.ongoing:
-                    request.setStatus("Ongoing");
-                    break;
-                default:
-            }
-            json.put("message", message);
-            json.put("status", request.getStatus());
-            new PostNewStatus(json, request).execute();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-
-    }
-         */
-
 
         @Override
         public int getItemCount() {

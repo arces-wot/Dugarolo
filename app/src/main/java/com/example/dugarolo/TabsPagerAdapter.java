@@ -52,6 +52,9 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         return mContext.getResources().getString(TAB_TITLES[position]);
     }
 
+    private void deletePlace(int position) {
+
+    }
     @Override
     public int getCount() {
         return 2;

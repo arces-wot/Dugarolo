@@ -19,23 +19,22 @@
         android:fillColor="#EABE96"/>
     <path
         android:pathData="M172.6,233.4m-20.1,0a20.1,20.1 0,1 1,40.2 0a20.1,20.1 0,1 1,-40.2 0"
-        android:fillColor="#5781a8"/>
+        android:fillColor="#CFDBE6"/>
     <path
         android:pathData="M335.1,233.4m-20.1,0a20.1,20.1 0,1 1,40.2 0a20.1,20.1 0,1 1,-40.2 0"
-        android:fillColor="#5781a8"/>
+        android:fillColor="#CFDBE6"/>
     <path
         android:pathData="M256.1,316.9h-4.5c-41.8,0 -75.7,-33.9 -75.7,-75.7v-69.1c0,-41.8 33.9,-75.7 75.7,-75.7h4.5c41.8,0 75.7,33.9 75.7,75.7v69.1C331.8,283 297.9,316.9 256.1,316.9z"
-        android:fillColor="#bccddc"/>
+        android:fillColor="#CFDBE6"/>
     <path
         android:pathData="M256.1,96.5H256V317h0.1c41.8,0 75.7,-33.9 75.7,-75.7v-69.1C331.8,130.4 297.9,96.5 256.1,96.5z"
-        android:fillColor="#bccddc"/>
+        android:fillColor="#CFDBE6"/>
     <path
         android:pathData="M217.1,224.5m-7.8,0a7.8,7.8 0,1 1,15.6 0a7.8,7.8 0,1 1,-15.6 0"
-        android:fillColor="#272525"/>
+        android:fillColor="#59595B"/>
     <path
         android:pathData="M290.6,224.5m-7.8,0a7.8,7.8 0,1 1,15.6 0a7.8,7.8 0,1 1,-15.6 0"
         android:fillColor="#272525"/>
-    //bocca
     <path
         android:pathData="M253.9,288.4c-14,0 -25.5,-11.4 -25.5,-25.5c0,-2.4 1.9,-4.3 4.3,-4.3s4.3,1.9 4.3,4.3c0,9.3 7.6,16.8 16.8,16.8c9.3,0 16.8,-7.6 16.8,-16.8c0,-2.4 1.9,-4.3 4.3,-4.3s4.3,1.9 4.3,4.3C279.3,277 267.9,288.4 253.9,288.4z"
         android:fillColor="#FD8469"/>
