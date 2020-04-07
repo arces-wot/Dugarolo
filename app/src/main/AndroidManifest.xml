@@ -17,6 +17,12 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+<<<<<<< HEAD
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".Planning" />
+        <activity android:name=".InfoTomorrowRequest" />
+        <activity android:name=".SplashScreen">
+=======
         <activity android:name=".Planning"></activity>
         <activity android:name=".InfoTomorrowRequest" />
         <activity
@@ -24,6 +30,7 @@
             android:label="SWAMP"
             android:parentActivityName=".MainActivity" />
         <activity android:name=".MainActivity">
+>>>>>>> 2332e07b69d4f4c6c77a586eae40743a58dd08b1
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

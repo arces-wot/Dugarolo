@@ -45,7 +45,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
-import java.lang.reflect.Array;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -67,80 +67,44 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton fab;
 
 
-    //debug only
-    //private static final String TAG = "MainActivity";
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 
-    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
 
+        farms= Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS");
+        requests=Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("REQUESTS");
+
+
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         Context ctx = getApplicationContext();
         loadMap(startPoint, ctx);
-
-        //RequestLab requestLab = RequestLab.get(this);
-        //List<Request> requestList = requestLab.getRequestList();
-        //trial requests:
-
-
-/*       DateTime date1 = new DateTime(2020, 12, 12, 12, 12);
-        ArrayList<GeoPoint> geoList1 = new ArrayList<GeoPoint>();
-        geoList1.add(new GeoPoint(44.777572, 10.715764));
-        geoList1.add(new GeoPoint(44.777201, 10.717981));
-        geoList1.add(new GeoPoint(44.778039, 10.719505));
-        geoList1.add(new GeoPoint(44.777572, 10.715764));
-
-        DateTime date2 = new DateTime();
-
-        Field f1 = new Field("Bertacchini's Farm", "001", geoList1);
-        Request r1 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "1h", f1, "speriamo bene", "Fosfondo", "criteria");
-        requests.add(r1);
-
-        Request r2 = new Request("001", "Bertacchini's Farm", date2, "Ongoing", "1h", f1, "speriamo bene", "Fosfondo1", "cbec");
-        requests.add(r2);
-
-        Request r3 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "1h", f1, "speriamo bene", "Fosfondo", "criteria");
-        requests.add(r3);
-
-        Request r4 = new Request("001", "Bertacchini's Farm", date2, "Ongoing", "1h", f1, "speriamo bene", "Fosfondo", "criteria");
-        requests.add(r4);
-        /*Request r3 = new Request("001", "Ferrari's Farm", date1, "Accepted", "1h", f1, "speriamo bene");
-        requests.add(r3);
-        Request r4 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r4);
-        Request r5 = new Request("001", "Ferrari's Farm", date2, "Accepted", "10h", f1, "speriamo bene");
-        requests.add(r5);
-        Request r6 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r6);
-
-        Request r7 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r7);
-        Request r8 = new Request("001", "Bonaccini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r8);
-        Request r9 = new Request("001", "Ferrari's Farm", date2, "Accepted", "10h", f1, "speriamo bene");
-        requests.add(r9);
-        Request r10 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r10);
-
-        Request r11 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r11);
-        Request r12 = new Request("001", "Bonaccini's Farm", date2, "Accepted", "12h", f1, "speriamo bene");
-        requests.add(r12);*/
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
         assert actionBar != null;
         actionBar.setDisplayShowTitleEnabled(false);
-        new LoadFarmsAndRequests().execute();
-        //loadRequestsRecyclerView(requestList);
 
-        if (requestId != null) {
-            Request request = requests.get(requestId);
-            String status = (String) Objects.requireNonNull(getIntent().getExtras()).get(REQUEST_STATUS);
-            request.setStatus(status);
-        }
+
+        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests, map);
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(tabsPagerAdapter);
+        TabLayout tabs = findViewById(R.id.tabs);
+        tabs.setupWithViewPager(viewPager);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            public void onPageScrollStateChanged(int state) {}
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            public void onPageSelected(int position) {
+                if (position==0)
+                    fab.show();
+                else
+                    fab.hide();
+            }
+        });
+
 
         fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -153,6 +117,10 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
+
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
 
 
     public void loadMap(GeoPoint startPoint, Context ctx) {
@@ -177,6 +145,9 @@ public class MainActivity extends AppCompatActivity {
         IMapController mapController = map.getController();
         mapController.setZoom(14.0);
         mapController.setCenter(startPoint);
+        map.drawFarms(farms);
+        map.drawIcon(farms, farmerMarkers, 70);
+
     }
 
 
@@ -196,6 +167,13 @@ public class MainActivity extends AppCompatActivity {
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().save(this, prefs);
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
+    }
+
+    public void onStop(){
+        super.onStop();
+    }
+    public void onRestart(){
+        super.onRestart();
     }
 
     public void onClickExpandMap(View view) {
@@ -256,3 +234,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
+
+

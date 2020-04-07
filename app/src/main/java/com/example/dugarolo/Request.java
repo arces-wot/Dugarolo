@@ -111,6 +111,8 @@ public class Request implements Comparable<Request>, Parcelable {
         waterVolume = in.readString();
         field = (Field) in.readValue(Field.class.getClassLoader());
         message = in.readString();
+        type=in.readString();
+        channel=in.readString();
     }
 
     @Override
@@ -127,6 +129,8 @@ public class Request implements Comparable<Request>, Parcelable {
         dest.writeString(waterVolume);
         dest.writeValue(field);
         dest.writeString(message);
+        dest.writeString(type);
+        dest.writeString(channel);
     }
 
     @SuppressWarnings("unused")
