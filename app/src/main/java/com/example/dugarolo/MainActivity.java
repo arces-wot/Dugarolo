@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         //trial requests:
 
 
-        DateTime date1 = new DateTime(2020, 12, 12, 12, 12);
+/*       DateTime date1 = new DateTime(2020, 12, 12, 12, 12);
         ArrayList<GeoPoint> geoList1 = new ArrayList<GeoPoint>();
         geoList1.add(new GeoPoint(44.777572, 10.715764));
         geoList1.add(new GeoPoint(44.777201, 10.717981));
@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         Request r1 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "1h", f1, "speriamo bene", "Fosfondo", "criteria");
         requests.add(r1);
 
-        Request r2 = new Request("001", "Bertacchini's Farm", date2, "Ongoing", "1h", f1, "speriamo bene", "Fosfondo", "criteria");
+        Request r2 = new Request("001", "Bertacchini's Farm", date2, "Ongoing", "1h", f1, "speriamo bene", "Fosfondo1", "cbec");
         requests.add(r2);
 
         Request r3 = new Request("001", "Bertacchini's Farm", date2, "Accepted", "1h", f1, "speriamo bene", "Fosfondo", "criteria");
@@ -209,8 +209,8 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Boolean doInBackground(Void... voids) {
-            //assetLoader.loadGeoPointsFarms(farms);
-            //assetLoader.loadRequests(farms, requests);
+            assetLoader.loadGeoPointsFarms(farms);
+            assetLoader.loadRequests(farms, requests);
             return true;
         }
 

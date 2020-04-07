@@ -195,7 +195,7 @@ public class TodayTab extends Fragment{
             String formattedDateTime = dateTime.toString(dtf);
             holder.farmName.setText(currentRequest.getName());
             holder.time.setText(getResources().getString(R.string.expected_time) + ": " + formattedDateTime);
-            holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume() + "h");
+            holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume());
             //poi li scrivo in strings
             holder.canalName.setText(currentRequest.getChannel());
             holder.nAppezamento.setText("Appezzamento n°");
