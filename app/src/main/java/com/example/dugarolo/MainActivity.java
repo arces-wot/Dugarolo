@@ -45,6 +45,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -65,13 +66,16 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Marker> farmerMarkers = new ArrayList<>();
     private FloatingActionButton fab;
 
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    @Override
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
+
         farms= Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS");
         requests=Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("REQUESTS");
+
 
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         Context ctx = getApplicationContext();
@@ -101,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         fab = findViewById(R.id.floatingActionButton);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,11 +116,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
     }
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
+
+
     public void loadMap(GeoPoint startPoint, Context ctx) {
         //load/initialize the osmdroid configuration, this can be done
 
@@ -140,6 +147,7 @@ public class MainActivity extends AppCompatActivity {
         mapController.setCenter(startPoint);
         map.drawFarms(farms);
         map.drawIcon(farms, farmerMarkers, 70);
+
     }
 
 
@@ -160,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         //Configuration.getInstance().save(this, prefs);
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
+
     public void onStop(){
         super.onStop();
     }
@@ -173,5 +182,8 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
 }
+
+
 

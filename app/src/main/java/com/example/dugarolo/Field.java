@@ -1,5 +1,6 @@
 package com.example.dugarolo;
 
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -8,7 +9,9 @@ import org.osmdroid.util.GeoPoint;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+
 public class Field implements Parcelable {
+
 
     private String farmName;
     private String id;
@@ -20,6 +23,7 @@ public class Field implements Parcelable {
         this.id = id;
         this.area = area;
     }
+
 
     protected Field(Parcel in) {
         farmName = in.readString();
@@ -39,6 +43,7 @@ public class Field implements Parcelable {
         }
     };
 
+
     public String getFarmName() {
         return farmName;
     }
@@ -52,6 +57,7 @@ public class Field implements Parcelable {
     }
 
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -63,5 +69,6 @@ public class Field implements Parcelable {
         parcel.writeString(id);
         parcel.writeTypedList(area);
     }
+
 }
 

@@ -12,17 +12,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Farm implements Parcelable{
+
+public class Farm implements Parcelable {
 
     private String name;
     private ArrayList<Field> fields = new ArrayList<>();
     private GeoPoint iconPosition;
 
-
     public Farm(String name, ArrayList<Field> fields, GeoPoint iconPosition) {
         this.name = name;
         this.fields = fields;
-        this.iconPosition=iconPosition;
+        this.iconPosition = iconPosition;
     }
 
     public ArrayList<Field> getFields() {
@@ -31,8 +31,8 @@ public class Farm implements Parcelable{
 
     protected Farm(Parcel in) {
         name = in.readString();
-        in.readTypedList(fields,Field.CREATOR);
-        iconPosition= (GeoPoint) in.readSerializable();
+        in.readTypedList(fields, Field.CREATOR);
+        iconPosition = (GeoPoint) in.readSerializable();
     }
 
 
@@ -52,9 +52,11 @@ public class Farm implements Parcelable{
         return name;
     }
 
+
     public GeoPoint getIconPosition() {
         return iconPosition;
     }
+
 
     @Override
     public int describeContents() {
@@ -70,3 +72,4 @@ public class Farm implements Parcelable{
 
 
 }
+
