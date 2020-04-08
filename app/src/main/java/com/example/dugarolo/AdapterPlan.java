@@ -92,8 +92,12 @@ public class AdapterPlan extends RecyclerView.Adapter<AdapterPlan.ViewHolder> {
         @Override
         public void onClick(View view) {
             final Intent intent = new Intent(view.getContext(), WeirActivity.class);
-            Toast.makeText(view.getContext(),"Clicked" ,Toast.LENGTH_SHORT).show();
-            view.getContext().startActivity(intent); 
+            intent.putExtra("Number", "PROVA");
+            intent.putExtra("Open Level", 12);
+            intent.putExtra("Max Level", 12);
+            intent.putExtra("Min Level", 1);
+            //Toast.makeText(view.getContext(),"Clicked" ,Toast.LENGTH_SHORT).show();
+            view.getContext().startActivity(intent);
 
         }
     }
