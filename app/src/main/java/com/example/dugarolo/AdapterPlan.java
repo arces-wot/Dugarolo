@@ -1,5 +1,6 @@
 package com.example.dugarolo;
 
+
 import android.content.Intent;
 import android.os.Parcelable;
 import android.view.LayoutInflater;
@@ -88,9 +89,9 @@ public class AdapterPlan extends RecyclerView.Adapter<AdapterPlan.ViewHolder> {
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(view.getContext(), WeirActivity.class);
+            final Intent intent = new Intent(view.getContext(), WeirActivity.class);
             Toast.makeText(view.getContext(),"Clicked" ,Toast.LENGTH_SHORT).show();
-            //startActivity(intent);  //Non funziona.........
+            view.getContext().startActivity(intent);  //Non funziona.........
         }
     }
 

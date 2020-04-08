@@ -229,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         Type typeCanal = new TypeToken<ArrayList<Canal>>() {
         }.getType();
         farms = gson.fromJson(jsonFarms, typeFarm);
-        //requests = gson.fromJson(jsonRequests, typeRequest);
+        requests = gson.fromJson(jsonRequests, typeRequest);
         weirs = gson.fromJson(jsonWeirs, typeWeir);
         canals = gson.fromJson(jsonCanals, typeCanal);
     }
