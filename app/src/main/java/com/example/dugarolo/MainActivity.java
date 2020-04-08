@@ -1,18 +1,26 @@
 package com.example.dugarolo;
 
-import androidx.annotation.NonNull;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
+import android.os.Bundle;
+import android.preference.PreferenceManager;
+import android.view.View;
+
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.res.ResourcesCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.tabs.TabLayout;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import net.danlew.android.joda.JodaTimeAndroid;
+
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -20,38 +28,8 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.overlay.Marker;
 
-import android.content.Context;
-import android.content.Intent;
-import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.Parcelable;
-import android.preference.PreferenceManager;
-import android.text.Html;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.tabs.TabLayout;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import net.danlew.android.joda.JodaTimeAndroid;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 
@@ -63,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     private MyMapView map;
     private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<Marker> farmerMarkers = new ArrayList<>();
+    //private ArrayList<Marker> weirMarkers = new ArrayList<>();
     private ArrayList<Weir> weirs = new ArrayList<>();
     private ArrayList<Canal> canals = new ArrayList<>();
 
@@ -164,6 +143,8 @@ public class MainActivity extends AppCompatActivity {
         mapController.setCenter(startPoint);
         map.drawFarms(farms);
         map.drawIcon(farms, farmerMarkers, 70);
+        //map.drawCanals(canals);
+        //map.drawWeirs(weirs,weirMarkers);
 
     }
 

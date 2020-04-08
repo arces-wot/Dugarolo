@@ -35,23 +35,6 @@
             app:layout_constraintStart_toEndOf="@+id/imageView"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <Spinner
-            android:id="@+id/filter"
-            android:layout_width="36dp"
-            android:layout_height="28dp"
-            android:layout_marginStart="237dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="20dp"
-            android:layout_marginBottom="16dp"
-            android:background="@android:color/transparent"
-            android:clickable="true"
-            android:foreground="@drawable/filter"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/textViewFlow"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/filter" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.appcompat.widget.Toolbar>

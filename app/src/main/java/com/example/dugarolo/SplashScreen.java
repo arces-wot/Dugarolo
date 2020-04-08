@@ -1,19 +1,11 @@
 package com.example.dugarolo;
 
-import androidx.annotation.RequiresApi;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.viewpager.widget.ViewPager;
-
 import android.content.Intent;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 
-import com.google.android.material.tabs.TabLayout;
-
-import org.joda.time.DateTime;
-import org.osmdroid.util.GeoPoint;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
 
@@ -36,7 +28,7 @@ public class SplashScreen extends AppCompatActivity {
         i.putParcelableArrayListExtra("WEIRS",weirs);
         i.putParcelableArrayListExtra("CANALS",canals);
 
-        new CountDownTimer(1500, 1000) {
+        new CountDownTimer(1500, 1500) {
 
             public void onTick(long millisUntilFinished) {
 

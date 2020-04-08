@@ -2,7 +2,6 @@ package com.example.dugarolo;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -21,10 +20,9 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
 import com.devs.vectorchildfinder.VectorChildFinder;
 import com.devs.vectorchildfinder.VectorDrawableCompat;
-
-
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -38,8 +36,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.Serializable;
-
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -218,7 +214,7 @@ public class TodayTab extends Fragment{
             holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume());
             //poi li scrivo in strings
             holder.canalName.setText(currentRequest.getChannel());
-            holder.nAppezamento.setText("Appezzamento n°");
+            holder.nAppezamento.setText("Appezzamento n°" + currentRequest.getField().getId());
 
 
             if(currentRequest.getStatus().equals("Accepted")){
