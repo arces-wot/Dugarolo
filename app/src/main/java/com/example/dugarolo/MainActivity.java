@@ -48,6 +48,7 @@ import net.danlew.android.joda.JodaTimeAndroid;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -87,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         Context ctx = getApplicationContext();
         loadMap(startPoint, ctx);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -200,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String jsonFarms = gson.toJson(farms);
-        String jsonRequests = gson.toJson(requests);
+        String jsonRequests= gson.toJson(requests);
         String jsonWeirs = gson.toJson(weirs);
         String jsonCanals = gson.toJson(canals);
         editor.putString("FARMS", jsonFarms);
@@ -226,7 +228,7 @@ public class MainActivity extends AppCompatActivity {
         Type typeCanal = new TypeToken<ArrayList<Canal>>() {
         }.getType();
         farms = gson.fromJson(jsonFarms, typeFarm);
-        //requests = gson.fromJson(jsonRequests, typeRequest);
+        requests = gson.fromJson(jsonRequests, typeRequest);
         weirs = gson.fromJson(jsonWeirs, typeWeir);
         canals = gson.fromJson(jsonCanals, typeCanal);
     }

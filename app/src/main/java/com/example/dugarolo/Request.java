@@ -6,6 +6,8 @@ import android.os.Parcelable;
 import androidx.annotation.RequiresApi;
 import org.joda.time.DateTime;
 import org.osmdroid.util.GeoPoint;
+
+import java.util.Date;
 import java.util.List;
 
 
@@ -14,7 +16,7 @@ public class Request implements Comparable<Request>, Parcelable {
     private String id;
     private String name;
     private String status;
-    private DateTime dateTime;
+    private Date dateTime;
     private String waterVolume;
     private Field field;
     private String message;
@@ -31,7 +33,7 @@ public class Request implements Comparable<Request>, Parcelable {
         this.id = id;
         this.name = name;
         this.status = status;
-        this.dateTime = dateTime;
+        this.dateTime = dateTime.toDate();
         this.waterVolume = waterVolume;
         this.field = field;
         this.message = message;
@@ -57,7 +59,7 @@ public class Request implements Comparable<Request>, Parcelable {
     public String getType(){return type; };
 
     public DateTime getDateTime() {
-        return dateTime;
+        return new DateTime(dateTime);
     }
 
     public void setStatus(String status) {
@@ -104,7 +106,7 @@ public class Request implements Comparable<Request>, Parcelable {
 
     @Override
     public int compareTo(Request o) {
-        return this.dateTime.toDateTime().compareTo(o.getDateTime().toDateTime());
+        return this.dateTime.compareTo(o.getDateTime().toDate());
     }
 
 
@@ -114,7 +116,7 @@ public class Request implements Comparable<Request>, Parcelable {
         id = in.readString();
         name = in.readString();
         status = in.readString();
-        dateTime = (DateTime) in.readValue(DateTime.class.getClassLoader());
+        dateTime = (Date) in.readValue(Date.class.getClassLoader());
         waterVolume = in.readString();
         field = (Field) in.readValue(Field.class.getClassLoader());
         message = in.readString();
