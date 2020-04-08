@@ -23,7 +23,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.devs.vectorchildfinder.VectorChildFinder;
 import com.devs.vectorchildfinder.VectorDrawableCompat;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+
 
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -38,6 +39,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Serializable;
+
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -93,6 +95,7 @@ public class TodayTab extends Fragment{
                 super.onScrollStateChanged(recyclerView, newState);
             }
         });*/
+
 
         return root;
 

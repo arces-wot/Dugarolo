@@ -24,6 +24,7 @@ public class SplashScreen extends AppCompatActivity {
     private ArrayList<Weir> weirs = new ArrayList<>();
     private ArrayList<Canal> canals = new ArrayList<>();
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +35,7 @@ public class SplashScreen extends AppCompatActivity {
         i.putParcelableArrayListExtra("FARMS",farms);
         i.putParcelableArrayListExtra("WEIRS",weirs);
         i.putParcelableArrayListExtra("CANALS",canals);
+
         new CountDownTimer(1500, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -58,6 +60,7 @@ public class SplashScreen extends AppCompatActivity {
             assetLoader.loadWDN(canals);
             assetLoader.loadGeoPointsWeirs(weirs);
             assetLoader.updateCurrentOpenLevels(weirs);
+
             return true;
         }
 

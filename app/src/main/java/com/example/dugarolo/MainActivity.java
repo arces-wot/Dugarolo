@@ -40,15 +40,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import net.danlew.android.joda.JodaTimeAndroid;
-
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -66,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Marker> farmerMarkers = new ArrayList<>();
     private ArrayList<Weir> weirs = new ArrayList<>();
     private ArrayList<Canal> canals = new ArrayList<>();
+
     private FloatingActionButton fab;
 
 
@@ -74,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
+
 
         if (getIntent().hasExtra("REQUESTS")) {
             farms = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS");
@@ -103,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+
             public void onPageScrollStateChanged(int state) {
             }
 
@@ -111,6 +110,7 @@ public class MainActivity extends AppCompatActivity {
 
             public void onPageSelected(int position) {
                 if (position == 0)
+
                     fab.show();
                 else
                     fab.hide();
@@ -132,8 +132,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-
-
     public void loadMap(GeoPoint startPoint, Context ctx) {
         //load/initialize the osmdroid configuration, this can be done
 
@@ -197,7 +195,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-
     private void saveData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -246,7 +243,4 @@ public class MainActivity extends AppCompatActivity {
         return viewPager;
     }
 }
-
-
-
 

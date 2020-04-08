@@ -3,6 +3,7 @@ package com.example.dugarolo;
 
 import android.content.Intent;
 import android.os.Parcelable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
-import java.util.Objects;
+
 
 
 public class AdapterPlan extends RecyclerView.Adapter<AdapterPlan.ViewHolder> {
@@ -91,7 +93,8 @@ public class AdapterPlan extends RecyclerView.Adapter<AdapterPlan.ViewHolder> {
         public void onClick(View view) {
             final Intent intent = new Intent(view.getContext(), WeirActivity.class);
             Toast.makeText(view.getContext(),"Clicked" ,Toast.LENGTH_SHORT).show();
-            view.getContext().startActivity(intent);  //Non funziona.........
+            view.getContext().startActivity(intent); 
+
         }
     }
 

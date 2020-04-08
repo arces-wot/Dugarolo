@@ -22,7 +22,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import android.Manifest;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,13 +34,11 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
-
 import java.lang.reflect.Type;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
-
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -50,7 +47,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
-
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -89,6 +85,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         else{
             loadData();
         }
+
         loadMap(startPoint);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -105,7 +102,9 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
 
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
     private void loadMap(GeoPoint startPoint) {
         //load/initialize the osmdroid configuration, this can be done
         Context ctx = getApplicationContext();
@@ -132,6 +131,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         map.drawIcon(farms, farmerMarkers, 80);
         setWeirListeners(weirMarkers);
         registerService();
+
     }
 
     public void centerMap(GeoPoint g) {
@@ -140,7 +140,9 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         mapController.setCenter(g);
     }
 
+
     public void onPause() {
+
         super.onPause();
         //this will refresh the osmdroid configuration on resuming.
         //if you make changes to the configuration, use
@@ -152,7 +154,9 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         isInFront = false;
     }
 
+
     public void onResume() {
+
         super.onResume();
         //this will refresh the osmdroid configuration on resuming.
         //if you make changes to the configuration, use
@@ -184,6 +188,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                 Integer newLevel = data.getExtras().getInt("Open Level");
                 for (Weir weir : weirs) {
                     if (weir.getId().equals(num)) weir.setOpenLevel(newLevel);
+
                 }
             }
             return;
@@ -198,6 +203,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             locationOverlay.enableFollowLocation();
             locationOverlay.enableMyLocation();
             map.getOverlayManager().add(locationOverlay);
+
             String weirNumber = data.getExtras().getString("Weir Number");
             Integer newOpenLevel = data.getExtras().getInt("Open Level");
             for (Weir weir : weirs) {
@@ -210,6 +216,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
 
     private void setWeirListeners(ArrayList<Marker> weirMarkers) {
         for (Marker marker : weirMarkers) {
+
             marker.setOnMarkerClickListener(new Marker.OnMarkerClickListener() {
                 @Override
                 public boolean onMarkerClick(Marker marker, MapView mapView) {
@@ -242,6 +249,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             startService(intent);
         } else {
             Toast.makeText(MapDetailActivity.this, "Device is not connected, can't fetch water level data", Toast.LENGTH_SHORT).show();
+
         }
     }
 
@@ -250,6 +258,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         //gestisci i risultati ottenuti dall'intent service
         try {
             if (isInFront) {
+
                 parseResult(resultCode, resultData);
             }
         } catch (JSONException e) {
@@ -421,6 +430,16 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             //assetLoader.loadWDN(canals);
             //assetLoader.loadGeoPointsWeirs(weirs);
             //assetLoader.updateCurrentOpenLevels(weirs);
+=======
+    private class LoadMapElements extends AsyncTask<Void, Void, Boolean> {
+
+        @Override
+        protected Boolean doInBackground(Void...voids) {
+            assetLoader.loadGeoPointsFarms(farms);
+            assetLoader.loadWDN(canals);
+            assetLoader.loadGeoPointsWeirs(weirs);
+            assetLoader.updateCurrentOpenLevels(weirs);
+>>>>>>> 5b9d0e16cb4be7d58f1ebc0d91e0297ee07e36b7
             return true;
         }
 
@@ -438,5 +457,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                 registerService();
             }
         }
+<<<<<<< HEAD
     }*/
 }
+

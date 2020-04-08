@@ -3,13 +3,11 @@ package com.example.dugarolo;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
-
 import androidx.annotation.RequiresApi;
-
 import org.joda.time.DateTime;
 import org.osmdroid.util.GeoPoint;
-
 import java.util.List;
+
 
 public class Request implements Comparable<Request>, Parcelable {
 
@@ -109,7 +107,9 @@ public class Request implements Comparable<Request>, Parcelable {
         return this.dateTime.toDateTime().compareTo(o.getDateTime().toDateTime());
     }
 
+
     @RequiresApi(api = Build.VERSION_CODES.M)
+
     protected Request(Parcel in) {
         id = in.readString();
         name = in.readString();
@@ -143,6 +143,7 @@ public class Request implements Comparable<Request>, Parcelable {
     @SuppressWarnings("unused")
     public static final Parcelable.Creator<Request> CREATOR = new Parcelable.Creator<Request>() {
         @RequiresApi(api = Build.VERSION_CODES.M)
+
         @Override
         public Request createFromParcel(Parcel in) {
             return new Request(in);
