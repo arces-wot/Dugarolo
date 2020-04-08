@@ -22,6 +22,7 @@ import org.osmdroid.views.overlay.Marker;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -41,31 +42,30 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
-
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import net.danlew.android.joda.JodaTimeAndroid;
-
-
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
 
 public class MainActivity extends AppCompatActivity {
 
-    private RecyclerView requestRecyclerView;
-    private RecyclerView.Adapter requestAdapter;
-    private RecyclerView.LayoutManager layoutManager;
+
     public static final String REQUEST_STATUS = "id";
-    private Integer requestId;
     private ArrayList<Farm> farms = new ArrayList<>();
     private MyMapView map;
-    private AssetLoader assetLoader = new AssetLoader();
     private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<Marker> farmerMarkers = new ArrayList<>();
+    private ArrayList<Weir> weirs = new ArrayList<>();
+    private ArrayList<Canal> canals = new ArrayList<>();
+
     private FloatingActionButton fab;
 
 
@@ -75,13 +75,22 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
 
-        farms= Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS");
-        requests=Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("REQUESTS");
+
+        if (getIntent().hasExtra("REQUESTS")) {
+            farms = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS");
+            requests = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("REQUESTS");
+            weirs = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("WEIRS");
+            canals = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("CANALS");
+            saveData();
+        } else {
+            loadData();
+        }
 
 
         GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         Context ctx = getApplicationContext();
         loadMap(startPoint, ctx);
+
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -100,11 +109,16 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            public void onPageScrollStateChanged(int state) {}
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
+
+            public void onPageScrollStateChanged(int state) {
+            }
+
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
 
             public void onPageSelected(int position) {
-                if (position==0)
+                if (position == 0)
+
                     fab.show();
                 else
                     fab.hide();
@@ -126,9 +140,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-
-
-
     public void loadMap(GeoPoint startPoint, Context ctx) {
         //load/initialize the osmdroid configuration, this can be done
 
@@ -175,72 +186,69 @@ public class MainActivity extends AppCompatActivity {
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
     }
 
-    public void onStop(){
+    public void onStop() {
         super.onStop();
     }
-    public void onRestart(){
+
+    public void onRestart() {
         super.onRestart();
     }
 
     public void onClickExpandMap(View view) {
 
         Intent intent = new Intent(MainActivity.this, MapDetailActivity.class);
+        intent.putParcelableArrayListExtra("FARMS", farms);
+        intent.putParcelableArrayListExtra("WEIRS", weirs);
+        intent.putParcelableArrayListExtra("CANALS", canals);
         startActivity(intent);
     }
 
+    private void saveData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String jsonFarms = gson.toJson(farms);
+        String jsonRequests= gson.toJson(requests);
+        String jsonWeirs = gson.toJson(weirs);
+        String jsonCanals = gson.toJson(canals);
+        editor.putString("FARMS", jsonFarms);
+        editor.putString("REQUESTS", jsonRequests);
+        editor.putString("WEIRS", jsonWeirs);
+        editor.putString("CANALS", jsonCanals);
+        editor.apply();
+    }
 
-    private class LoadFarmsAndRequests extends AsyncTask<Void, Void, Boolean> {
+    private void loadData() {
+        SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
+        Gson gson = new Gson();
+        String jsonFarms = sharedPreferences.getString("FARMS", null);
+        String jsonRequests = sharedPreferences.getString("REQUESTS", null);
+        String jsonWeirs = sharedPreferences.getString("WEIRS", null);
+        String jsonCanals = sharedPreferences.getString("CANALS", null);
+        Type typeFarm = new TypeToken<ArrayList<Farm>>() {
+        }.getType();
+        Type typeRequest = new TypeToken<ArrayList<Request>>() {
+        }.getType();
+        Type typeWeir = new TypeToken<ArrayList<Weir>>() {
+        }.getType();
+        Type typeCanal = new TypeToken<ArrayList<Canal>>() {
+        }.getType();
+        farms = gson.fromJson(jsonFarms, typeFarm);
+        requests = gson.fromJson(jsonRequests, typeRequest);
+        weirs = gson.fromJson(jsonWeirs, typeWeir);
+        canals = gson.fromJson(jsonCanals, typeCanal);
+    }
 
-        @Override
-        protected Boolean doInBackground(Void... voids) {
-            assetLoader.loadGeoPointsFarms(farms);
-            assetLoader.loadRequests(farms, requests);
-            return true;
-        }
+   /* public TabsPagerAdapter getTabsPagerAdapter(ArrayList<Request> requests, MyMapView map) {
+        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(),
+                requests, map);
+        return tabsPagerAdapter;
+    }*/
 
-        int check = 0;
-
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-
-            if (aBoolean) {
-                map.drawFarms(farms);
-                map.drawIcon(farms, farmerMarkers, 70);
-                TabsPagerAdapter tabsPagerAdapter = getTabsPagerAdapter(requests, map);
-                ViewPager viewPager = getViewPager(tabsPagerAdapter);
-                TabLayout tabs = findViewById(R.id.tabs);
-                tabs.setupWithViewPager(viewPager);
-                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                    public void onPageScrollStateChanged(int state) {}
-                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {}
-
-                    public void onPageSelected(int position) {
-                        if (position==0)
-                            fab.show();
-                        else
-                            fab.hide();
-                    }
-                });
-
-            }
-        }
-
-        public TabsPagerAdapter getTabsPagerAdapter(ArrayList<Request> requests, MyMapView map){
-            TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(),
-                    requests, map);
-            return tabsPagerAdapter;
-        }
-
-        public ViewPager getViewPager(TabsPagerAdapter tabsPagerAdapter){
-            ViewPager viewPager = findViewById(R.id.view_pager);
-            viewPager.setAdapter(tabsPagerAdapter);
-            return  viewPager;
-        }
-
+    public ViewPager getViewPager(TabsPagerAdapter tabsPagerAdapter) {
+        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager.setAdapter(tabsPagerAdapter);
+        return viewPager;
     }
 }
-
-
 

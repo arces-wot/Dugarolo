@@ -24,6 +24,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.devs.vectorchildfinder.VectorChildFinder;
 import com.devs.vectorchildfinder.VectorDrawableCompat;
 
+
+
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -36,6 +38,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.Serializable;
+
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -74,8 +78,24 @@ public class TodayTab extends Fragment{
         recyclerView.setLayoutManager(layoutManager);
         mAdapter = new RequestAdapter(requests);
         recyclerView.setAdapter(mAdapter);
-
         map = getArguments().getParcelable("Mappa");
+
+
+        /*recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
+                if (dy<0 && !fab.isShown())
+                    fab.show();
+                else if(dy>0 && fab.isShown())
+                    fab.hide();
+            }
+
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+        });*/
+
 
         return root;
 

@@ -1,14 +1,21 @@
 package com.example.dugarolo;
 
+
+import android.content.Intent;
+import android.os.Parcelable;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+
 
 
 public class AdapterPlan extends RecyclerView.Adapter<AdapterPlan.ViewHolder> {
@@ -84,7 +91,14 @@ public class AdapterPlan extends RecyclerView.Adapter<AdapterPlan.ViewHolder> {
 
         @Override
         public void onClick(View view) {
-            if (mClickListener != null) mClickListener.onItemClick(view, getAdapterPosition());
+            final Intent intent = new Intent(view.getContext(), WeirActivity.class);
+            intent.putExtra("Number", "PROVA");
+            intent.putExtra("Open Level", 12);
+            intent.putExtra("Max Level", 12);
+            intent.putExtra("Min Level", 1);
+            //Toast.makeText(view.getContext(),"Clicked" ,Toast.LENGTH_SHORT).show();
+            view.getContext().startActivity(intent);
+
         }
     }
 

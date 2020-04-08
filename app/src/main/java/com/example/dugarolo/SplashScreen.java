@@ -21,6 +21,9 @@ public class SplashScreen extends AppCompatActivity {
     private AssetLoader assetLoader= new AssetLoader();
     private ArrayList<Farm> farms=new ArrayList<>();
     private ArrayList<Request> requests=new ArrayList<>();
+    private ArrayList<Weir> weirs = new ArrayList<>();
+    private ArrayList<Canal> canals = new ArrayList<>();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,10 @@ public class SplashScreen extends AppCompatActivity {
         new LoadFarmsAndRequests().execute();
         final Intent i=new Intent(this, MainActivity.class);
         i.putParcelableArrayListExtra("REQUESTS",requests);
-        i.putExtra("FARMS",farms);
+        i.putParcelableArrayListExtra("FARMS",farms);
+        i.putParcelableArrayListExtra("WEIRS",weirs);
+        i.putParcelableArrayListExtra("CANALS",canals);
+
         new CountDownTimer(1500, 1000) {
 
             public void onTick(long millisUntilFinished) {
@@ -51,6 +57,10 @@ public class SplashScreen extends AppCompatActivity {
         protected Boolean doInBackground(Void... voids) {
             assetLoader.loadGeoPointsFarms(farms);
             assetLoader.loadRequests(farms, requests);
+            assetLoader.loadWDN(canals);
+            assetLoader.loadGeoPointsWeirs(weirs);
+            assetLoader.updateCurrentOpenLevels(weirs);
+
             return true;
         }
 

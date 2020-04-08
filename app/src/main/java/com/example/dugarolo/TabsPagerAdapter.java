@@ -24,7 +24,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
             new int[]{R.string.tab_text_1, R.string.tab_text_2};
     private final Context mContext;
     private ArrayList<Request> requests;
-    private FloatingActionButton fab;
+
     private MyMapView map;
 
     public TabsPagerAdapter(Context context, FragmentManager fm, ArrayList<Request> requests, MyMapView map) {
