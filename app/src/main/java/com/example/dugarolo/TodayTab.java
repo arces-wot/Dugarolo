@@ -359,7 +359,6 @@ public class TodayTab extends Fragment{
                     Math.min(b,255));
         }
 
-
         PostNewStatus postNewStatus;
 
         //metodo che manda

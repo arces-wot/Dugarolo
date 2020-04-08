@@ -15,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.joda.time.DateTime;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class TabsPagerAdapter extends FragmentPagerAdapter {
@@ -71,7 +72,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
             }
         }
         return todayRequests;
-
     }
 
     public ArrayList<Request> tomorrowRequests(ArrayList<Request> requests) {
@@ -85,5 +85,6 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
         return tomorrowRequests;
     }
+
 }
 

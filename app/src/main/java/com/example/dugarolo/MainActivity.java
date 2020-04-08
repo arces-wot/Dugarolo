@@ -37,7 +37,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -87,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
         assert actionBar != null;
         actionBar.setDisplayShowTitleEnabled(false);
 
+        /*Spinner filter = findViewById(R.id.filter);
+        String[] planets_array = new String[]{"Ciao", "Ciao1"};
+        Filter spinn = new Filter(getApplicationContext(), R.layout.item_filter, planets_array);
+        filter.setAdapter(spinn);*/
 
         TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests, map);
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -232,6 +238,7 @@ public class MainActivity extends AppCompatActivity {
             viewPager.setAdapter(tabsPagerAdapter);
             return  viewPager;
         }
+
     }
 }
 

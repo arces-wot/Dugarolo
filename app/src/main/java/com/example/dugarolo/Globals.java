@@ -13,7 +13,6 @@ public class Globals {
 
     private static Globals instance = new Globals();
 
-
     public static Globals getInstance() {
         return instance;
     }
