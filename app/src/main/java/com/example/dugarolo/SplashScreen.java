@@ -35,8 +35,8 @@ public class SplashScreen extends AppCompatActivity {
             }
 
             public void onFinish() {
-                startActivity(i);
-                finish();
+                    startActivity(i);
+                    finish();
 
             }
         }.start();

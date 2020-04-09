@@ -219,14 +219,20 @@ public class TodayTab extends Fragment{
 
             if(currentRequest.getStatus().equals("Accepted")){
                 //Log.d("ProvaEx", currentRequest.getChannel() + currentRequest.getStatus());
+                holder.playText.setVisibility(View.VISIBLE);
+                holder.playImage.setVisibility(View.VISIBLE);
                 holder.pauseText.setVisibility(View.INVISIBLE);
                 holder.pauseImage.setVisibility(View.INVISIBLE);
                 holder.statusWaitingImage.setVisibility(View.VISIBLE);
                 holder.statusOperatingImage.setVisibility(View.INVISIBLE);
+                holder.cancelText.setVisibility(View.VISIBLE);
+                holder.cancelImage.setVisibility(View.VISIBLE);
             }else if(currentRequest.getStatus().equals("Ongoing")){
                 //Log.d("ProvaEx", currentRequest.getChannel() + currentRequest.getStatus());
                 holder.playText.setVisibility(View.INVISIBLE);
                 holder.playImage.setVisibility(View.INVISIBLE);
+                holder.pauseText.setVisibility(View.VISIBLE);
+                holder.pauseImage.setVisibility(View.VISIBLE);
                 holder.statusWaitingImage.setVisibility(View.INVISIBLE);
                 holder.statusOperatingImage.setVisibility(View.VISIBLE);
                 holder.cancelImage.setVisibility(View.INVISIBLE);
