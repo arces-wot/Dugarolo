@@ -10,9 +10,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import java.util.ArrayList;
 
 public class SplashScreen extends AppCompatActivity {
-    private AssetLoader assetLoader= new AssetLoader();
-    private ArrayList<Farm> farms=new ArrayList<>();
-    private ArrayList<Request> requests=new ArrayList<>();
+    private AssetLoader assetLoader = new AssetLoader();
+    private ArrayList<Farm> farms = new ArrayList<>();
+    private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<Weir> weirs = new ArrayList<>();
     private ArrayList<Canal> canals = new ArrayList<>();
 
@@ -22,13 +22,14 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         new LoadFarmsAndRequests().execute();
-        final Intent i=new Intent(this, MainActivity.class);
+        /*final Intent i=new Intent(this, MainActivity.class);
         i.putParcelableArrayListExtra("REQUESTS",requests);
         i.putParcelableArrayListExtra("FARMS",farms);
         i.putParcelableArrayListExtra("WEIRS",weirs);
         i.putParcelableArrayListExtra("CANALS",canals);
 
-        new CountDownTimer(1500, 1500) {
+
+        new CountDownTimer(500, 500) {
 
             public void onTick(long millisUntilFinished) {
 
@@ -39,11 +40,12 @@ public class SplashScreen extends AppCompatActivity {
                     finish();
 
             }
-        }.start();
+        }.start();*/
 
     }
 
     private class LoadFarmsAndRequests extends AsyncTask<Void, Void, Boolean> {
+        final Intent i = new Intent(getApplicationContext(), MainActivity.class);
 
         @Override
         protected Boolean doInBackground(Void... voids) {
@@ -56,9 +58,21 @@ public class SplashScreen extends AppCompatActivity {
             return true;
         }
 
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            if (aBoolean) {
+                i.putParcelableArrayListExtra("REQUESTS", requests);
+                i.putParcelableArrayListExtra("FARMS", farms);
+                i.putParcelableArrayListExtra("WEIRS", weirs);
+                i.putParcelableArrayListExtra("CANALS", canals);
+                startActivity(i);
+                finish();
+            }
+
+        }
+
+
     }
-
-
 
 
 }
