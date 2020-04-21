@@ -200,7 +200,7 @@ public class TodayTab extends Fragment{
                 path1.setFillColor(color1);
                 path2.setFillColor(color2);
             }else if(currentRequest.getType().equals("criteria")){
-                vector = new VectorChildFinder(getContext(),R.drawable.ic_requestcriteria, holder.basicIcon);
+                vector = new VectorChildFinder(getContext(),R.drawable.ic_robo_swamp, holder.basicIcon);
                 VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
                 VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
                 path1.setFillColor(color1);
