@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -108,23 +109,28 @@ public class TodayTab extends Fragment{
             public TextView farmName, irrigationTime, time;
             public TextView canalName, nAppezamento, cancelText, mapsText, playText, pauseText;
             public ImageView statusWaitingImage,  playImage, mapsImage, cancelImage, pauseImage, basicIcon, statusOperatingImage;
+            public Button playArea, mapsArea, deleteArea;
 
 
             @SuppressLint("ResourceType")
             public RequestHolder(View itemView) {
                 super(itemView);
+                playArea = itemView.findViewById(R.id.areaPlay);
+                mapsArea = itemView.findViewById(R.id.areaMaps);
+                deleteArea = itemView.findViewById(R.id.areaDelete);
+
                 basicIcon = itemView.findViewById(R.id.basic_icon);
                 farmName = itemView.findViewById(R.id.farm_name);
                 time = itemView.findViewById(R.id.time);
                 irrigationTime = itemView.findViewById(R.id.irrigation_time);
                 canalName = itemView.findViewById(R.id.canal_name);
                 nAppezamento = itemView.findViewById(R.id.nAppezamento);
-                cancelText = itemView.findViewById(R.id.cancelText);
+                cancelText = itemView.findViewById(R.id.deleteText);
                 mapsText = itemView.findViewById(R.id.mapsText);
                 playText = itemView.findViewById(R.id.playText);
                 playImage = itemView.findViewById(R.id.playImage);
                 mapsImage = itemView.findViewById(R.id.mapsImage);
-                cancelImage = itemView.findViewById(R.id.cancelImage);
+                cancelImage = itemView.findViewById(R.id.deleteImage);
                 pauseImage = itemView.findViewById(R.id.pauseImage);
                 pauseText = itemView.findViewById(R.id.pauseText);
                 statusWaitingImage = itemView.findViewById(R.id.statusWaitingImage);
@@ -203,8 +209,10 @@ public class TodayTab extends Fragment{
                 vector = new VectorChildFinder(getContext(),R.drawable.ic_robo_swamp, holder.basicIcon);
                 VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
                 VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
+                VectorDrawableCompat.VFullPath path3 = vector.findPathByName("backgroundShadow2");
                 path1.setFillColor(color1);
                 path2.setFillColor(color2);
+                path3.setFillColor(color2);
             }
 
             DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
@@ -242,7 +250,7 @@ public class TodayTab extends Fragment{
 
             //Sezione Onclick delle varie sezioni
 
-            holder.playImage.setOnClickListener(new View.OnClickListener() {
+            holder.playArea.setOnClickListener(new View.OnClickListener() {
                 //@Override
                 public void onClick(View v) {
                     playClicked(v, currentRequest, holder.statusWaitingImage, holder.statusOperatingImage,
@@ -250,45 +258,14 @@ public class TodayTab extends Fragment{
                 }
             });
 
-            holder.playText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    playClicked(v, currentRequest, holder.statusWaitingImage, holder.statusOperatingImage,
-                            holder.playImage, holder.playText, holder.pauseImage, holder. pauseText, holder.cancelImage, holder.cancelText);
-                }
-            });
-
-            holder.pauseImage.setOnClickListener(new View.OnClickListener() {
-                //@Override
-                public void onClick(View v) {
-                    pauseClicked(v, currentRequest, holder.statusWaitingImage, holder.statusOperatingImage,
-                            holder.playImage, holder.playText, holder.pauseImage, holder. pauseText, holder.cancelImage, holder.cancelText);
-                }
-            });
-
-            holder.pauseText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    pauseClicked(v, currentRequest, holder.statusWaitingImage, holder.statusOperatingImage,
-                            holder.playImage, holder.playText, holder.pauseImage, holder. pauseText, holder.cancelImage, holder.cancelText);
-                }
-            });
-
-            holder.mapsImage.setOnClickListener(new View.OnClickListener() {
+            holder.mapsArea.setOnClickListener(new View.OnClickListener() {
                 //@Override
                 public void onClick(View v) {
                     centerMapWithPosition(currentRequest);
                 }
             });
 
-            holder.mapsText.setOnClickListener(new View.OnClickListener() {
-                //@Override
-                public void onClick(View v) {
-                    centerMapWithPosition(currentRequest);
-                }
-            });
-
-            holder.cancelImage.setOnClickListener(new View.OnClickListener() {
+            holder.deleteArea.setOnClickListener(new View.OnClickListener() {
                 //@Override
                 public void onClick(View v) {
                     deleteClicked(v, requests, currentRequest, position);
@@ -300,37 +277,39 @@ public class TodayTab extends Fragment{
 
         public void playClicked(View v, Request currentRequest, ImageView waitingImage, ImageView operatingImage, ImageView playImage,
                                 TextView playText, ImageView pauseImage, TextView pauseText, ImageView cancelImage, TextView cancelText){
-            waitingImage.setVisibility(View.INVISIBLE);
-            operatingImage.setVisibility(View.VISIBLE);
+            if(currentRequest.getStatus().equals("Accepted")){
+                waitingImage.setVisibility(View.INVISIBLE);
+                operatingImage.setVisibility(View.VISIBLE);
 
-            playImage.setVisibility(View.INVISIBLE);
-            playText.setVisibility(View.INVISIBLE);
+                playImage.setVisibility(View.INVISIBLE);
+                playText.setVisibility(View.INVISIBLE);
 
-            pauseImage.setVisibility(View.VISIBLE);
-            pauseText.setVisibility(View.VISIBLE);
+                pauseImage.setVisibility(View.VISIBLE);
+                pauseText.setVisibility(View.VISIBLE);
 
-            cancelImage.setVisibility(View.INVISIBLE);
-            cancelText.setVisibility(View.INVISIBLE);
+                cancelImage.setVisibility(View.INVISIBLE);
+                cancelText.setVisibility(View.INVISIBLE);
 
-            sendInfoToServerActivate(currentRequest);
+                String currentStatus = currentRequest.getStatus();
+
+                sendInfoToServerActivate(currentRequest, currentStatus);
+            }else{
+                waitingImage.setVisibility(View.VISIBLE);
+                operatingImage.setVisibility(View.INVISIBLE);
+
+                playImage.setVisibility(View.VISIBLE);
+                playText.setVisibility(View.VISIBLE);
+
+                pauseImage.setVisibility(View.INVISIBLE);
+                pauseText.setVisibility(View.INVISIBLE);
+
+                cancelImage.setVisibility(View.VISIBLE);
+                cancelText.setVisibility(View.VISIBLE);
+
+                sendInfoToServerStop(currentRequest);
+            }
         }
 
-        public void pauseClicked(View v, Request currentRequest, ImageView waitingImage, ImageView operatingImage, ImageView playImage,
-                                TextView playText, ImageView pauseImage, TextView pauseText, ImageView cancelImage, TextView cancelText){
-            waitingImage.setVisibility(View.VISIBLE);
-            operatingImage.setVisibility(View.INVISIBLE);
-
-            playImage.setVisibility(View.VISIBLE);
-            playText.setVisibility(View.VISIBLE);
-
-            pauseImage.setVisibility(View.INVISIBLE);
-            pauseText.setVisibility(View.INVISIBLE);
-
-            cancelImage.setVisibility(View.VISIBLE);
-            cancelText.setVisibility(View.VISIBLE);
-
-            sendInfoToServerStop(currentRequest);
-        }
 
         public void deleteClicked(View v, final ArrayList<Request> requests, final Request currentRequest, final int position) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
@@ -356,6 +335,8 @@ public class TodayTab extends Fragment{
 
             AlertDialog alertDialog = alertDialogBuilder.create();
             alertDialog.show();
+
+            sendInfoToServerDelete(currentRequest);
         }
 
 
@@ -384,17 +365,28 @@ public class TodayTab extends Fragment{
         PostNewStatus postNewStatus;
 
         //metodo che manda
-        public void sendInfoToServerActivate(Request currentRequest){
+        public void sendInfoToServerActivate(Request currentRequest, String currentStatus){
             JSONObject json = new JSONObject();
             currentRequest.setCurrentStat(1);
             currentRequest.setStatus("Ongoing");
 
-            try {
-                json.put("message", "Changing status from Accepted to Ongoing");
-                json.put("status", currentRequest.getStatus());
-                postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
-            } catch (JSONException e) {
-                e.printStackTrace();
+            if(currentRequest.getStatus().equals("Accepted"))
+            {
+                try {
+                    json.put("message", "Changing status from Accepted to Ongoing");
+                    json.put("status", currentRequest.getStatus());
+                    postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }else if(currentRequest.getStatus().equals("Interrupted")){
+                try {
+                    json.put("message", "Changing status from Interrupted to Ongoing");
+                    json.put("status", currentRequest.getStatus());
+                    postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -405,7 +397,7 @@ public class TodayTab extends Fragment{
             currentRequest.setStatus("Accepted"); //(?)
 
             try {
-                json.put("message", "Changing status from Ongoing to Accepted");
+                json.put("message", "Changing status from Ongoing to Interrupted");
                 json.put("status", currentRequest.getStatus());
                 postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
             } catch (JSONException e) {
@@ -416,7 +408,7 @@ public class TodayTab extends Fragment{
         public void sendInfoToServerDelete(Request currentRequest){
             JSONObject json = new JSONObject();
             currentRequest.setCurrentStat(1);
-            currentRequest.setStatus("Cancelled"); //(?)
+            currentRequest.setStatus("Cancelled");
 
             try {
                 json.put("message", "Cancelled request");

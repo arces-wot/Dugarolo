@@ -21,36 +21,222 @@
         app:layout_constraintTop_toTopOf="parent" >
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="105dp"
+            android:weightSum="100"
+            app:layout_constraintTop_toTopOf="parent"
+            >
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="8dp"
+                android:layout_height="match_parent"
+                android:layout_weight="33.3"
+                android:clickable="true">
+
+                <Button
+                    android:id="@+id/areaPlay"
+                    android:layout_width="131dp"
+                    android:layout_height="49dp"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <TextView
+                    android:id="@+id/playText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginEnd="27dp"
+                    android:layout_marginBottom="17dp"
+                    android:text="Attiva"
+                    android:textColor="@color/greyButton"
+                    android:textSize="14dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/playImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/playImage"
+                    android:layout_width="48dp"
+                    android:layout_height="21dp"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="15dp"
+                    android:maxHeight="21dp"
+                    android:tint="@color/greyButton"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/playText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/play" />
+
+                <TextView
+                    android:id="@+id/pauseText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginEnd="27dp"
+                    android:layout_marginBottom="17dp"
+                    android:text="Pausa"
+                    android:textColor="@color/greyButton"
+                    android:textSize="14dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/playImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/pauseImage"
+                    android:layout_width="48dp"
+                    android:layout_height="21dp"
+                    android:layout_marginStart="15dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="15dp"
+                    android:maxHeight="21dp"
+                    android:tint="@color/greyButton"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/pauseText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/pause" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="8dp"
+                android:layout_height="match_parent"
+                android:layout_weight="33.3">
+
+                <Button
+                    android:id="@+id/areaMaps"
+                    android:layout_width="131dp"
+                    android:layout_height="49dp"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <TextView
+                    android:id="@+id/mapsText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginEnd="27dp"
+                    android:layout_marginBottom="17dp"
+                    android:text="Posizione"
+                    android:textColor="@color/greyButton"
+                    android:textSize="14dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/mapsImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/mapsImage"
+                    android:layout_width="48dp"
+                    android:layout_height="21dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="15dp"
+                    android:maxHeight="21dp"
+                    android:tint="@color/greyButton"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/mapsText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/maps_icon" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="8dp"
+                android:layout_height="match_parent"
+                android:layout_weight="33.3">
+
+                <Button
+                    android:id="@+id/areaDelete"
+                    android:layout_width="131dp"
+                    android:layout_height="49dp"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:visibility="visible"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
+
+                <TextView
+                    android:id="@+id/deleteText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginEnd="27dp"
+                    android:layout_marginBottom="17dp"
+                    android:text="Annulla"
+                    android:textColor="@color/greyButton"
+                    android:textSize="14dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/deleteImage"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <ImageView
+                    android:id="@+id/deleteImage"
+                    android:layout_width="48dp"
+                    android:layout_height="21dp"
+                    android:layout_marginTop="14dp"
+                    android:layout_marginBottom="15dp"
+                    android:maxHeight="21dp"
+                    android:tint="@color/greyButton"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/deleteText"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/cancel" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </LinearLayout>
+
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="107dp">
 
             <ImageView
                 android:id="@+id/statusWaitingImage"
                 android:layout_width="60dp"
                 android:layout_height="25dp"
                 android:layout_marginTop="21dp"
-                android:layout_marginEnd="28dp"
+                android:layout_marginEnd="32dp"
                 android:layout_marginBottom="124dp"
                 android:clickable="true"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.466"
+                app:layout_constraintVertical_bias="0.142"
                 app:srcCompat="@drawable/attesa" />
 
             <ImageView
                 android:id="@+id/statusOperatingImage"
                 android:layout_width="60dp"
                 android:layout_height="25dp"
-                android:layout_marginTop="21dp"
-                android:layout_marginEnd="28dp"
-                android:layout_marginBottom="124dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginEnd="32dp"
                 android:clickable="true"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.4"
                 app:srcCompat="@drawable/incorso" />
 
             <TextView
@@ -60,66 +246,6 @@
                 android:text="TextView"
                 app:layout_constraintStart_toStartOf="@+id/farm_name"
                 app:layout_constraintTop_toBottomOf="@+id/farm_name" />
-
-            <TextView
-                android:id="@+id/cancelText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="16dp"
-                android:text="Annulla"
-                android:textColor="@color/greyButton"
-                android:textSize="14dp"
-                app:layout_constraintStart_toEndOf="@+id/cancelImage"
-                app:layout_constraintTop_toBottomOf="@+id/view" />
-
-            <TextView
-                android:id="@+id/mapsText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginTop="16dp"
-                android:text="Posizione"
-                android:textColor="@color/greyButton"
-                android:textSize="14dp"
-                app:layout_constraintStart_toEndOf="@+id/mapsImage"
-                app:layout_constraintTop_toBottomOf="@+id/view" />
-
-            <ImageView
-                android:id="@+id/playImage"
-                android:layout_width="33dp"
-                android:layout_height="21dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="14dp"
-                android:clickable="true"
-                android:tint="@color/greyButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view"
-                app:srcCompat="@drawable/play" />
-
-            <ImageView
-                android:id="@+id/pauseImage"
-                android:layout_width="33dp"
-                android:layout_height="21dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="14dp"
-                android:clickable="true"
-                android:tint="@color/greyButton"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/view"
-                app:srcCompat="@drawable/pause" />
-
-            <ImageView
-                android:id="@+id/mapsImage"
-                android:layout_width="33dp"
-                android:layout_height="21dp"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="14dp"
-                android:clickable="true"
-                android:tint="@color/greyButton"
-                app:layout_constraintStart_toEndOf="@+id/playText"
-                app:layout_constraintTop_toBottomOf="@+id/view"
-                app:srcCompat="@drawable/maps_icon" />
 
             <TextView
                 android:id="@+id/farm_name"
@@ -135,6 +261,7 @@
                 android:layout_width="45dp"
                 android:layout_height="45dp"
                 android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -170,45 +297,6 @@
                 app:layout_constraintBottom_toBottomOf="@+id/time"
                 app:layout_constraintStart_toEndOf="@+id/time" />
 
-            <ImageView
-                android:id="@+id/cancelImage"
-                android:layout_width="30dp"
-                android:layout_height="18dp"
-                android:layout_marginStart="36dp"
-                android:layout_marginTop="16dp"
-                android:clickable="true"
-                android:tint="@color/greyButton"
-                app:layout_constraintStart_toEndOf="@+id/mapsText"
-                app:layout_constraintTop_toTopOf="@+id/view"
-                app:srcCompat="@drawable/cancel" />
-
-            <TextView
-                android:id="@+id/pauseText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="25dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="52dp"
-                android:text="Pausa"
-                android:textColor="@color/greyButton"
-                android:textSize="14dp"
-                app:layout_constraintEnd_toStartOf="@+id/mapsImage"
-                app:layout_constraintStart_toEndOf="@+id/playImage"
-                app:layout_constraintTop_toBottomOf="@+id/view" />
-
-            <TextView
-                android:id="@+id/playText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:clickable="true"
-                android:text="Attiva"
-                android:textColor="@color/greyButton"
-                android:textSize="14dp"
-                app:layout_constraintStart_toEndOf="@+id/playImage"
-                app:layout_constraintTop_toBottomOf="@+id/view" />
-
             <TextView
                 android:id="@+id/canal_name"
                 android:layout_width="wrap_content"
@@ -222,6 +310,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.cardview.widget.CardView>
 
 

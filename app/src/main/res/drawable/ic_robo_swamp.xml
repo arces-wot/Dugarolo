@@ -3,7 +3,8 @@
     android:height="66.51689dp"
     android:viewportWidth="66.516754"
     android:viewportHeight="66.51689">
-  <path android:name="background"
+  <path
+      android:name="background"
       android:pathData="M33.2584,33.2584m-33.2584,0a33.2584,33.2584 0,1 1,66.5168 0a33.2584,33.2584 0,1 1,-66.5168 0"
       android:strokeAlpha="1"
       android:strokeLineJoin="round"
@@ -13,7 +14,8 @@
       android:fillType="nonZero"
       android:fillAlpha="1"
       android:strokeLineCap="butt"/>
-  <path android:name="backgroundShadow"
+  <path
+      android:name="backgroundShadow"
       android:pathData="m14.4576,13.4112 l12.0007,6.8036 0.378,6.7091 0.0945,5.0082 -11.4329,-0.9697 -0.8395,-5.5976z"
       android:strokeAlpha="1"
       android:strokeLineJoin="miter"
@@ -43,6 +45,7 @@
       android:fillAlpha="1"
       android:strokeLineCap="butt"/>
   <path
+      android:name="backgroundShadow2"
       android:pathData="m34.3219,66.4793a33.2584,33.2584 0,0 0,1.2893 -0.0455,33.2584 33.2584,0 0,0 3.3002,-0.4014 33.2584,33.2584 0,0 0,3.2439 -0.7277,33.2584 33.2584,0 0,0 3.1549,-1.048 33.2584,33.2584 0,0 0,3.0343 -1.3585,33.2584 33.2584,0 0,0 2.884,-1.6541 33.2584,33.2584 0,0 0,2.7041 -1.9339,33.2584 33.2584,0 0,0 2.4974,-2.1939 33.2584,33.2584 0,0 0,2.2661 -2.4322,33.2584 33.2584,0 0,0 2.012,-2.6467 33.2584,33.2584 0,0 0,1.7371 -2.8346,33.2584 33.2584,0 0,0 1.4464,-2.9927 33.2584,33.2584 0,0 0,1.14 -3.1233,33.2584 33.2584,0 0,0 0.8226,-3.2211 33.2584,33.2584 0,0 0,0.4963 -3.2874,33.2584 33.2584,0 0,0 0.1661,-3.32 33.2584,33.2584 0,0 0,-0.083 -2.3531,33.2584 33.2584,0 0,0 -0.4004,-3.3002 33.2584,33.2584 0,0 0,-0.7287 -3.2429,33.2584 33.2584,0 0,0 -0.004,-0.0129l-12.9686,-11.3392 -0.9857,14.2401 -17.2743,-9.4044z"
       android:strokeAlpha="1"
       android:strokeLineJoin="miter"
