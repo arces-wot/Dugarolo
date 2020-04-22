@@ -29,8 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class MyMapView extends MapView implements Parcelable
-{
+public class MyMapView extends MapView implements Parcelable {
 
     Globals sharedData = Globals.getInstance();
 
@@ -140,6 +139,21 @@ public class MyMapView extends MapView implements Parcelable
             this.getOverlays().add(marker);
             this.invalidate();
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public Marker drawPosition(GeoPoint position) {
+        Marker newMarker = new Marker(this);
+        newMarker.setPosition(position);
+        newMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        Drawable resizedWeirIcon = new BitmapDrawable(getResources(), Bitmap.createScaledBitmap(getBitmap(getContext(), R.drawable.ic_map_marker), 70, 70, true));
+        newMarker.setIcon(resizedWeirIcon);
+        newMarker.setInfoWindow(null);
+        newMarker.setId("Dugarolo position");
+        this.getOverlays().add(newMarker);
+        this.invalidate();
+        return newMarker;
+
     }
 
 

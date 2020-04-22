@@ -10,6 +10,8 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -18,10 +20,12 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 import android.Manifest;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -34,11 +38,14 @@ import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.mylocation.GpsMyLocationProvider;
 import org.osmdroid.views.overlay.mylocation.MyLocationNewOverlay;
+
 import java.lang.reflect.Type;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Objects;
+
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
@@ -47,6 +54,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -81,8 +89,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             weirs = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("WEIRS");
             canals = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("CANALS");
             saveData();
-        }
-        else{
+        } else {
             loadData();
         }
 
@@ -101,6 +108,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         //loadMapElements();
 
     }
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -393,6 +401,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
 
         }
     }
+
     private void saveData() {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
@@ -418,46 +427,11 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         }.getType();
         Type typeCanal = new TypeToken<ArrayList<Canal>>() {
         }.getType();
-        farms = gson.fromJson(jsonFarms, typeFarm);;
+        farms = gson.fromJson(jsonFarms, typeFarm);
+        ;
         weirs = gson.fromJson(jsonWeirs, typeWeir);
         canals = gson.fromJson(jsonCanals, typeCanal);
     }
-    /*private class LoadMapElements extends AsyncTask<Void, Void, Boolean> {
 
-        @Override
-        protected Boolean doInBackground(Void...voids) {
-            //assetLoader.loadGeoPointsFarms(farms);
-            //assetLoader.loadWDN(canals);
-            //assetLoader.loadGeoPointsWeirs(weirs);
-            //assetLoader.updateCurrentOpenLevels(weirs);
-=======
-    private class LoadMapElements extends AsyncTask<Void, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(Void...voids) {
-            assetLoader.loadGeoPointsFarms(farms);
-            assetLoader.loadWDN(canals);
-            assetLoader.loadGeoPointsWeirs(weirs);
-            assetLoader.updateCurrentOpenLevels(weirs);
->>>>>>> 5b9d0e16cb4be7d58f1ebc0d91e0297ee07e36b7
-            return true;
-        }
-
-        @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            super.onPostExecute(aBoolean);
-
-            if(aBoolean) {
-                map.drawFarms(farms);
-                map.drawCanals(canals);
-                map.drawWeirs(weirs, weirMarkers);
-                map.drawIcon(farms,farmerMarkers,80);
-                setWeirListeners(weirMarkers);
-                registerService();
-            }
-        }
-<<<<<<< HEAD
-    }*/
 }
 

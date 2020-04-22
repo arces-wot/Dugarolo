@@ -20,6 +20,7 @@
             android:layout_height="match_parent"
             android:layout_gravity="bottom|right">
 
+
         </com.example.dugarolo.MyMapView>
 
         <ImageView
@@ -31,6 +32,16 @@
             android:paddingRight="12dp"
             android:paddingBottom="12dp"
             app:srcCompat="@drawable/focus" />
+
+        <Button
+            android:id="@+id/GPSbutton"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="right|end"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/maps_icon"
+             />
 
     </FrameLayout>
 
@@ -69,7 +80,7 @@
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/info"
-            app:backgroundTint="#009688" />
+            app:backgroundTint="@color/colorPrimaryDark" />
 
 
     </FrameLayout>

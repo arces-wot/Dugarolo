@@ -1,17 +1,27 @@
 package com.example.dugarolo;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -44,8 +54,11 @@ public class MainActivity extends AppCompatActivity {
     //private ArrayList<Marker> weirMarkers = new ArrayList<>();
     private ArrayList<Weir> weirs = new ArrayList<>();
     private ArrayList<Canal> canals = new ArrayList<>();
-
     private FloatingActionButton fab;
+    private Button gps;
+    private LocationManager locationManager;
+    private LocationListener listener;
+    Marker markerPosition;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -66,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
+        final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         Context ctx = getApplicationContext();
         loadMap(startPoint, ctx);
 
@@ -114,7 +127,87 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        gps = findViewById(R.id.GPSbutton);
 
+        listener = new LocationListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onLocationChanged(Location location) {
+                Marker newMarkerPosition;
+                if (markerPosition != null)
+                    markerPosition.remove(map);
+                GeoPoint myPosition = new GeoPoint(location.getLatitude(), location.getLongitude());
+                newMarkerPosition = map.drawPosition(myPosition);
+                markerPosition = newMarkerPosition;
+                map.getController().setCenter(myPosition);
+
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(i);
+            }
+        };
+
+        configure_button();
+
+
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 10:
+                configure_button();
+                break;
+            default:
+                break;
+        }
+    }
+
+    void configure_button() {
+        // first check for permissions
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET}
+                        , 10);
+            }
+            return;
+        }
+        // this code won'textView execute IF permissions are not allowed, because in the line above there is return statement.
+        gps.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                //noinspection MissingPermission
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    Activity#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for Activity#requestPermissions for more details.
+                    return;
+                }
+                locationManager.requestLocationUpdates("gps", 5000, 10, listener);
+            }
+        });
     }
 
 
@@ -189,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String jsonFarms = gson.toJson(farms);
-        String jsonRequests= gson.toJson(requests);
+        String jsonRequests = gson.toJson(requests);
         String jsonWeirs = gson.toJson(weirs);
         String jsonCanals = gson.toJson(canals);
         editor.putString("FARMS", jsonFarms);
