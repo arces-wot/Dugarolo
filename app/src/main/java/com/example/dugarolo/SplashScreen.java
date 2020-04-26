@@ -7,6 +7,9 @@ import android.os.CountDownTimer;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.joda.time.DateTime;
+import org.osmdroid.util.GeoPoint;
+
 import java.util.ArrayList;
 
 public class SplashScreen extends AppCompatActivity {
@@ -22,26 +25,6 @@ public class SplashScreen extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash_screen);
         new LoadFarmsAndRequests().execute();
-        /*final Intent i=new Intent(this, MainActivity.class);
-        i.putParcelableArrayListExtra("REQUESTS",requests);
-        i.putParcelableArrayListExtra("FARMS",farms);
-        i.putParcelableArrayListExtra("WEIRS",weirs);
-        i.putParcelableArrayListExtra("CANALS",canals);
-
-
-        new CountDownTimer(500, 500) {
-
-            public void onTick(long millisUntilFinished) {
-
-            }
-
-            public void onFinish() {
-                    startActivity(i);
-                    finish();
-
-            }
-        }.start();*/
-
     }
 
     private class LoadFarmsAndRequests extends AsyncTask<Void, Void, Boolean> {
@@ -60,6 +43,7 @@ public class SplashScreen extends AppCompatActivity {
 
         protected void onPostExecute(Boolean aBoolean) {
             super.onPostExecute(aBoolean);
+
             if (aBoolean) {
                 i.putParcelableArrayListExtra("REQUESTS", requests);
                 i.putParcelableArrayListExtra("FARMS", farms);

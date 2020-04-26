@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/layout_root"
-    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <include
-        layout="@layout/toolbar_main"/>
+    <include layout="@layout/toolbar_main" />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="190dp"
@@ -18,7 +18,7 @@
             android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom|right">
+            android:layout_gravity="bottom|end">
 
 
         </com.example.dugarolo.MyMapView>
@@ -37,55 +37,116 @@
             android:id="@+id/GPSbutton"
             android:layout_width="28dp"
             android:layout_height="28dp"
-            android:layout_gravity="right|end"
+            android:layout_gravity="end"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/maps_icon"
-             />
+            app:layout_anchor="@id/toggle_expand" />
 
     </FrameLayout>
 
 
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabs"
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="577dp">
 
-        android:background="@color/cardview_light_background"
-        app:tabIndicatorColor="?attr/colorPrimary"
-        app:tabIndicatorHeight="4dp"
-        />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="489dp"
-        tools:context=".MainActivity">
-
-        <androidx.viewpager.widget.ViewPager
-            android:id="@+id/view_pager"
+        <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark">
 
-            />
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_scrollFlags="scroll|enterAlways"
+                app:tabBackground="@color/white"
+                app:tabIndicatorColor="?attr/colorPrimary"
+                app:tabIndicatorHeight="3dp"
+                app:tabTextColor="@color/colorPrimaryDark"
+                />
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <com.google.android.material.bottomappbar.BottomAppBar
+            android:id="@+id/bottom_bar"
+            android:layout_width="match_parent"
+            android:layout_height="75dp"
+            android:layout_gravity="bottom"
+            app:backgroundTint="@color/colorPrimaryDark"
+            app:fabAlignmentMode="center"
+            app:fabCradleMargin="2dp"
+            app:fabCradleRoundedCornerRadius="8dp"
+            app:fabCradleVerticalOffset="5dp"
+            app:hideOnScroll="true"
+            app:layout_scrollFlags="scroll|enterAlways">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ImageView
+                    android:id="@+id/orderButton"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginEnd="70dp"
+                    android:onClick="orderButton"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_sort" />
+
+                <ImageView
+                    android:id="@+id/filterButton"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_marginStart="70dp"
+                    android:layout_marginTop="12dp"
+                    android:onClick="filterButton"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_funnel" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.bottomappbar.BottomAppBar>
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|right"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="30dp"
+            android:layout_height="match_parent"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/info"
-            app:backgroundTint="@color/colorPrimaryDark" />
+            app:backgroundTint="@color/colorPrimary"
+            app:layout_anchor="@id/bottom_bar" />
 
 
-    </FrameLayout>
-
-
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
 
 </LinearLayout>

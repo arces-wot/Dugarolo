@@ -1,7 +1,10 @@
 package com.example.dugarolo;
 
 import android.Manifest;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -14,6 +17,7 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -51,14 +55,15 @@ public class MainActivity extends AppCompatActivity {
     private MyMapView map;
     private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<Marker> farmerMarkers = new ArrayList<>();
-    //private ArrayList<Marker> weirMarkers = new ArrayList<>();
     private ArrayList<Weir> weirs = new ArrayList<>();
     private ArrayList<Canal> canals = new ArrayList<>();
     private FloatingActionButton fab;
     private Button gps;
     private LocationManager locationManager;
     private LocationListener listener;
-    Marker markerPosition;
+    private Marker markerPosition;
+    private ImageView filterButton;
+    private ImageView orderButton;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -82,6 +87,42 @@ public class MainActivity extends AppCompatActivity {
         final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         Context ctx = getApplicationContext();
         loadMap(startPoint, ctx);
+        requests.add(requests.get(2));
+        requests.add(requests.get(2));
+        requests.add(requests.get(2));
+        requests.add(requests.get(2));
+        requests.add(requests.get(2));requests.add(requests.get(2));
+        requests.add(requests.get(2));
+        requests.add(requests.get(2));
+        requests.add(requests.get(2));
+        requests.add(requests.get(2));
+        requests.add(requests.get(2));
+
+        requests.add(requests.get(1));
+        requests.add(requests.get(1));requests.add(requests.get(1));
+        requests.add(requests.get(1));
+        requests.add(requests.get(1));requests.add(requests.get(1));
+        requests.add(requests.get(1));requests.add(requests.get(1));
+        requests.add(requests.get(1));
+        requests.add(requests.get(1));requests.add(requests.get(1));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+        requests.add(requests.get(0));
+
+
+
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -165,6 +206,53 @@ public class MainActivity extends AppCompatActivity {
         configure_button();
 
 
+        filterButton=findViewById(R.id.filterButton);
+        orderButton=findViewById(R.id.orderButton);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+
+                // set title
+                alertDialogBuilder.setTitle("Come le vuoi filtrare?");
+
+                // set dialog message
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+        });
+
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+
+                // set title
+                alertDialogBuilder.setTitle("Come le vuoi ordinare?");
+
+                // set dialog message
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+            }
+        });
+
+
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -208,6 +296,9 @@ public class MainActivity extends AppCompatActivity {
                 locationManager.requestLocationUpdates("gps", 5000, 10, listener);
             }
         });
+
+
+
     }
 
 
