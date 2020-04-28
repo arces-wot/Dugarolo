@@ -3,12 +3,13 @@ package com.example.dugarolo;
 import android.os.Build;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
 import androidx.annotation.RequiresApi;
+
 import org.joda.time.DateTime;
-import org.osmdroid.util.GeoPoint;
 
 import java.util.Date;
-import java.util.List;
 
 
 public class Request implements Comparable<Request>, Parcelable {
@@ -25,6 +26,7 @@ public class Request implements Comparable<Request>, Parcelable {
     //variabile che mi dice se è in corso o in attesa
     //non la metto nel costruttore perchè se no faccio danni
     private int currentStat;
+    private boolean isExpanded;
 
 
     public Request(String id, String name, DateTime dateTime, String status, String waterVolume, Field field, String message,
@@ -39,6 +41,7 @@ public class Request implements Comparable<Request>, Parcelable {
         this.message = message;
         this.channel = channel;
         this.type = type;
+        this.isExpanded = false;
     }
 
     public String getName() {
@@ -53,6 +56,15 @@ public class Request implements Comparable<Request>, Parcelable {
     public String getCurrentStat() {
         return currentStat;
     }*/
+
+    public Boolean getIsExpanded() {
+        return isExpanded;
+    }
+
+    public void setIsExpanded(Boolean isExpanded) {
+        Log.d("Hey", "hey");
+        this.isExpanded = isExpanded;
+    }
 
     public String getChannel(){return channel;}
 

@@ -14,9 +14,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -77,23 +79,6 @@ public class TodayTab extends Fragment{
         recyclerView.setAdapter(mAdapter);
         map = getArguments().getParcelable("Mappa");
 
-
-        /*recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener(){
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy){
-                if (dy<0 && !fab.isShown())
-                    fab.show();
-                else if(dy>0 && fab.isShown())
-                    fab.hide();
-            }
-
-            @Override
-            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-        });*/
-
-
         return root;
 
     }
@@ -101,15 +86,18 @@ public class TodayTab extends Fragment{
 
     public class RequestAdapter extends RecyclerView.Adapter<TodayTab.RequestAdapter.RequestHolder>{
 
-        public ArrayList<Request> requests;
+        public List<Request> requests;
         public Globals sharedData = Globals.getInstance();
 
         public class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             public TextView farmName, irrigationTime, time;
             public TextView canalName, nAppezamento, cancelText, mapsText, playText, pauseText;
-            public ImageView statusWaitingImage,  playImage, mapsImage, cancelImage, pauseImage, basicIcon, statusOperatingImage;
-            public Button playArea, mapsArea, deleteArea;
+            public ImageView statusWaitingImage,  playImage, mapsImage, cancelImage, pauseImage, basicIcon, statusOperatingImage, collapse, uncollapse;
+            public Button playArea, mapsArea, deleteArea, collapsing;
+
+            LinearLayout expandibleView = null;
+            CardView cardView;
 
 
             @SuppressLint("ResourceType")
@@ -136,6 +124,11 @@ public class TodayTab extends Fragment{
                 statusWaitingImage = itemView.findViewById(R.id.statusWaitingImage);
                 statusOperatingImage = itemView.findViewById(R.id.statusOperatingImage);
 
+                collapse = itemView.findViewById(R.id.collapse);
+                collapsing = itemView.findViewById(R.id.collapsing);
+                uncollapse = itemView.findViewById(R.id.uncollapse);
+                expandibleView = itemView.findViewById(R.id.collapsedArea1);
+
                 itemView.setOnClickListener(this);
 
             }
@@ -151,7 +144,7 @@ public class TodayTab extends Fragment{
             }
         }
 
-        RequestAdapter(ArrayList<Request> requests) {
+        RequestAdapter(List<Request> requests) {
             this.requests = requests;
         }
 
@@ -177,6 +170,17 @@ public class TodayTab extends Fragment{
             int color1=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null);
             int color2=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null);
 
+            boolean isExpanded = requests.get(position).getIsExpanded();
+            holder.expandibleView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+
+            if(isExpanded == false){
+                holder.uncollapse.setVisibility(View.VISIBLE);
+                holder.collapse.setVisibility(View.INVISIBLE);
+            }else{
+                holder.collapse.setVisibility(View.VISIBLE);
+                holder.uncollapse.setVisibility(View.INVISIBLE);
+            }
+
             for (FarmColor f : sharedData.getFarmColors())
                 if(f.getNameFarm().equalsIgnoreCase(name)){
                     color1= f.getIdColor();
@@ -184,19 +188,6 @@ public class TodayTab extends Fragment{
                     break;
                 }
 
-
-            /*VectorChildFinder vector;
-            vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor, holder.basicIcon);
-            VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
-            VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
-            path1.setFillColor(color1);
-            path2.setFillColor(color2);*/
-
-            //qui viene definito il farmer, deve essere aggiunto un campo in request che mi dice
-            //se la richiesta è fatta da farmer o dall'algoritmo
-            //da attivare quando ci sarà la variabile in request
-
-            Log.d("Exxxx", currentRequest.getType());
 
             VectorChildFinder vector;
             if(currentRequest.getType().equals("cbec")){
@@ -247,8 +238,27 @@ public class TodayTab extends Fragment{
                 holder.cancelText.setVisibility(View.INVISIBLE);
             }
 
-
             //Sezione Onclick delle varie sezioni
+
+            holder.collapsing.setOnClickListener(new View.OnClickListener() {
+                //@Override
+                public void onClick(View v) {
+                    if(holder.expandibleView.getVisibility()==View.GONE)
+                    {
+                        currentRequest.setIsExpanded(true);
+                        notifyItemChanged(position);
+                        holder.collapse.setVisibility(View.VISIBLE);
+                        holder.uncollapse.setVisibility(View.INVISIBLE);
+
+                    }else{
+                        currentRequest.setIsExpanded(false);
+                        notifyItemChanged(position);
+                        holder.collapse.setVisibility(View.INVISIBLE);
+                        holder.uncollapse.setVisibility(View.VISIBLE);
+
+                    }
+                }
+            });
 
             holder.playArea.setOnClickListener(new View.OnClickListener() {
                 //@Override
@@ -311,7 +321,7 @@ public class TodayTab extends Fragment{
         }
 
 
-        public void deleteClicked(View v, final ArrayList<Request> requests, final Request currentRequest, final int position) {
+        public void deleteClicked(View v, final List<Request> requests, final Request currentRequest, final int position) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
 
             // set title

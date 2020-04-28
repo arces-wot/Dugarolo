@@ -2,7 +2,6 @@ package com.example.dugarolo;
 
 import android.Manifest;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -18,7 +17,6 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -182,7 +180,6 @@ public class MainActivity extends AppCompatActivity {
                 newMarkerPosition = map.drawPosition(myPosition);
                 markerPosition = newMarkerPosition;
                 map.getController().setCenter(myPosition);
-
             }
 
             @Override

@@ -5,36 +5,49 @@
     android:id="@+id/linearLayoutToday"
     android:layout_width="match_parent"
 
-    android:layout_height="165dp">
-
-
+    android:layout_height="wrap_content">
 
 
     <androidx.cardview.widget.CardView
+        android:id="@+id/cardView"
         android:layout_width="389dp"
-        android:layout_height="155dp"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="3dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:visibility="visible"
+        app:cardCornerRadius="15dp"
+        app:cardElevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
 
         <LinearLayout
+            android:id="@+id/collapsedArea1"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="105dp"
-            android:weightSum="100"
-            app:layout_constraintTop_toTopOf="parent"
-            >
+            android:visibility="visible"
+            android:weightSum="100">
 
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="8dp"
                 android:layout_height="match_parent"
                 android:layout_weight="33.3"
-                android:clickable="true">
+                android:clickable="false">
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@color/greyShadow"
+                    app:layout_constraintBottom_toTopOf="@+id/areaPlay"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
                     android:id="@+id/areaPlay"
@@ -115,6 +128,17 @@
                 android:layout_height="match_parent"
                 android:layout_weight="33.3">
 
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@color/greyShadow"
+                    app:layout_constraintBottom_toTopOf="@+id/areaMaps"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <Button
                     android:id="@+id/areaMaps"
                     android:layout_width="131dp"
@@ -164,6 +188,18 @@
                 android:layout_height="match_parent"
                 android:layout_weight="33.3">
 
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="1dp"
+                    android:background="@color/greyShadow"
+                    app:layout_constraintBottom_toTopOf="@+id/areaDelete"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
                 <Button
                     android:id="@+id/areaDelete"
                     android:layout_width="131dp"
@@ -209,10 +245,10 @@
 
         </LinearLayout>
 
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="107dp">
+            android:layout_height="107dp"
+            android:visibility="visible">
 
             <ImageView
                 android:id="@+id/statusWaitingImage"
@@ -267,19 +303,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.181" />
 
-            <View
-                android:id="@+id/view"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="15dp"
-                android:layout_marginTop="104dp"
-                android:layout_marginEnd="15dp"
-                android:background="@color/greyShadow"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="1.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
             <TextView
                 android:id="@+id/time"
                 android:layout_width="wrap_content"
@@ -308,6 +331,44 @@
                 android:textSize="18sp"
                 app:layout_constraintStart_toEndOf="@+id/basic_icon"
                 app:layout_constraintTop_toTopOf="parent" />
+
+            <ImageView
+                android:id="@+id/uncollapse"
+                android:layout_width="35dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginBottom="35dp"
+                android:visibility="visible"
+                app:layout_constraintBottom_toTopOf="@+id/view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/statusWaitingImage"
+                app:srcCompat="@drawable/down_arrow" />
+
+            <ImageView
+                android:id="@+id/collapse"
+                android:layout_width="35dp"
+                android:layout_height="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="40dp"
+                android:layout_marginBottom="35dp"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toTopOf="@+id/view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/statusWaitingImage"
+                app:srcCompat="@drawable/up_arrow" />
+
+            <Button
+                android:id="@+id/collapsing"
+                android:layout_width="52dp"
+                android:layout_height="39dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="28dp"
+                android:background="@android:color/transparent"
+                app:layout_constraintBottom_toTopOf="@+id/view"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/statusWaitingImage" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
