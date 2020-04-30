@@ -48,7 +48,7 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="577dp">
+        android:layout_height="match_parent">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -70,20 +70,16 @@
                 app:tabTextColor="@color/colorPrimaryDark" />
 
 
-
         </com.google.android.material.appbar.AppBarLayout>
 
 
         <androidx.viewpager.widget.ViewPager
             android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="545dp"
+            android:layout_height="wrap_content"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
-
-
-
 
 
         <com.google.android.material.bottomappbar.BottomAppBar
@@ -128,7 +124,6 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.bottomappbar.BottomAppBar>
-
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
