@@ -91,9 +91,10 @@ public class TodayTab extends Fragment{
 
         public class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-            public TextView farmName, irrigationTime, time;
+            public TextView farmName, irrigationTime, time, completeText;
             public TextView canalName, nAppezamento, cancelText, mapsText, playText, pauseText;
-            public ImageView statusWaitingImage,  playImage, mapsImage, cancelImage, pauseImage, basicIcon, statusOperatingImage, collapse, uncollapse;
+            public ImageView statusWaitingImage,  playImage, mapsImage, cancelImage, pauseImage, basicIcon,
+                    statusOperatingImage, collapse, uncollapse, completeImage;
             public Button playArea, mapsArea, deleteArea, collapsing;
 
             LinearLayout expandibleView = null;
@@ -123,6 +124,9 @@ public class TodayTab extends Fragment{
                 pauseText = itemView.findViewById(R.id.pauseText);
                 statusWaitingImage = itemView.findViewById(R.id.statusWaitingImage);
                 statusOperatingImage = itemView.findViewById(R.id.statusOperatingImage);
+
+                completeText = itemView.findViewById(R.id.completeText);
+                completeImage = itemView.findViewById(R.id.checkImage);
 
                 collapse = itemView.findViewById(R.id.collapse);
                 collapsing = itemView.findViewById(R.id.collapsing);
@@ -171,15 +175,15 @@ public class TodayTab extends Fragment{
             int color2=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null);
 
             boolean isExpanded = requests.get(position).getIsExpanded();
-            holder.expandibleView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+            //holder.expandibleView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
-            if(isExpanded == false){
+            /*if(isExpanded == false){
                 holder.uncollapse.setVisibility(View.VISIBLE);
                 holder.collapse.setVisibility(View.INVISIBLE);
             }else{
                 holder.collapse.setVisibility(View.VISIBLE);
                 holder.uncollapse.setVisibility(View.INVISIBLE);
-            }
+            }*/
 
             for (FarmColor f : sharedData.getFarmColors())
                 if(f.getNameFarm().equalsIgnoreCase(name)){
@@ -226,6 +230,8 @@ public class TodayTab extends Fragment{
                 holder.statusOperatingImage.setVisibility(View.INVISIBLE);
                 holder.cancelText.setVisibility(View.VISIBLE);
                 holder.cancelImage.setVisibility(View.VISIBLE);
+                holder.completeText.setVisibility(View.INVISIBLE);
+                holder.completeImage.setVisibility(View.INVISIBLE);
             }else if(currentRequest.getStatus().equals("Ongoing")){
                 //Log.d("ProvaEx", currentRequest.getChannel() + currentRequest.getStatus());
                 holder.playText.setVisibility(View.INVISIBLE);
@@ -236,11 +242,13 @@ public class TodayTab extends Fragment{
                 holder.statusOperatingImage.setVisibility(View.VISIBLE);
                 holder.cancelImage.setVisibility(View.INVISIBLE);
                 holder.cancelText.setVisibility(View.INVISIBLE);
+                holder.completeText.setVisibility(View.VISIBLE);
+                holder.completeImage.setVisibility(View.VISIBLE);
             }
 
             //Sezione Onclick delle varie sezioni
 
-            holder.collapsing.setOnClickListener(new View.OnClickListener() {
+            /*holder.collapsing.setOnClickListener(new View.OnClickListener() {
                 //@Override
                 public void onClick(View v) {
                     if(holder.expandibleView.getVisibility()==View.GONE)
@@ -258,13 +266,14 @@ public class TodayTab extends Fragment{
 
                     }
                 }
-            });
+            });*/
 
             holder.playArea.setOnClickListener(new View.OnClickListener() {
                 //@Override
                 public void onClick(View v) {
                     playClicked(v, currentRequest, holder.statusWaitingImage, holder.statusOperatingImage,
-                            holder.playImage, holder.playText, holder.pauseImage, holder. pauseText, holder.cancelImage, holder.cancelText);
+                            holder.playImage, holder.playText, holder.pauseImage, holder. pauseText, holder.cancelImage, holder.cancelText,
+                            holder.cancelImage, holder.completeText);
                 }
             });
 
@@ -286,7 +295,8 @@ public class TodayTab extends Fragment{
 
 
         public void playClicked(View v, Request currentRequest, ImageView waitingImage, ImageView operatingImage, ImageView playImage,
-                                TextView playText, ImageView pauseImage, TextView pauseText, ImageView cancelImage, TextView cancelText){
+                                TextView playText, ImageView pauseImage, TextView pauseText, ImageView cancelImage, TextView cancelText,
+                                ImageView completeImage, TextView completeText){
             if(currentRequest.getStatus().equals("Accepted")){
                 waitingImage.setVisibility(View.INVISIBLE);
                 operatingImage.setVisibility(View.VISIBLE);
@@ -297,8 +307,11 @@ public class TodayTab extends Fragment{
                 pauseImage.setVisibility(View.VISIBLE);
                 pauseText.setVisibility(View.VISIBLE);
 
-                cancelImage.setVisibility(View.INVISIBLE);
-                cancelText.setVisibility(View.INVISIBLE);
+                cancelImage.setVisibility(View.GONE);
+                cancelText.setVisibility(View.GONE);
+
+                completeImage.setVisibility(View.VISIBLE);
+                completeText.setVisibility(View.VISIBLE);
 
                 String currentStatus = currentRequest.getStatus();
 
@@ -316,6 +329,11 @@ public class TodayTab extends Fragment{
                 cancelImage.setVisibility(View.VISIBLE);
                 cancelText.setVisibility(View.VISIBLE);
 
+                completeImage.setVisibility(View.GONE);
+                completeText.setVisibility(View.GONE);
+
+
+
                 sendInfoToServerStop(currentRequest);
             }
         }
@@ -324,29 +342,36 @@ public class TodayTab extends Fragment{
         public void deleteClicked(View v, final List<Request> requests, final Request currentRequest, final int position) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
 
-            // set title
-            alertDialogBuilder.setTitle("Vuoi sicuro di voler cancellare questa richiesta?");
+            if(currentRequest.getStatus().equals("Accepted")){
+                // set title
+                alertDialogBuilder.setTitle("Vuoi sicuro di voler cancellare questa richiesta?");
 
-            // set dialog message
-            alertDialogBuilder
-                    .setCancelable(false)
-                    .setPositiveButton("Si", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            sendInfoToServerDelete(currentRequest);
-                            requests.remove(currentRequest);
-                            mAdapter.notifyItemRemoved(position);
-                        }
-                    })
-                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.cancel();
-                        }
-                    });
+                // set dialog message
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                sendInfoToServerDelete(currentRequest);
+                                requests.remove(currentRequest);
+                                mAdapter.notifyItemRemoved(position);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
 
-            AlertDialog alertDialog = alertDialogBuilder.create();
-            alertDialog.show();
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
 
-            sendInfoToServerDelete(currentRequest);
+                sendInfoToServerDelete(currentRequest);
+            }else{
+                requests.remove(currentRequest);
+                mAdapter.notifyItemRemoved(position);
+                sendInfoToServerComplete(currentRequest);
+            }
+
         }
 
 
@@ -408,6 +433,20 @@ public class TodayTab extends Fragment{
 
             try {
                 json.put("message", "Changing status from Ongoing to Interrupted");
+                json.put("status", currentRequest.getStatus());
+                postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        public void sendInfoToServerComplete(Request currentRequest){
+            JSONObject json = new JSONObject();
+            currentRequest.setCurrentStat(1);
+            currentRequest.setStatus("Completed");
+
+            try {
+                json.put("message", "Completed");
                 json.put("status", currentRequest.getStatus());
                 postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
             } catch (JSONException e) {
