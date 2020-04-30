@@ -38,4 +38,13 @@
 
     <string name="tab_text_1">Oggi</string>
     <string name="tab_text_2">Domani</string>
+    <string name="order_title">Ordina per:</string>
+    <string name="filter_title">Filtra per:</string>
+    <string name="radio_order_1">Tempo</string>
+    <string name="radio_order_2">Canali</string>
+    <string name="radio_order_3">Stato</string>
+    <string name="radio_filter_1">Stato</string>
+    <string name="radio_filter_2">Tipo</string>
+    <string name="radio_filter_3">Canale</string>
+    <string name="order_selected">Ordine selezionato:</string>
 </resources>

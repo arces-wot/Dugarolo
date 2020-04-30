@@ -67,28 +67,23 @@
                 app:tabBackground="@color/white"
                 app:tabIndicatorColor="?attr/colorPrimary"
                 app:tabIndicatorHeight="3dp"
-                app:tabTextColor="@color/colorPrimaryDark"
-                />
+                app:tabTextColor="@color/colorPrimaryDark" />
+
 
 
         </com.google.android.material.appbar.AppBarLayout>
 
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="545dp"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
 
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/view_pager"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
 
         <com.google.android.material.bottomappbar.BottomAppBar
@@ -133,6 +128,7 @@
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.google.android.material.bottomappbar.BottomAppBar>
+
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton

@@ -36,4 +36,14 @@
     <string name="hint_end_date">Select end date by clicking here</string>
     <string name="tab_text_1">Today</string>
     <string name="tab_text_2">Tomorrow</string>
+    <string name="order_title">Order by:</string>
+    <string name="filter_title">Filter by:</string>
+    <string name="radio_order_1">Time</string>
+    <string name="radio_order_2">Canals</string>
+    <string name="radio_order_3">Status</string>
+    <string name="radio_filter_1">Status</string>
+    <string name="radio_filter_2">Type</string>
+    <string name="radio_filter_3">Canals</string>
+    <string name="order_selected">Order selected:</string>
+
 </resources>

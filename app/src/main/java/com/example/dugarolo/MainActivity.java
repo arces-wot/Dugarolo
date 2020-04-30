@@ -2,6 +2,7 @@ package com.example.dugarolo;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,6 +18,10 @@ import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
@@ -120,9 +125,6 @@ public class MainActivity extends AppCompatActivity {
         requests.add(requests.get(0));
 
 
-
-
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -166,6 +168,99 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        setGPSButton();
+
+
+
+
+        filterButton=findViewById(R.id.filterButton);
+        orderButton=findViewById(R.id.orderButton);
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buildFilterDialog();
+        }
+        });
+
+        orderButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                buildOrderDialog();
+    }
+});
+
+
+    }
+
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case 10:
+                configure_button();
+                break;
+            default:
+                break;
+        }
+    }
+
+    public void buildOrderDialog(){
+        Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.order_dialog);
+        TextView negativeButton=dialog.findViewById(R.id.negativeOrderButton);
+        TextView positiveButton=dialog.findViewById(R.id.positiveOrderButton);
+        RadioGroup radioGroup=dialog.findViewById(R.id.radioOrderGroup);
+
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selected= radioGroup.getCheckedRadioButtonId();
+                RadioButton radioButton=dialog.findViewById(selected);
+                Toast.makeText(MainActivity.this,radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+
+            }
+        });
+
+        negativeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    public void buildFilterDialog(){
+        Dialog dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.dialog_filter);
+        TextView negativeButton=dialog.findViewById(R.id.negativeFilterButton);
+        TextView positiveButton=dialog.findViewById(R.id.positiveFilterButton);
+        RadioGroup radioGroup=dialog.findViewById(R.id.radioFilterGroup);
+
+        positiveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selected= radioGroup.getCheckedRadioButtonId();
+                RadioButton radioButton=dialog.findViewById(selected);
+                Toast.makeText(MainActivity.this,radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+                dialog.dismiss();
+
+            }
+        });
+
+        negativeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+
+
+    public void setGPSButton(){
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         gps = findViewById(R.id.GPSbutton);
 
@@ -201,65 +296,6 @@ public class MainActivity extends AppCompatActivity {
         };
 
         configure_button();
-
-
-        filterButton=findViewById(R.id.filterButton);
-        orderButton=findViewById(R.id.orderButton);
-        filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-
-                // set title
-                alertDialogBuilder.setTitle("Come le vuoi filtrare?");
-
-                // set dialog message
-                alertDialogBuilder
-                        .setCancelable(false)
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-            }
-        });
-
-        orderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-
-                // set title
-                alertDialogBuilder.setTitle("Come le vuoi ordinare?");
-
-                // set dialog message
-                alertDialogBuilder
-                        .setCancelable(false)
-                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
-                            }
-                        });
-
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                alertDialog.show();
-            }
-        });
-
-
-    }
-
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case 10:
-                configure_button();
-                break;
-            default:
-                break;
-        }
     }
 
     void configure_button() {
