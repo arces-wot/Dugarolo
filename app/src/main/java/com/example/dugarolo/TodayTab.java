@@ -46,13 +46,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 public class TodayTab extends Fragment{
 
     MyMapView map;
-    RequestAdapter mAdapter;
+    static RequestAdapter mAdapter;
+    static ArrayList<Request> requests;
 
-    public TodayTab() {
+    public  TodayTab() {
         // Required empty public constructor
     }
 
@@ -71,7 +71,7 @@ public class TodayTab extends Fragment{
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_today, container, false);
         assert getArguments() != null;
-        ArrayList<Request> requests = getArguments().getParcelableArrayList("list");
+        requests = getArguments().getParcelableArrayList("list");
         final RecyclerView recyclerView = root.findViewById(R.id.list_requests);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -82,12 +82,18 @@ public class TodayTab extends Fragment{
         return root;
 
     }
+    static public void setChanged(ArrayList<Request> req){
+        requests.clear();
+        requests.addAll(req);
+        mAdapter.notifyDataSetChanged();
+    }
 
 
     public class RequestAdapter extends RecyclerView.Adapter<TodayTab.RequestAdapter.RequestHolder>{
 
         public List<Request> requests;
         public Globals sharedData = Globals.getInstance();
+
 
         public class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 

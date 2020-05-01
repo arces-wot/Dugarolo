@@ -47,6 +47,9 @@ import org.osmdroid.views.overlay.Marker;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collection.*;
+import java.util.Collections;
 import java.util.Objects;
 
 
@@ -215,6 +218,12 @@ public class MainActivity extends AppCompatActivity {
                 int selected= radioGroup.getCheckedRadioButtonId();
                 RadioButton radioButton=dialog.findViewById(selected);
                 Toast.makeText(MainActivity.this,radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+                if (radioButton.getText().toString().equals(getString(R.string.radio_order_1))){
+                    Collections.sort(requests,new Request.SortByDate());
+                }else if (radioButton.getText().toString().equals(getString(R.string.radio_order_2))){
+                    Collections.sort(requests,new Request.SortByChannel());
+                }
+                TodayTab.setChanged(requests);
                 dialog.dismiss();
 
             }

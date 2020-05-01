@@ -9,6 +9,7 @@ import androidx.annotation.RequiresApi;
 
 import org.joda.time.DateTime;
 
+import java.util.Comparator;
 import java.util.Date;
 
 
@@ -169,4 +170,14 @@ public class Request implements Comparable<Request>, Parcelable {
         }
     };
 
+    static class SortByDate implements Comparator<Request> {
+        public int compare(Request a, Request b) {
+            return a.compareTo(b);
+        }
+    }
+    static class SortByChannel implements Comparator<Request> {  //per ora ordine alfabetico
+        public int compare(Request a, Request b) {
+            return a.getChannel().compareToIgnoreCase(b.getChannel());
+        }
+    }
 }
