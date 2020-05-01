@@ -46,14 +46,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 public class TodayTab extends Fragment{
 
     MyMapView map;
     static RequestAdapter mAdapter;
     static ArrayList<Request> requests;
 
-    public TodayTab() {
+    public  TodayTab() {
         // Required empty public constructor
     }
 
@@ -95,6 +94,7 @@ public class TodayTab extends Fragment{
 
         public List<Request> requests;
         public Globals sharedData = Globals.getInstance();
+
 
         public class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
