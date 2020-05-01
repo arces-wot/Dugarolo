@@ -180,4 +180,9 @@ public class Request implements Comparable<Request>, Parcelable {
             return a.getChannel().compareToIgnoreCase(b.getChannel());
         }
     }
+    static class SortByStatus implements Comparator<Request> {
+        public int compare(Request a, Request b) {
+            return a.getStatus().compareToIgnoreCase(b.getStatus());
+        }
+    }
 }

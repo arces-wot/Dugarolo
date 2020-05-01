@@ -222,6 +222,8 @@ public class MainActivity extends AppCompatActivity {
                     Collections.sort(requests,new Request.SortByDate());
                 }else if (radioButton.getText().toString().equals(getString(R.string.radio_order_2))){
                     Collections.sort(requests,new Request.SortByChannel());
+                }else if (radioButton.getText().toString().equals(getString(R.string.radio_order_3))){
+                    Collections.sort(requests,new Request.SortByStatus());
                 }
                 TodayTab.setChanged(requests);
                 dialog.dismiss();

@@ -85,14 +85,14 @@
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottom_bar"
             android:layout_width="match_parent"
-            android:layout_height="75dp"
+            android:layout_height="56dp"
             android:layout_gravity="bottom"
             app:backgroundTint="@color/colorPrimaryDark"
             app:fabAlignmentMode="center"
-            app:fabCradleMargin="2dp"
-            app:fabCradleRoundedCornerRadius="8dp"
-            app:fabCradleVerticalOffset="5dp"
-            app:hideOnScroll="true"
+            app:fabCradleMargin="0dp"
+            app:fabCradleRoundedCornerRadius="0dp"
+            app:fabCradleVerticalOffset="0dp"
+            app:hideOnScroll="false"
             app:layout_scrollFlags="scroll|enterAlways">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -103,9 +103,9 @@
                     android:id="@+id/orderButton"
                     android:layout_width="25dp"
                     android:layout_height="25dp"
-                    android:layout_marginTop="12dp"
                     android:layout_marginEnd="70dp"
                     android:onClick="orderButton"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_sort" />
@@ -115,8 +115,8 @@
                     android:layout_width="25dp"
                     android:layout_height="25dp"
                     android:layout_marginStart="70dp"
-                    android:layout_marginTop="12dp"
                     android:onClick="filterButton"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     app:srcCompat="@drawable/ic_funnel" />
@@ -128,8 +128,8 @@
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/floatingActionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
             android:clickable="true"
             android:focusable="true"
             android:src="@drawable/info"
