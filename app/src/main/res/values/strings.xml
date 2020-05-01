@@ -44,6 +44,12 @@
     <string name="radio_filter_1">Status</string>
     <string name="radio_filter_2">Type</string>
     <string name="radio_filter_3">Canals</string>
+
+    <string name="radio_filter_getType_1">Farmer</string>
+    <string name="radio_filter_getType_2">Algorithm</string>
+
+
+
     <string name="order_selected">Order selected:</string>
 
 </resources>

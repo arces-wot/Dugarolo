@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="240dp"
     android:layout_height="220dp"
     android:elevation="15dp"
-    app:layout_constraintCircleRadius="10dp"
-    >
+    app:layout_constraintCircleRadius="10dp">
 
 
     <TextView
@@ -24,45 +22,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <RadioGroup
-        android:id="@+id/radioFilterGroup"
-        android:layout_width="121dp"
-        android:layout_height="100dp"
-        android:layout_marginTop="16dp"
-        android:checkedButton="@+id/radioButtonFilter1"
+    <Spinner
+        android:id="@+id/spinnerCanals"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="69dp"
+        android:background="@android:drawable/btn_dropdown"
+        android:spinnerMode="dropdown"
+        app:layout_constraintBottom_toTopOf="@+id/negativeFilterButton1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.224"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/filterTitle">
-
-        <RadioButton
-            android:id="@+id/radioButtonFilter1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorPrimary"
-            android:text="@string/radio_filter_1"
-            android:textSize="16sp" />
-
-        <RadioButton
-            android:id="@+id/radioButtonFilter2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorPrimary"
-            android:text="@string/radio_filter_2"
-            android:textSize="16sp" />
-
-        <RadioButton
-            android:id="@+id/radioButtonFilter3"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:buttonTint="@color/colorPrimary"
-            android:text="@string/radio_filter_3"
-            android:textSize="16sp" />
-    </RadioGroup>
-
+        app:layout_constraintTop_toBottomOf="@+id/filterTitle" />
 
     <TextView
-        android:id="@+id/negativeFilterButton"
+        android:id="@+id/negativeFilterButton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="90dp"
@@ -73,11 +49,11 @@
         android:textSize="14dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/positiveFilterButton"
+        app:layout_constraintEnd_toStartOf="@+id/positiveFilterButton3"
         app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
-        android:id="@+id/positiveFilterButton"
+        android:id="@+id/positiveFilterButton3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
@@ -89,8 +65,7 @@
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/negativeFilterButton" />
-
+        app:layout_constraintStart_toEndOf="@+id/negativeFilterButton3" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

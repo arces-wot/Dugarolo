@@ -74,6 +74,10 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
         return todayRequests;
     }
 
+    /*public ArrayList<Request> filterByStatus(ArrayList<Request> requests){
+
+    }*/
+
     public ArrayList<Request> tomorrowRequests(ArrayList<Request> requests) {
         DateTime now = new DateTime();
         ArrayList<Request> tomorrowRequests = new ArrayList<>();

@@ -15,11 +15,15 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +42,7 @@ import com.google.gson.reflect.TypeToken;
 
 import net.danlew.android.joda.JodaTimeAndroid;
 
+import org.joda.time.DateTime;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -48,6 +53,7 @@ import org.osmdroid.views.overlay.Marker;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -57,6 +63,7 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<Farm> farms = new ArrayList<>();
     private MyMapView map;
     private ArrayList<Request> requests = new ArrayList<>();
+    private ArrayList<Request> requestsFiltering = new ArrayList<>();
     private ArrayList<Marker> farmerMarkers = new ArrayList<>();
     private ArrayList<Weir> weirs = new ArrayList<>();
     private ArrayList<Canal> canals = new ArrayList<>();
@@ -67,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     private Marker markerPosition;
     private ImageView filterButton;
     private ImageView orderButton;
+    private boolean filtered = false;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -131,10 +139,7 @@ public class MainActivity extends AppCompatActivity {
         assert actionBar != null;
         actionBar.setDisplayShowTitleEnabled(false);
 
-        /*Spinner filter = findViewById(R.id.filter);
-        String[] planets_array = new String[]{"Ciao", "Ciao1"};
-        Filter spinn = new Filter(getApplicationContext(), R.layout.item_filter, planets_array);
-        filter.setAdapter(spinn);*/
+
 
         TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests, map);
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -242,9 +247,14 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 int selected= radioGroup.getCheckedRadioButtonId();
                 RadioButton radioButton=dialog.findViewById(selected);
-                Toast.makeText(MainActivity.this,radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(MainActivity.this,radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+                Log.d("Checking", requests.size() + ", " + requestsFiltering.size());
+                requestsFiltering.clear();
+                requestsFiltering.addAll(requests);
+                Log.d("Checking", requests.size() + ", " + requestsFiltering.size());
                 dialog.dismiss();
-
+                String selectedS = radioButton.getText().toString();
+                checkFilterWants(radioButton.getText().toString());
             }
         });
 
@@ -256,6 +266,177 @@ public class MainActivity extends AppCompatActivity {
         });
 
         dialog.show();
+    }
+
+    public void checkFilterWants(String s){
+
+
+        switch (s){
+
+            case "Status":
+
+                Dialog dialogS = new Dialog(MainActivity.this);
+                dialogS.setContentView(R.layout.get_filter_status);
+                TextView negativeButtonS=dialogS.findViewById(R.id.negativeFilterButton1);
+                TextView positiveButtonS=dialogS.findViewById(R.id.positiveFilterButton1);
+                RadioGroup radioGroupS=dialogS.findViewById(R.id.radioFilterGroup1);
+
+
+                positiveButtonS.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onClick(View v) {
+                        int selected= radioGroupS.getCheckedRadioButtonId();
+                        RadioButton radioButton=dialogS.findViewById(selected);
+
+
+                        if (radioButton.getText().toString().equals(getString(R.string.accepted_request))){
+                            requestsFiltering.removeIf(requests -> !(requests.getStatus().equals("Accepted")));
+                        }else if (radioButton.getText().toString().equals(getString(R.string.interrupted_request))) {
+                            requestsFiltering.removeIf(requests -> !(requests.getStatus().equals("Interrupted")));
+                        }else if (radioButton.getText().toString().equals(getString(R.string.ongoing_request))) {
+                            requestsFiltering.removeIf(requests -> !(requests.getStatus().equals("Ongoing")));
+                        }
+
+                        filtered = true;
+                        TodayTab.setChanged(requestsFiltering);
+                        dialogS.dismiss();
+                    }
+                });
+
+                negativeButtonS.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogS.dismiss();
+                        buildFilterDialog();
+                    }
+                });
+
+                dialogS.show();
+
+            break;
+
+            case "Type":
+
+                Dialog dialogT = new Dialog(MainActivity.this);
+                dialogT.setContentView(R.layout.get_type_request);
+                TextView negativeButtonT=dialogT.findViewById(R.id.negativeFilterButton2);
+                TextView positiveButtonT=dialogT.findViewById(R.id.positiveFilterButton2);
+                RadioGroup radioGroupT=dialogT.findViewById(R.id.radioFilterGroup2);
+
+
+                positiveButtonT.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onClick(View v) {
+                        int selected= radioGroupT.getCheckedRadioButtonId();
+                        RadioButton radioButton=dialogT.findViewById(selected);
+
+                        if (radioButton.getText().toString().equals(getString(R.string.radio_filter_getType_1))){
+                            requestsFiltering.removeIf(requests -> !(requests.getType().equals("cbec")));
+                        }else if (radioButton.getText().toString().equals(getString(R.string.radio_filter_getType_2))) {
+                            requestsFiltering.removeIf(requests -> !(requests.getType().equals("criteria")));
+                        }
+
+                        filtered = true;
+                        TodayTab.setChanged(requestsFiltering);
+                        dialogT.dismiss();
+                    }
+                });
+
+                negativeButtonT.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogT.dismiss();
+                        buildFilterDialog();
+                    }
+                });
+
+                dialogT.show();
+
+            break;
+
+            case "Canals":
+
+                Dialog dialogC = new Dialog(MainActivity.this);
+                dialogC.setContentView(R.layout.get_canal_name);
+                TextView negativeButtonC=dialogC.findViewById(R.id.negativeFilterButton3);
+                TextView positiveButtonC=dialogC.findViewById(R.id.positiveFilterButton3);
+                final String[] selected = {""};
+
+                ArrayList<String> canalsName = getCanalsNameForFilter();
+
+                Spinner spinner = (Spinner)dialogC.findViewById(R.id.spinnerCanals);
+
+                ArrayAdapter<String> spinnerArrayAdapter = new ArrayAdapter<String>
+                        (MainActivity.this, android.R.layout.simple_spinner_item,
+                                canalsName);
+
+                spinnerArrayAdapter.setDropDownViewResource(android.R.layout
+                        .simple_spinner_dropdown_item);
+
+                spinner.setAdapter(spinnerArrayAdapter);
+
+                spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener()
+                {
+                    public void onItemSelected(AdapterView<?> parent, View view,
+                                               int position, long arg3)
+                    {
+                        selected[0] = parent.getItemAtPosition(position).toString();
+                    }
+
+                    public void onNothingSelected(AdapterView<?> arg0){
+                        selected[0] = "";
+                    }
+                });
+
+                positiveButtonC.setOnClickListener(new View.OnClickListener() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
+                    @Override
+                    public void onClick(View v) {
+                        requestsFiltering.removeIf(requests -> !(requests.getChannel().equals(selected[0])));
+                        filtered = true;
+                        TodayTab.setChanged(requestsFiltering);
+                        dialogC.dismiss();
+                    }
+                });
+
+                negativeButtonC.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        dialogC.dismiss();
+                        buildFilterDialog();
+                    }
+                });
+
+                dialogC.show();
+
+            break;
+        }
+    }
+
+    public ArrayList<String> getCanalsNameForFilter(){
+
+        ArrayList<String> canalsName = new ArrayList<String>();
+        int check=0;
+
+        for(int i=0;i<requests.size();i++){
+            if(canalsName.size()!=0) {
+                for (int y = 0; y < canalsName.size(); y++) {
+                    if (canalsName.get(y).equals(requests.get(i).getChannel())) {
+                        check = 1;
+                    }
+                }
+            }
+
+                if (check == 0)
+                    canalsName.add(requests.get(i).getChannel());
+
+                check = 0;
+
+        }
+
+        return canalsName;
     }
 
 
@@ -420,16 +601,16 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         Gson gson = new Gson();
         String jsonFarms = sharedPreferences.getString("FARMS", null);
-        String jsonRequests = sharedPreferences.getString("REQUESTS", null);
-        String jsonWeirs = sharedPreferences.getString("WEIRS", null);
-        String jsonCanals = sharedPreferences.getString("CANALS", null);
-        Type typeFarm = new TypeToken<ArrayList<Farm>>() {
-        }.getType();
-        Type typeRequest = new TypeToken<ArrayList<Request>>() {
-        }.getType();
-        Type typeWeir = new TypeToken<ArrayList<Weir>>() {
-        }.getType();
-        Type typeCanal = new TypeToken<ArrayList<Canal>>() {
+            String jsonRequests = sharedPreferences.getString("REQUESTS", null);
+            String jsonWeirs = sharedPreferences.getString("WEIRS", null);
+            String jsonCanals = sharedPreferences.getString("CANALS", null);
+            Type typeFarm = new TypeToken<ArrayList<Farm>>() {
+            }.getType();
+            Type typeRequest = new TypeToken<ArrayList<Request>>() {
+            }.getType();
+            Type typeWeir = new TypeToken<ArrayList<Weir>>() {
+            }.getType();
+            Type typeCanal = new TypeToken<ArrayList<Canal>>() {
         }.getType();
         farms = gson.fromJson(jsonFarms, typeFarm);
         requests = gson.fromJson(jsonRequests, typeRequest);

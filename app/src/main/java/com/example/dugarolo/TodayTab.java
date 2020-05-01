@@ -50,7 +50,8 @@ import java.util.Objects;
 public class TodayTab extends Fragment{
 
     MyMapView map;
-    RequestAdapter mAdapter;
+    static RequestAdapter mAdapter;
+    static ArrayList<Request> requests;
 
     public TodayTab() {
         // Required empty public constructor
@@ -71,7 +72,7 @@ public class TodayTab extends Fragment{
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_today, container, false);
         assert getArguments() != null;
-        ArrayList<Request> requests = getArguments().getParcelableArrayList("list");
+        requests = getArguments().getParcelableArrayList("list");
         final RecyclerView recyclerView = root.findViewById(R.id.list_requests);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -81,6 +82,12 @@ public class TodayTab extends Fragment{
 
         return root;
 
+    }
+
+    static public void setChanged(ArrayList<Request> req){
+        requests.clear();
+        requests.addAll(req);
+        mAdapter.notifyDataSetChanged();
     }
 
 
@@ -314,8 +321,9 @@ public class TodayTab extends Fragment{
                 completeText.setVisibility(View.VISIBLE);
 
                 String currentStatus = currentRequest.getStatus();
-
                 sendInfoToServerActivate(currentRequest, currentStatus);
+
+
             }else{
                 waitingImage.setVisibility(View.VISIBLE);
                 operatingImage.setVisibility(View.INVISIBLE);
@@ -333,8 +341,25 @@ public class TodayTab extends Fragment{
                 completeText.setVisibility(View.GONE);
 
 
-
                 sendInfoToServerStop(currentRequest);
+            }
+        }
+
+        public void updateFilterStatus(String s){
+            if(s.equals("Criteria")) {
+                for (int i = 0; i < requests.size(); i++) {
+                    if (requests.get(i).getType().equals("cbec")) {
+                        requests.remove(i);
+                        mAdapter.notifyItemRemoved(i);
+                    }
+                }
+            }else if(s.equals("cbec")){
+                for (int i = 0; i < requests.size(); i++) {
+                    if (requests.get(i).getType().equals("Criteria")) {
+                        requests.remove(i);
+                        mAdapter.notifyItemRemoved(i);
+                    }
+                }
             }
         }
 
@@ -403,11 +428,11 @@ public class TodayTab extends Fragment{
         public void sendInfoToServerActivate(Request currentRequest, String currentStatus){
             JSONObject json = new JSONObject();
             currentRequest.setCurrentStat(1);
-            currentRequest.setStatus("Ongoing");
 
             if(currentRequest.getStatus().equals("Accepted"))
             {
                 try {
+                    currentRequest.setStatus("Ongoing");
                     json.put("message", "Changing status from Accepted to Ongoing");
                     json.put("status", currentRequest.getStatus());
                     postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
@@ -416,6 +441,7 @@ public class TodayTab extends Fragment{
                 }
             }else if(currentRequest.getStatus().equals("Interrupted")){
                 try {
+                    currentRequest.setStatus("Ongoing");
                     json.put("message", "Changing status from Interrupted to Ongoing");
                     json.put("status", currentRequest.getStatus());
                     postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
@@ -429,12 +455,13 @@ public class TodayTab extends Fragment{
         public void sendInfoToServerStop(Request currentRequest){
             JSONObject json = new JSONObject();
             currentRequest.setCurrentStat(1);
-            currentRequest.setStatus("Accepted"); //(?)
+            currentRequest.setStatus("Accepted");
 
             try {
                 json.put("message", "Changing status from Ongoing to Interrupted");
                 json.put("status", currentRequest.getStatus());
                 postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
+                Log.d("Checking1", "yaap");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
