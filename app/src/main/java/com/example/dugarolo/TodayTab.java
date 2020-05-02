@@ -182,15 +182,15 @@ public class TodayTab extends Fragment{
             int color2=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null);
 
             boolean isExpanded = requests.get(position).getIsExpanded();
-            //holder.expandibleView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
+            holder.expandibleView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
-            /*if(isExpanded == false){
+            if(isExpanded == false){
                 holder.uncollapse.setVisibility(View.VISIBLE);
                 holder.collapse.setVisibility(View.INVISIBLE);
             }else{
                 holder.collapse.setVisibility(View.VISIBLE);
                 holder.uncollapse.setVisibility(View.INVISIBLE);
-            }*/
+            }
 
             for (FarmColor f : sharedData.getFarmColors())
                 if(f.getNameFarm().equalsIgnoreCase(name)){
@@ -255,7 +255,7 @@ public class TodayTab extends Fragment{
 
             //Sezione Onclick delle varie sezioni
 
-            /*holder.collapsing.setOnClickListener(new View.OnClickListener() {
+            holder.collapsing.setOnClickListener(new View.OnClickListener() {
                 //@Override
                 public void onClick(View v) {
                     if(holder.expandibleView.getVisibility()==View.GONE)
@@ -273,7 +273,7 @@ public class TodayTab extends Fragment{
 
                     }
                 }
-            });*/
+            });
 
             holder.playArea.setOnClickListener(new View.OnClickListener() {
                 //@Override

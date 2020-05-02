@@ -77,7 +77,6 @@ public class MainActivity extends AppCompatActivity {
     private Marker markerPosition;
     private ImageView filterButton;
     private ImageView orderButton;
-    private boolean filtered = false;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -259,13 +258,11 @@ public class MainActivity extends AppCompatActivity {
                 int selected= radioGroup.getCheckedRadioButtonId();
                 RadioButton radioButton=dialog.findViewById(selected);
                 //Toast.makeText(MainActivity.this,radioButton.getText().toString(), Toast.LENGTH_SHORT).show();
-                Log.d("Checking", requests.size() + ", " + requestsFiltering.size());
                 requestsFiltering.clear();
                 requestsFiltering.addAll(requests);
-                Log.d("Checking", requests.size() + ", " + requestsFiltering.size());
                 dialog.dismiss();
                 String selectedS = radioButton.getText().toString();
-                checkFilterWants(radioButton.getText().toString());
+                checkFilterWants(selectedS);
             }
         });
 
@@ -309,7 +306,6 @@ public class MainActivity extends AppCompatActivity {
                             requestsFiltering.removeIf(requests -> !(requests.getStatus().equals("Ongoing")));
                         }
 
-                        filtered = true;
                         TodayTab.setChanged(requestsFiltering);
                         dialogS.dismiss();
                     }
@@ -349,7 +345,6 @@ public class MainActivity extends AppCompatActivity {
                             requestsFiltering.removeIf(requests -> !(requests.getType().equals("criteria")));
                         }
 
-                        filtered = true;
                         TodayTab.setChanged(requestsFiltering);
                         dialogT.dismiss();
                     }
@@ -406,7 +401,6 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         requestsFiltering.removeIf(requests -> !(requests.getChannel().equals(selected[0])));
-                        filtered = true;
                         TodayTab.setChanged(requestsFiltering);
                         dialogC.dismiss();
                     }
