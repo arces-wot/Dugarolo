@@ -323,7 +323,6 @@ public class TodayTab extends Fragment{
                 String currentStatus = currentRequest.getStatus();
                 sendInfoToServerActivate(currentRequest, currentStatus);
 
-
             }else{
                 waitingImage.setVisibility(View.VISIBLE);
                 operatingImage.setVisibility(View.INVISIBLE);
@@ -391,12 +390,31 @@ public class TodayTab extends Fragment{
                 alertDialog.show();
 
                 sendInfoToServerDelete(currentRequest);
-            }else{
-                requests.remove(currentRequest);
-                mAdapter.notifyItemRemoved(position);
+            }else if(currentRequest.getStatus().equals("Ongoing")){
+
+                alertDialogBuilder.setTitle("La richiesta è stata soddisfatta?");
+
+                // set dialog message
+                alertDialogBuilder
+                        .setCancelable(false)
+                        .setPositiveButton("Si", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                sendInfoToServerComplete(currentRequest);
+                                requests.remove(currentRequest);
+                                mAdapter.notifyItemRemoved(position);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                alertDialog.show();
+
                 sendInfoToServerComplete(currentRequest);
             }
-
         }
 
 
@@ -455,13 +473,12 @@ public class TodayTab extends Fragment{
         public void sendInfoToServerStop(Request currentRequest){
             JSONObject json = new JSONObject();
             currentRequest.setCurrentStat(1);
-            currentRequest.setStatus("Accepted");
+            currentRequest.setStatus("Interrupted");
 
             try {
                 json.put("message", "Changing status from Ongoing to Interrupted");
                 json.put("status", currentRequest.getStatus());
                 postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
-                Log.d("Checking1", "yaap");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -473,7 +490,7 @@ public class TodayTab extends Fragment{
             currentRequest.setStatus("Completed");
 
             try {
-                json.put("message", "Completed");
+                json.put("message", "Request Completed");
                 json.put("status", currentRequest.getStatus());
                 postNewStatus = (PostNewStatus) new PostNewStatus(json, currentRequest).execute();
             } catch (JSONException e) {

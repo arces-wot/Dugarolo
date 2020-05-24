@@ -97,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-        final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
+        /*final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         Context ctx = getApplicationContext();
         loadMap(startPoint, ctx);
         requests.add(requests.get(2));
@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         requests.add(requests.get(0));
         requests.add(requests.get(0));
         requests.add(requests.get(0));
-
+*/
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -193,11 +193,11 @@ public class MainActivity extends AppCompatActivity {
         });
 
         orderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                OrderHandler orderHandler = new OrderHandler();
-                orderHandler.buildOrderDialog(MainActivity.this, requests);
-    }
+                @Override
+                public void onClick(View view) {
+                    OrderHandler orderHandler = new OrderHandler();
+                    orderHandler.buildOrderDialog(MainActivity.this, requests);
+                }
 });
 
 
