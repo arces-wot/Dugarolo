@@ -97,10 +97,17 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
+<<<<<<< HEAD
         final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         Context ctx = getApplicationContext();
         loadMap(startPoint, ctx);
         /*requests.add(requests.get(2));
+=======
+        /*final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
+        Context ctx = getApplicationContext();
+        loadMap(startPoint, ctx);
+        requests.add(requests.get(2));
+>>>>>>> 7e2b11efacb26d0e6694e35b8ffef46419bd633f
         requests.add(requests.get(2));
         requests.add(requests.get(2));
         requests.add(requests.get(2));
@@ -219,8 +226,12 @@ public class MainActivity extends AppCompatActivity {
         gps = findViewById(R.id.GPSbutton);
 
         listener = new LocationListener() {
+<<<<<<< HEAD
 
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+=======
+            @RequiresApi(api = Build.VERSION_CODES.O)
+>>>>>>> 7e2b11efacb26d0e6694e35b8ffef46419bd633f
             @Override
             public void onLocationChanged(Location location) {
                 Marker newMarkerPosition;
