@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dugarolo</string>
+    <string name="irrigation_scheduling">Richieste Irrigue</string>
+    <string name="request">Richiesta:</string>
+    <string name="select_status">Seleziona stato:</string>
+    <string name="satisfied_request">Soddisfatta</string>
+    <string name="cancelled_request">Cancellata</string>
+    <string name="interrupted_request">Interrotta</string>
+    <string name="submit_button">INVIA</string>
+    <string name="expand_button">ESPANDI</string>
+    <string name="resize_button">RIDIMENSIONA</string>
+    <string name="my_location">MIA POSIZIONE</string>
+    <string name="update_weir_open_level">AGGIORNA LIVELLO APERTURA</string>
+    <string name="accepted_request">Accettata</string>
+    <string name="ongoing_request">In corso</string>
+    <string name="scheduled_request">Programmata</string>
+    <string name="cancelled_request_reason">Perché la richiesta è stata cancellata?</string>
+    <string name="reason_hint">Inserisci motivazione qui</string>
+    <string name="request_cancelled_message">La richiesta è stata cancellata.</string>
+    <string name="request_satisfied_message">La richiesta è stata soddisfatta.</string>
+    <string name="current_status">Stato corrente </string>
+    <string name="request_statuses">Stati delle richieste:</string>
+    <string name="show_statuses_key">Mostra la legenda degli stati</string>
+    <string name="measurement_unit">m</string>
+    <string name="measurement_unit_meaning">m: Metri</string>
+    <string name="message_label">"Messaggio "</string>
+    <string name="no_message">Nessun messaggio da mostrare</string>
+    <string name="open_level_is">Il livello di apertura è</string>
+    <string name="weir">Chiusa</string>
+    <string name="total_irrigation_time">Tempo totale</string>
+    <string name="start">Inizio</string>
+    <string name="end">Fine</string>
+    <string name="hint_irrigation_time">Inserisci il tempo di irrigazione qui</string>
+    <string name="hint_start_date">Seleziona la data di inizio cliccando qui</string>
+    <string name="hint_end_date">Seleziona la data di fine cliccando qui</string>
+    <string name="expected_time">Ora</string>
+
+    <string name="tab_text_1">Oggi</string>
+    <string name="tab_text_2">Domani</string>
+    <string name="order_title">Ordina per:</string>
+    <string name="filter_title">Filtra per:</string>
+    <string name="radio_order_1">Tempo</string>
+    <string name="radio_order_2">Canali</string>
+    <string name="radio_order_3">Stato</string>
+    <string name="radio_filter_1">Stato</string>
+    <string name="radio_filter_2">Tipo</string>
+    <string name="radio_filter_3">Canale</string>
+
+    <string name="radio_filter_getType_1">Contadino</string>
+    <string name="radio_filter_getType_2">Algoritmo</string>
+
+    <string name="order_selected">Ordine selezionato:</string>
+</resources>
