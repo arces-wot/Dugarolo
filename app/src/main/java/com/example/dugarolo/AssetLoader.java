@@ -7,6 +7,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -36,7 +37,7 @@ public class AssetLoader {
 
             int code = connection.getResponseCode();
 
-                if (code == 200) {
+            if (code == 200) {
 
                 bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
@@ -95,7 +96,7 @@ public class AssetLoader {
                         }
                         fields.add(new Field(JSONObjectFarm.getString("name"), fieldId, fieldPoints));
                     }
-                    Farm farm = new Farm(JSONObjectFarm.getString("name"), fields,geoIconPoint);
+                    Farm farm = new Farm(JSONObjectFarm.getString("name"), fields, geoIconPoint);
                     farms.add(farm);
                 }
             } catch (JSONException e) {
@@ -112,7 +113,7 @@ public class AssetLoader {
             JSONArray arrayConnections = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/connections")));
             for (int i = 0; i < arrayConnections.length(); i++) {
                 JSONObject conn = arrayConnections.getJSONObject(i);
-                if(conn.getString("type").equals("Channel")) {
+                if (conn.getString("type").equals("Channel")) {
                     String id = conn.getString("id");
                     double geoLanStart = conn.getJSONObject("start").getDouble("lan");
                     double geoLongStart = conn.getJSONObject("start").getDouble("long");
@@ -161,7 +162,7 @@ public class AssetLoader {
     }
 
     public void loadGeoPointsWeirs(ArrayList<Weir> weirs) {
-        if (weirs.isEmpty()) {
+        if(weirs.isEmpty()) {
             try {
                 JSONArray jsonArrayWeirs = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/nodes")));
                 for (int index = 0; index < jsonArrayWeirs.length(); index++) {
@@ -169,17 +170,17 @@ public class AssetLoader {
                     //considero solo le chiuse
                     if (jsonArrayElem.getString("type").equals("Weir")) {
                         String id = jsonArrayElem.getString("id");
-                        /*JSONObject openLevel = jsonArrayElem.getJSONObject("openLevel");
-                        int max = openLevel.getInt("max");
-                        int min = openLevel.getInt("min");
-                        int current = openLevel.getInt("current");*/
+                    /*JSONObject openLevel = jsonArrayElem.getJSONObject("openLevel");
+                    int max = openLevel.getInt("max");
+                    int min = openLevel.getInt("min");
+                    int current = openLevel.getInt("current");*/
                         GeoPoint geoPoint = new GeoPoint(jsonArrayElem.getJSONObject("location").getDouble("lat"),
                                 jsonArrayElem.getJSONObject("location").getDouble("lon"));
                         Weir weir = new Weir(id, 10, 0, 5, geoPoint);
                         weirs.add(weir);
                     }
                 }
-            } catch (MalformedURLException e) {
+                } catch (MalformedURLException e) {
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -209,13 +210,13 @@ public class AssetLoader {
 
     public void loadRequests(ArrayList<Farm> farms, ArrayList<Request> requests) {
 
-        if(requests.isEmpty()) {
+        if (requests.isEmpty()) {
             try {
                 for (Farm farm : farms) {
                     ArrayList<Field> fields = farm.getFields();
                     for (Field field : fields) {
                         String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + field.getId() + "/irrigation_plan"));
-                        if(json != null) {
+                        if (json != null) {
                             JSONArray jsonArray = new JSONArray(json);
                             for (int index = 0; index < jsonArray.length(); index++) {
                                 JSONObject JSONRequest = jsonArray.getJSONObject(index);
@@ -228,7 +229,7 @@ public class AssetLoader {
                                 String channel = JSONRequest.getString("channel");
                                 String type = JSONRequest.getString("type");
                                 String message = "";
-                                if(JSONRequest.has("message")){
+                                if (JSONRequest.has("message")) {
                                     message = JSONRequest.getString("message");
                                 }
                                 Request request = new Request(id, requestName, formattedDateTime, status, waterVolume.toString(), field, message, channel, type);
