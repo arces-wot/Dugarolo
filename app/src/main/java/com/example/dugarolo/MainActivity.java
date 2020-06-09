@@ -86,9 +86,9 @@ public class MainActivity extends AppCompatActivity {
         JodaTimeAndroid.init(this);
 
 
-        if (getIntent().hasExtra("REQUESTS")) {
+        if (getIntent().hasExtra("FARMS")) {
             farms = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS");
-            requests = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("REQUESTS");
+            //requests = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("REQUESTS");
             weirs = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("WEIRS");
             canals = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("CANALS");
             saveData();

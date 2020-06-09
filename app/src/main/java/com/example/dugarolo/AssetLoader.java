@@ -80,7 +80,7 @@ public class AssetLoader {
                     JSONArray JSONArrayFields = JSONObjectFarm.getJSONArray("fields");
                     JSONObject iconPoint = JSONObjectFarm.getJSONObject("location");
                     double latI = iconPoint.getDouble("lat");
-                    double lonI = iconPoint.getDouble("long");
+                    double lonI = iconPoint.getDouble("lon");
                     GeoPoint geoIconPoint = new GeoPoint(latI, lonI);
 
                     for (int index1 = 0; index1 < JSONArrayFields.length(); index1++) {

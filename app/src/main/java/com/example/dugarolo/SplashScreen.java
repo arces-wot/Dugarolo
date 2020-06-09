@@ -15,6 +15,7 @@ import java.util.ArrayList;
 public class SplashScreen extends AppCompatActivity {
     private AssetLoader assetLoader = new AssetLoader();
     private ArrayList<Farm> farms = new ArrayList<>();
+    private ArrayList<Farm> farms2 = new ArrayList<>();
     private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<Weir> weirs = new ArrayList<>();
     private ArrayList<Canal> canals = new ArrayList<>();
@@ -33,7 +34,7 @@ public class SplashScreen extends AppCompatActivity {
         @Override
         protected Boolean doInBackground(Void... voids) {
             assetLoader.loadGeoPointsFarms(farms);
-            assetLoader.loadRequests(farms, requests);
+            //assetLoader.loadRequests(farms, requests);
             assetLoader.loadWDN(canals);
             assetLoader.loadGeoPointsWeirs(weirs);
             assetLoader.updateCurrentOpenLevels(weirs);
@@ -45,7 +46,9 @@ public class SplashScreen extends AppCompatActivity {
             super.onPostExecute(aBoolean);
 
             if (aBoolean) {
-                i.putParcelableArrayListExtra("REQUESTS", requests);
+                for(int i=2;i<farms.size();i++)
+                    farms.remove(i);
+                //i.putParcelableArrayListExtra("REQUESTS", requests);
                 i.putParcelableArrayListExtra("FARMS", farms);
                 i.putParcelableArrayListExtra("WEIRS", weirs);
                 i.putParcelableArrayListExtra("CANALS", canals);
