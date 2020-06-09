@@ -7,10 +7,6 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
-<<<<<<< HEAD
-
-=======
->>>>>>> 7e2b11efacb26d0e6694e35b8ffef46419bd633f
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -40,11 +36,9 @@ public class AssetLoader {
 
             int code = connection.getResponseCode();
 
-<<<<<<< HEAD
-            if (code == 200) {
-=======
+
                 if (code == 200) {
->>>>>>> 7e2b11efacb26d0e6694e35b8ffef46419bd633f
+
 
                 bufferedReader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
 
@@ -103,11 +97,9 @@ public class AssetLoader {
                         }
                         fields.add(new Field(JSONObjectFarm.getString("name"), fieldId, fieldPoints));
                     }
-<<<<<<< HEAD
+
                     Farm farm = new Farm(JSONObjectFarm.getString("name"), fields, geoIconPoint);
-=======
-                    Farm farm = new Farm(JSONObjectFarm.getString("name"), fields,geoIconPoint);
->>>>>>> 7e2b11efacb26d0e6694e35b8ffef46419bd633f
+
                     farms.add(farm);
                 }
             } catch (JSONException e) {
@@ -124,11 +116,8 @@ public class AssetLoader {
             JSONArray arrayConnections = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/connections")));
             for (int i = 0; i < arrayConnections.length(); i++) {
                 JSONObject conn = arrayConnections.getJSONObject(i);
-<<<<<<< HEAD
                 if (conn.getString("type").equals("Channel")) {
-=======
-                if(conn.getString("type").equals("Channel")) {
->>>>>>> 7e2b11efacb26d0e6694e35b8ffef46419bd633f
+
                     String id = conn.getString("id");
                     double geoLanStart = conn.getJSONObject("start").getDouble("lan");
                     double geoLongStart = conn.getJSONObject("start").getDouble("long");
@@ -185,7 +174,6 @@ public class AssetLoader {
                     //considero solo le chiuse
                     if (jsonArrayElem.getString("type").equals("Weir")) {
                         String id = jsonArrayElem.getString("id");
-<<<<<<< HEAD
                     /*JSONObject openLevel = jsonArrayElem.getJSONObject("openLevel");
                     int max = openLevel.getInt("max");
                     int min = openLevel.getInt("min");
@@ -197,19 +185,7 @@ public class AssetLoader {
                     }
                 }
                 } catch (MalformedURLException e) {
-=======
-                        JSONObject openLevel = jsonArrayElem.getJSONObject("openLevel");
-                        int max = openLevel.getInt("max");
-                        int min = openLevel.getInt("min");
-                        int current = openLevel.getInt("current");
-                        GeoPoint geoPoint = new GeoPoint(jsonArrayElem.getJSONObject("location").getDouble("lat"),
-                                jsonArrayElem.getJSONObject("location").getDouble("lon"));
-                        Weir weir = new Weir(id, max, min, current, geoPoint);
-                        weirs.add(weir);
-                    }
-                }
-            } catch (MalformedURLException e) {
->>>>>>> 7e2b11efacb26d0e6694e35b8ffef46419bd633f
+
                 e.printStackTrace();
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -220,7 +196,6 @@ public class AssetLoader {
     public void updateCurrentOpenLevels(ArrayList<Weir> weirs) {
         try {
             for (Weir weir : weirs) {
-<<<<<<< HEAD
                 //String idForUrl = weir.getId().replace(" ", "%20");
                 String idForUrl = weir.getId().replace(":", "%3A");
                 idForUrl = idForUrl.replace("/", "%2F");
@@ -232,12 +207,7 @@ public class AssetLoader {
                 else
                     weir.setOpenLevel(1);
 
-=======
-                String idForUrl = weir.getId().replace(" ", "%20");
-                String openLevel = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/nodes/" + idForUrl + "/open_level"));
-                openLevel = openLevel.replace("\n", "");
-                weir.setOpenLevel(Integer.parseInt(openLevel));
->>>>>>> 7e2b11efacb26d0e6694e35b8ffef46419bd633f
+
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -246,21 +216,17 @@ public class AssetLoader {
 
     public void loadRequests(ArrayList<Farm> farms, ArrayList<Request> requests) {
 
-<<<<<<< HEAD
+
         if (requests.isEmpty()) {
-=======
-        if(requests.isEmpty()) {
->>>>>>> 7e2b11efacb26d0e6694e35b8ffef46419bd633f
+
             try {
                 for (Farm farm : farms) {
                     ArrayList<Field> fields = farm.getFields();
                     for (Field field : fields) {
                         String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + field.getId() + "/irrigation_plan"));
-<<<<<<< HEAD
+
                         if (json != null) {
-=======
-                        if(json != null) {
->>>>>>> 7e2b11efacb26d0e6694e35b8ffef46419bd633f
+
                             JSONArray jsonArray = new JSONArray(json);
                             for (int index = 0; index < jsonArray.length(); index++) {
                                 JSONObject JSONRequest = jsonArray.getJSONObject(index);
@@ -273,11 +239,8 @@ public class AssetLoader {
                                 String channel = JSONRequest.getString("channel");
                                 String type = JSONRequest.getString("type");
                                 String message = "";
-<<<<<<< HEAD
                                 if (JSONRequest.has("message")) {
-=======
-                                if(JSONRequest.has("message")){
->>>>>>> 7e2b11efacb26d0e6694e35b8ffef46419bd633f
+
                                     message = JSONRequest.getString("message");
                                 }
                                 Request request = new Request(id, requestName, formattedDateTime, status, waterVolume.toString(), field, message, channel, type);

@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Dugarolo.iml" filepath="$PROJECT_DIR$/Dugarolo.iml" group="Dugarolo" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Dugarolo-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Dugarolo-app.iml" group="Dugarolo/app" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Dugarolo-dev-Dugarolo.iml" filepath="$PROJECT_DIR$/.idea/modules/Dugarolo-dev-Dugarolo.iml" group="Dugarolo" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="Dugarolo/app" />
     </modules>
   </component>
