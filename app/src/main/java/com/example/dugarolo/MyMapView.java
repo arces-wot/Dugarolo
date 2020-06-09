@@ -260,11 +260,11 @@ public class MyMapView extends MapView implements Parcelable {
             }
 
             //In order to check if the color is already used, I use a variable check
-            for (int i = 0; i < farmColorsList.size(); i++) {
-                if (randomElement == farmColorsList.get(i).getIdColor()) {
-                    check = 1;
-                }
-            }
+            /*for (int i = 0; i < farmColorsList.size(); i++) {
+                    if (randomElement == farmColorsList.get(i).getIdColor()) {
+                        check = 1;
+                    }
+            }*/
 
             //if color is not used
             if (check == 0) {
