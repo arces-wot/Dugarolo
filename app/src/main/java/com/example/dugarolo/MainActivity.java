@@ -64,6 +64,11 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String REQUEST_STATUS = "id";
     private ArrayList<Farm> farms = new ArrayList<>();
+    private ArrayList<Farm> farms1 = new ArrayList<>();
+    private ArrayList<Farm> farms2= new ArrayList<>();
+    private ArrayList<Farm> farms3 = new ArrayList<>();
+    private ArrayList<Farm> farms4 = new ArrayList<>();
+    private ArrayList<Farm> farms5 = new ArrayList<>();
     private MyMapView map;
     private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<Request> requestsFiltering = new ArrayList<>();
@@ -84,10 +89,21 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
+        Globals globals = Globals.getInstance();
 
 
-        if (getIntent().hasExtra("FARMS")) {
-            farms = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS");
+
+        if (getIntent().hasExtra("WEIRS")) {
+            farms1 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS1");
+            farms2 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS2");
+            farms3 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS3");
+            farms4 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS4");
+            farms5 = globals.getFarms();
+            farms.addAll(farms1);
+            farms.addAll(farms2);
+            farms.addAll(farms3);
+            farms.addAll(farms4);
+            farms.addAll(farms5);
             //requests = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("REQUESTS");
             weirs = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("WEIRS");
             canals = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("CANALS");
@@ -316,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
         mapController.setZoom(14.0);
         mapController.setCenter(startPoint);
         map.drawFarms(farms);
-        map.drawIcon(farms, farmerMarkers, 70);
+        //map.drawIcon(farms, farmerMarkers, 70);
         //map.drawCanals(canals);
         //map.drawWeirs(weirs,weirMarkers);
 
@@ -352,9 +368,13 @@ public class MainActivity extends AppCompatActivity {
     public void onClickExpandMap(View view) {
 
         Intent intent = new Intent(MainActivity.this, MapDetailActivity.class);
-        intent.putParcelableArrayListExtra("FARMS", farms);
+        //intent.putParcelableArrayListExtra("FARMS", farms);
+        /*intent.putParcelableArrayListExtra("FARMS1", farms1);
+        intent.putParcelableArrayListExtra("FARMS2", farms2);
+        intent.putParcelableArrayListExtra("FARMS3", farms3);
+        intent.putParcelableArrayListExtra("FARMS4", farms4);
         intent.putParcelableArrayListExtra("WEIRS", weirs);
-        intent.putParcelableArrayListExtra("CANALS", canals);
+        intent.putParcelableArrayListExtra("CANALS", canals);*/
         startActivity(intent);
     }
 

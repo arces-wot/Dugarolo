@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 
 public class Globals {
+    private ArrayList<Farm> farms = new ArrayList<>();
 
 
     private static Globals instance = new Globals();
@@ -43,6 +44,13 @@ public class Globals {
                 return farmColors.get(i).idColor;
         }
         return 0;
+    }
+
+    public  void putFarms(ArrayList<Farm> farms){
+        this.farms=farms;
+    }
+    public  ArrayList<Farm> getFarms(){
+        return farms;
     }
 
 }
