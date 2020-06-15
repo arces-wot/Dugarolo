@@ -46,10 +46,10 @@ public class SplashScreen extends AppCompatActivity {
             super.onPostExecute(aBoolean);
 
             if (aBoolean) {
-                for(int i=2;i<farms.size();i++)
-                    farms.remove(i);
+                for(int i=0;i<250;i++)
+                    farms2.add(farms.get(i));
                 //i.putParcelableArrayListExtra("REQUESTS", requests);
-                i.putParcelableArrayListExtra("FARMS", farms);
+                i.putParcelableArrayListExtra("FARMS", farms2);
                 i.putParcelableArrayListExtra("WEIRS", weirs);
                 i.putParcelableArrayListExtra("CANALS", canals);
                 startActivity(i);
