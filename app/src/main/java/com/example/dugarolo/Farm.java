@@ -19,10 +19,10 @@ public class Farm implements Parcelable {
     private ArrayList<Field> fields = new ArrayList<>();
     private GeoPoint iconPosition;
 
-    public Farm(String name, ArrayList<Field> fields, GeoPoint iconPosition) {
+    public Farm(String name, ArrayList<Field> fields) {
         this.name = name;
         this.fields = fields;
-        this.iconPosition = iconPosition;
+        //this.iconPosition = iconPosition;
     }
 
     public ArrayList<Field> getFields() {

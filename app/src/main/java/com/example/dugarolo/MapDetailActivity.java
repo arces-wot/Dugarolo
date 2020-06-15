@@ -71,10 +71,16 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     private ArrayList<Marker> weirMarkers = new ArrayList<>();
     private ArrayList<Marker> farmerMarkers = new ArrayList<>();
     private ArrayList<Farm> farms = new ArrayList<>();
+    private ArrayList<Farm> farms1 = new ArrayList<>();
+    private ArrayList<Farm> farms2 = new ArrayList<>();
+    private ArrayList<Farm> farms3 = new ArrayList<>();
+    private ArrayList<Farm> farms4 = new ArrayList<>();
+    private ArrayList<Farm> farms5 = new ArrayList<>();
     private AssetLoader assetLoader = new AssetLoader();
     private JSONReceiver jsonReceiver;
     private boolean isInFront;
     GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
+    Globals globals = Globals.getInstance();
 
 
     private static final int REQUEST_CODE_WATER = 0;
@@ -84,8 +90,18 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getIntent().hasExtra("FARMS")) {
-            farms = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS");
+        if (getIntent().hasExtra("WEIRS")) {
+            //farms = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS");
+            farms1 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS1");
+            farms2 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS2");
+            farms3 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS3");
+            farms4 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS4");
+            farms5 = globals.getFarms();
+            farms.addAll(farms1);
+            farms.addAll(farms2);
+            farms.addAll(farms3);
+            farms.addAll(farms4);
+            farms.addAll(farms5);
             weirs = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("WEIRS");
             canals = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("CANALS");
             saveData();
@@ -136,7 +152,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         map.drawFarms(farms);
         map.drawCanals(canals);
         map.drawWeirs(weirs, weirMarkers);
-        map.drawIcon(farms, farmerMarkers, 80);
+        //map.drawIcon(farms, farmerMarkers, 80);
         setWeirListeners(weirMarkers);
         registerService();
 
@@ -428,7 +444,6 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         Type typeCanal = new TypeToken<ArrayList<Canal>>() {
         }.getType();
         farms = gson.fromJson(jsonFarms, typeFarm);
-        ;
         weirs = gson.fromJson(jsonWeirs, typeWeir);
         canals = gson.fromJson(jsonCanals, typeCanal);
     }

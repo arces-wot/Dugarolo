@@ -78,10 +78,10 @@ public class AssetLoader {
                     ArrayList<Field> fields = new ArrayList<>();
                     JSONObject JSONObjectFarm = JSONArrayFarms.getJSONObject(index);
                     JSONArray JSONArrayFields = JSONObjectFarm.getJSONArray("fields");
-                    JSONObject iconPoint = JSONObjectFarm.getJSONObject("location");
+                    /*JSONObject iconPoint = JSONObjectFarm.getJSONObject("location");
                     double latI = iconPoint.getDouble("lat");
                     double lonI = iconPoint.getDouble("lon");
-                    GeoPoint geoIconPoint = new GeoPoint(latI, lonI);
+                    GeoPoint geoIconPoint = new GeoPoint(latI, lonI);*/
 
                     for (int index1 = 0; index1 < JSONArrayFields.length(); index1++) {
                         JSONObject field = JSONArrayFields.getJSONObject(index1);
@@ -98,7 +98,8 @@ public class AssetLoader {
                         fields.add(new Field(JSONObjectFarm.getString("name"), fieldId, fieldPoints));
                     }
 
-                    Farm farm = new Farm(JSONObjectFarm.getString("name"), fields, geoIconPoint);
+                    //Farm farm = new Farm(JSONObjectFarm.getString("name"), fields, geoIconPoint);
+                    Farm farm = new Farm(JSONObjectFarm.getString("name"), fields);
 
                     farms.add(farm);
                 }
