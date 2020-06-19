@@ -42,6 +42,15 @@ public class SplashScreen extends AppCompatActivity {
             assetLoader.loadGeoPointsWeirs(weirs);
             assetLoader.updateCurrentOpenLevels(weirs);
 
+            //OCCHIO A CHI LA TOCCA
+            //Sample Request
+            /*final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
+            ArrayList<GeoPoint> geoPoints = new ArrayList<GeoPoint>();
+            geoPoints.add(startPoint);
+            Field field = new Field("farmName", "2", geoPoints);
+            Request request0 = new Request("1", "Name", DateTime.now(), "Accepted", "10", field , "message", "Channel", "cbec");
+            requests.add(request0);*/
+
 
             return true;
         }

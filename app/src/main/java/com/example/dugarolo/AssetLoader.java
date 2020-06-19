@@ -218,22 +218,26 @@ public class AssetLoader {
     public void loadRequests(ArrayList<Farm> farms, ArrayList<Request> requests) {
 
         if (requests.isEmpty()) {
-
             try {
                 for (Farm farm : farms) {
                     ArrayList<Field> fields = farm.getFields();
                     for (Field field : fields) {
-                        String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + field.getId() + "/irrigation_plan"));
 
+                        String id = field.getId();
+
+                        String idForUrl = id.replace(":", "%3A");
+                        idForUrl = idForUrl.replace("/", "%2F");
+                        idForUrl = idForUrl.replace("#", "%23");
+
+                        String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + idForUrl + "/irrigation_plan"));
                         if (json != null) {
-
                             JSONArray jsonArray = new JSONArray(json);
                             for (int index = 0; index < jsonArray.length(); index++) {
                                 JSONObject JSONRequest = jsonArray.getJSONObject(index);
 
-                                String id = JSONRequest.getString("id");
+                                id = JSONRequest.getString("id");
 
-                                String idForUrl = id.replace(":", "%3A");
+                                idForUrl = id.replace(":", "%3A");
                                 idForUrl = idForUrl.replace("/", "%2F");
                                 idForUrl = idForUrl.replace("#", "%23");
 
@@ -262,6 +266,7 @@ public class AssetLoader {
                 e.printStackTrace();
             }
         }
+
     }
 }
 

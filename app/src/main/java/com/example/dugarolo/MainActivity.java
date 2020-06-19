@@ -64,11 +64,6 @@ public class MainActivity extends AppCompatActivity {
 
     public static final String REQUEST_STATUS = "id";
     private ArrayList<Farm> farms = new ArrayList<>();
-    private ArrayList<Farm> farms1 = new ArrayList<>();
-    private ArrayList<Farm> farms2= new ArrayList<>();
-    private ArrayList<Farm> farms3 = new ArrayList<>();
-    private ArrayList<Farm> farms4 = new ArrayList<>();
-    private ArrayList<Farm> farms5 = new ArrayList<>();
     private MyMapView map;
     private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<Request> requestsFiltering = new ArrayList<>();
@@ -97,40 +92,7 @@ public class MainActivity extends AppCompatActivity {
         final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         Context ctx = getApplicationContext();
         loadMap(startPoint, ctx);
-        /*requests.add(requests.get(2));
-        requests.add(requests.get(2));
-        requests.add(requests.get(2));
-        requests.add(requests.get(2));
-        requests.add(requests.get(2));requests.add(requests.get(2));
-        requests.add(requests.get(2));
-        requests.add(requests.get(2));
-        requests.add(requests.get(2));
-        requests.add(requests.get(2));
-        requests.add(requests.get(2));
 
-        requests.add(requests.get(1));
-        requests.add(requests.get(1));requests.add(requests.get(1));
-        requests.add(requests.get(1));
-        requests.add(requests.get(1));requests.add(requests.get(1));
-        requests.add(requests.get(1));requests.add(requests.get(1));
-        requests.add(requests.get(1));
-        requests.add(requests.get(1));requests.add(requests.get(1));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-        requests.add(requests.get(0));
-*/
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
