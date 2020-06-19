@@ -217,7 +217,6 @@ public class AssetLoader {
 
     public void loadRequests(ArrayList<Farm> farms, ArrayList<Request> requests) {
 
-
         if (requests.isEmpty()) {
 
             try {
@@ -231,7 +230,13 @@ public class AssetLoader {
                             JSONArray jsonArray = new JSONArray(json);
                             for (int index = 0; index < jsonArray.length(); index++) {
                                 JSONObject JSONRequest = jsonArray.getJSONObject(index);
+
                                 String id = JSONRequest.getString("id");
+
+                                String idForUrl = id.replace(":", "%3A");
+                                idForUrl = idForUrl.replace("/", "%2F");
+                                idForUrl = idForUrl.replace("#", "%23");
+
                                 String dateTime = JSONRequest.getString("start");
                                 DateTime formattedDateTime = DateTime.parse(dateTime);
                                 Integer waterVolume = JSONRequest.getInt("waterVolume");
@@ -244,7 +249,7 @@ public class AssetLoader {
 
                                     message = JSONRequest.getString("message");
                                 }
-                                Request request = new Request(id, requestName, formattedDateTime, status, waterVolume.toString(), field, message, channel, type);
+                                Request request = new Request(idForUrl, requestName, formattedDateTime, status, waterVolume.toString(), field, message, channel, type);
                                 requests.add(request);
                             }
                         }

@@ -92,26 +92,7 @@ public class MainActivity extends AppCompatActivity {
         Globals globals = Globals.getInstance();
 
 
-
-        if (getIntent().hasExtra("WEIRS")) {
-            farms1 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS1");
-            farms2 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS2");
-            farms3 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS3");
-            farms4 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS4");
-            farms5 = globals.getFarms();
-            farms.addAll(farms1);
-            farms.addAll(farms2);
-            farms.addAll(farms3);
-            farms.addAll(farms4);
-            farms.addAll(farms5);
-            //requests = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("REQUESTS");
-            weirs = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("WEIRS");
-            canals = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("CANALS");
-            saveData();
-        } else {
-            loadData();
-        }
-
+        loadData();
 
         final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
         Context ctx = getApplicationContext();
