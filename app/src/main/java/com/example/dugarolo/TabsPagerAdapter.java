@@ -17,6 +17,7 @@ import org.joda.time.DateTime;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class TabsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
@@ -64,8 +65,9 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     public ArrayList<Request> todayRequests(ArrayList<Request> requests) {
         DateTime now = new DateTime();
         ArrayList<Request> todayRequests = new ArrayList<>();
+
         for (Request r : requests) {
-            //
+            //Log.d("tagDay",r.getDateTime().getDayOfYear() + " - " + now.getDayOfYear());
             if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear())) &&
                     (r.getStatus().equals("Accepted") ||  r.getStatus().equals("Ongoing")) ) {
                 todayRequests.add(r);

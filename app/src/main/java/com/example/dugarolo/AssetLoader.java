@@ -74,7 +74,7 @@ public class AssetLoader {
         if (farms.isEmpty()) {
             try {
                 JSONArray JSONArrayFarms = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/assigned_farms")));
-                for (int index = 0; index < JSONArrayFarms.length(); index++) {
+                for (int index = 0; index < 1; index++) {
                     ArrayList<Field> fields = new ArrayList<>();
                     JSONObject JSONObjectFarm = JSONArrayFarms.getJSONObject(index);
                     JSONArray JSONArrayFields = JSONObjectFarm.getJSONArray("fields");
@@ -229,7 +229,8 @@ public class AssetLoader {
                         idForUrl = idForUrl.replace("/", "%2F");
                         idForUrl = idForUrl.replace("#", "%23");
 
-                        String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + idForUrl + "/irrigation_plan"));
+                        //String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + idForUrl + "/irrigation_plan"));
+                        String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{inspector}/irrigation_plan"));
                         if (json != null) {
                             JSONArray jsonArray = new JSONArray(json);
                             for (int index = 0; index < jsonArray.length(); index++) {

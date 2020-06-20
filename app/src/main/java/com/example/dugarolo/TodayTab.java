@@ -201,7 +201,7 @@ public class TodayTab extends Fragment{
 
 
             VectorChildFinder vector;
-            if(currentRequest.getType().equals("cbec")){
+            if(currentRequest.getType().equals("CBEC")){
                 vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor, holder.basicIcon);
                 VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
                 VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
@@ -219,12 +219,32 @@ public class TodayTab extends Fragment{
 
             DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
             String formattedDateTime = dateTime.toString(dtf);
-            holder.farmName.setText(currentRequest.getName());
+
+            String farmerNameToModify = currentRequest.getName();
+
+            String[] partsName = farmerNameToModify.split("/");
+            String[] partsName1 = partsName[4].split("_");
+            String finalId = partsName1[1];
+
+            holder.farmName.setText(finalId);
             holder.time.setText(getResources().getString(R.string.expected_time) + ": " + formattedDateTime);
             holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume());
-            //poi li scrivo in strings
-            holder.canalName.setText(currentRequest.getChannel());
-            holder.nAppezamento.setText("Appezzamento n°" + currentRequest.getField().getId());
+
+            String canalNameToModify = currentRequest.getChannel();
+
+            String[] partsCanal = canalNameToModify.split("/");
+            String[] partsCanal1 = partsCanal[4].split("_");
+            String finalCanal = partsCanal1[1];
+
+            holder.canalName.setText(finalCanal);
+
+            String idFieldNameToModify = currentRequest.getField().getId();
+
+            String[] partsField= idFieldNameToModify.split("/");
+            String[] partsField1 = partsField[4].split("_");
+            String finalField = partsField1[1];
+
+            holder.nAppezamento.setText("Appezzamento n°" + finalField);
 
 
             if(currentRequest.getStatus().equals("Accepted")){
