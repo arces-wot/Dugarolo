@@ -232,11 +232,21 @@ public class TodayTab extends Fragment{
 
             String canalNameToModify = currentRequest.getChannel();
 
+            /*Sono utili? Boh..*/
+            canalNameToModify = canalNameToModify.replace("%22", "%3A");
+            canalNameToModify = canalNameToModify.replace("%7D", "%3A");
+
             String[] partsCanal = canalNameToModify.split("/");
             String[] partsCanal1 = partsCanal[4].split("_");
+            String[] partsCanal2 = partsCanal1[1].split(",");
+            String codeCanal = partsCanal2[0];
+
+            String[] partsCanal3 = partsCanal2[1].split(":");
+            String nameCanal = partsCanal3[1];
+
             String finalCanal = partsCanal1[1];
 
-            holder.canalName.setText(finalCanal);
+            holder.canalName.setText(nameCanal + "(" +codeCanal+ ")");
 
             String idFieldNameToModify = currentRequest.getField().getId();
 
