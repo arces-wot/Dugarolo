@@ -68,11 +68,11 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
         for (Request r : requests) {
             //Log.d("tagDay",r.getDateTime().getDayOfYear() + " - " + now.getDayOfYear());
-            if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear())) &&
+            /*if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear())) &&
                     (r.getStatus().equals("Accepted") ||  r.getStatus().equals("Ongoing")) ) {
                 todayRequests.add(r);
-            }
-            //todayRequests.add(r);
+            }*/
+            todayRequests.add(r);
         }
         return todayRequests;
     }

@@ -24,6 +24,7 @@ public class Request implements Comparable<Request>, Parcelable {
     private String message;
     private String type;
     private String channel;
+    private String nameChannel;
     //variabile che mi dice se è in corso o in attesa
     //non la metto nel costruttore perchè se no faccio danni
     private int currentStat;
@@ -31,7 +32,7 @@ public class Request implements Comparable<Request>, Parcelable {
 
 
     public Request(String id, String name, DateTime dateTime, String status, String waterVolume, Field field, String message,
-                   String channel, String type) {
+                   String channel, String type, String nameChannel) {
 
         this.id = id;
         this.name = name;
@@ -43,6 +44,7 @@ public class Request implements Comparable<Request>, Parcelable {
         this.channel = channel;
         this.type = type;
         this.isExpanded = false;
+        this.nameChannel = nameChannel;
     }
 
     public String getName() {
@@ -63,13 +65,20 @@ public class Request implements Comparable<Request>, Parcelable {
     }
 
     public void setIsExpanded(Boolean isExpanded) {
-        Log.d("Hey", "hey");
         this.isExpanded = isExpanded;
     }
 
     public String getChannel(){return channel;}
 
     public String getType(){return type; };
+
+    public String getNameChannel() {
+        return nameChannel;
+    }
+
+    public void setNameChannel(String nameChannel) {
+        this.nameChannel = nameChannel;
+    }
 
     public DateTime getDateTime() {
         return new DateTime(dateTime);

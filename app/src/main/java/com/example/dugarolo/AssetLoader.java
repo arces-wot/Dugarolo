@@ -75,7 +75,7 @@ public class AssetLoader {
             try {
                 JSONArray JSONArrayFarms = new JSONArray(getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/assigned_farms")));
                 //for (int index = 0; index < JSONArrayFarms.length(); index++) {
-                for (int index = 0; index < 1; index++) {
+                for (int index = 0; index < JSONArrayFarms.length(); index++) {
                     ArrayList<Field> fields = new ArrayList<>();
                     JSONObject JSONObjectFarm = JSONArrayFarms.getJSONObject(index);
                     JSONArray JSONArrayFields = JSONObjectFarm.getJSONArray("fields");
@@ -220,18 +220,16 @@ public class AssetLoader {
 
         if (requests.isEmpty()) {
             try {
+                String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{inspector}/irrigation_plan"));
                 for (Farm farm : farms) {
                     ArrayList<Field> fields = farm.getFields();
                     for (Field field : fields) {
 
                         String id = field.getId();
-
                         String idForUrl = id.replace(":", "%3A");
                         idForUrl = idForUrl.replace("/", "%2F");
                         idForUrl = idForUrl.replace("#", "%23");
 
-                        //String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + idForUrl + "/irrigation_plan"));
-                        String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{inspector}/irrigation_plan"));
                         if (json != null) {
                             JSONArray jsonArray = new JSONArray(json);
                             for (int index = 0; index < jsonArray.length(); index++) {
@@ -248,19 +246,22 @@ public class AssetLoader {
                                 Integer waterVolume = JSONRequest.getInt("waterVolume");
                                 String requestName = field.getFarmName();
                                 String status = JSONRequest.getString("status");
-                                String channel = JSONRequest.getString("channel");
+
+                                JSONObject channelOb = JSONRequest.getJSONObject("channel");
+                                String channel = channelOb.getString("id");
+                                String nameChannel = channelOb.getString("name");
+
                                 String type = JSONRequest.getString("type");
                                 String message = "";
-                                if (JSONRequest.has("message")) {
 
+                                if (JSONRequest.has("message"))
                                     message = JSONRequest.getString("message");
-                                }
-                                Request request = new Request(idForUrl, requestName, formattedDateTime, status, waterVolume.toString(), field, message, channel, type);
+
+                                Request request = new Request(idForUrl, requestName, formattedDateTime, status, waterVolume.toString(), field, message, channel, type, nameChannel);
                                 requests.add(request);
                             }
                         }
                     }
-
                 }
             } catch (MalformedURLException e) {
                 e.printStackTrace();

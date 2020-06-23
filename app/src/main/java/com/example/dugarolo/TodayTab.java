@@ -230,23 +230,7 @@ public class TodayTab extends Fragment{
             holder.time.setText(getResources().getString(R.string.expected_time) + ": " + formattedDateTime);
             holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume());
 
-            String canalNameToModify = currentRequest.getChannel();
-
-            /*Sono utili? Boh..*/
-            canalNameToModify = canalNameToModify.replace("%22", "%3A");
-            canalNameToModify = canalNameToModify.replace("%7D", "%3A");
-
-            String[] partsCanal = canalNameToModify.split("/");
-            String[] partsCanal1 = partsCanal[4].split("_");
-            String[] partsCanal2 = partsCanal1[1].split(",");
-            String codeCanal = partsCanal2[0];
-
-            String[] partsCanal3 = partsCanal2[1].split(":");
-            String nameCanal = partsCanal3[1];
-
-            String finalCanal = partsCanal1[1];
-
-            holder.canalName.setText(nameCanal + "(" +codeCanal+ ")");
+            holder.canalName.setText(currentRequest.getNameChannel());
 
             String idFieldNameToModify = currentRequest.getField().getId();
 
