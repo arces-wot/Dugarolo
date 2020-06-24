@@ -102,13 +102,13 @@ public class MyMapView extends MapView implements Parcelable {
 
     @SuppressLint("ResourceAsColor")
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-   /* public void drawIcon(ArrayList<Farm> farms, ArrayList<Marker> farmerMarkers, int size) {
+    /*public void drawIcon(ArrayList<Farm> farms, ArrayList<Marker> farmerMarkers, int size) {
         ArrayList<GeoPoint> iconsPosition = new ArrayList<>();
 
 
         for (Farm farm : farms) {
             Marker marker = new Marker(this);
-            iconsPosition = farm.getIconsPositionList();
+            iconsPosition = farm.getIconPosition();
             for (int i = 0; i <= iconsPosition.size(); i++) {
 
                 marker.setPosition(iconsPosition.get(i));

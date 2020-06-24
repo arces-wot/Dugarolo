@@ -42,7 +42,7 @@ public class SplashScreen extends AppCompatActivity {
             assetLoader.loadGeoPointsWeirs(weirs);
             assetLoader.updateCurrentOpenLevels(weirs);
 
-            //OCCHIO A CHI LA TOCCA
+            //GUAI A CHI LA TOCCA
             //Sample Request
             /*final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
             ArrayList<GeoPoint> geoPoints = new ArrayList<GeoPoint>();

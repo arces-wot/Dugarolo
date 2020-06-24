@@ -181,6 +181,14 @@ public class TodayTab extends Fragment{
             int color1=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null);
             int color2=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null);
 
+
+            for (FarmColor f : sharedData.getFarmColors())
+                if(f.getNameFarm().equals(name)){
+                    color1= f.getIdColor();
+                    color2= manipulateColor(f.getIdColor(),0.8f);
+                    break;
+            }
+
             boolean isExpanded = requests.get(position).getIsExpanded();
             holder.expandibleView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
