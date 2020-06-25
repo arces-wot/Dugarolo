@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <item name="accepted" type="id"/>
-    <item name="cancelled" type="id"/>
-    <item name="ongoing" type="id"/>
-    <item name="interrupted" type="id"/>
-    <item name="satisfied" type="id"/>
-</resources>
