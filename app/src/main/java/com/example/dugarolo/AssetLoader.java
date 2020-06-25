@@ -221,44 +221,48 @@ public class AssetLoader {
         if (requests.isEmpty()) {
             try {
                 String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{inspector}/irrigation_plan"));
+                if (json != null) {
+                    JSONArray jsonArray = new JSONArray(json);
                 for (Farm farm : farms) {
                     ArrayList<Field> fields = farm.getFields();
                     for (Field field : fields) {
-
-                        String id = field.getId();
+                        /*String id = field.getId();
                         String idForUrl = id.replace(":", "%3A");
                         idForUrl = idForUrl.replace("/", "%2F");
-                        idForUrl = idForUrl.replace("#", "%23");
+                        idForUrl = idForUrl.replace("#", "%23");*/
 
-                        if (json != null) {
-                            JSONArray jsonArray = new JSONArray(json);
+
                             for (int index = 0; index < jsonArray.length(); index++) {
                                 JSONObject JSONRequest = jsonArray.getJSONObject(index);
 
-                                id = JSONRequest.getString("id");
+                                String id = JSONRequest.getString("id");
 
-                                idForUrl = id.replace(":", "%3A");
-                                idForUrl = idForUrl.replace("/", "%2F");
-                                idForUrl = idForUrl.replace("#", "%23");
 
-                                String dateTime = JSONRequest.getString("start");
-                                DateTime formattedDateTime = DateTime.parse(dateTime);
-                                Integer waterVolume = JSONRequest.getInt("waterVolume");
-                                String requestName = field.getFarmName();
-                                String status = JSONRequest.getString("status");
+                                String fieldId=JSONRequest.getString("field");
+                                if(fieldId.equals(field.getId())){
+                                    JSONObject channelOb = JSONRequest.getJSONObject("channel");
+                                    String channel = channelOb.getString("id");
+                                    String nameChannel = channelOb.getString("name");
 
-                                JSONObject channelOb = JSONRequest.getJSONObject("channel");
-                                String channel = channelOb.getString("id");
-                                String nameChannel = channelOb.getString("name");
 
-                                String type = JSONRequest.getString("type");
-                                String message = "";
+                                    String dateTime = JSONRequest.getString("start");
+                                    DateTime formattedDateTime = DateTime.parse(dateTime);
+                                    Integer waterVolume = JSONRequest.getInt("waterVolume");
+                                    String requestName = field.getFarmName();
+                                    String status = JSONRequest.getString("status");
 
-                                if (JSONRequest.has("message"))
-                                    message = JSONRequest.getString("message");
 
-                                Request request = new Request(idForUrl, requestName, formattedDateTime, status, waterVolume.toString(), field, message, channel, type, nameChannel);
-                                requests.add(request);
+
+                                    String type = JSONRequest.getString("type");
+                                    String message = "";
+
+                                    if (JSONRequest.has("message"))
+                                        message = JSONRequest.getString("message");
+
+                                    Request request = new Request(id, requestName, formattedDateTime, status, waterVolume.toString(), field, message, channel, type, nameChannel);
+                                    requests.add(request);
+                                }
+
                             }
                         }
                     }

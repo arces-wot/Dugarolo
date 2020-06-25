@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Documents-Dugarolo.iml" filepath="$PROJECT_DIR$/.idea/modules/Documents-Dugarolo.iml" group="Dugarolo" />
       <module fileurl="file://$PROJECT_DIR$/Dugarolo.iml" filepath="$PROJECT_DIR$/Dugarolo.iml" group="Dugarolo" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/Dugarolo-app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/Dugarolo-app.iml" group="Dugarolo/app" />
       <module fileurl="file://$PROJECT_DIR$/Progetti-Dugarolo.iml" filepath="$PROJECT_DIR$/Progetti-Dugarolo.iml" group="Dugarolo" />
