@@ -135,7 +135,17 @@ public class TomorrowTab extends Fragment {
 
             DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
             String formattedDateTime = dateTime.toString(dtf);
-            holder.farmName.setText(currentRequest.getName());
+
+            String farmerNameToModify = currentRequest.getName();
+
+            String[] partsName = farmerNameToModify.split("/");
+            String[] partsName1 = partsName[4].split("_");
+            String finalId = partsName1[1];
+
+            String canalName = currentRequest.getNameChannel();
+
+            holder.farmName.setText(canalName + "-" + finalId);
+
             holder.time.setText(getResources().getString(R.string.expected_time) + ": " + formattedDateTime);
             holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume());
 

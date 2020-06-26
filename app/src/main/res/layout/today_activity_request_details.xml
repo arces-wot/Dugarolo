@@ -13,13 +13,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".RequestDetailsActivity">
+        tools:context=".TodayRequestDetailsActivity">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/constraint_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:context=".RequestDetailsActivity">
+            tools:context=".TodayRequestDetailsActivity">
 
             <TextView
                 android:id="@+id/irrigation_time"

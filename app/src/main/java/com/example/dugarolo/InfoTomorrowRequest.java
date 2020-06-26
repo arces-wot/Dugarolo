@@ -3,7 +3,6 @@ package com.example.dugarolo;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Button;
@@ -51,10 +50,25 @@ public class InfoTomorrowRequest extends AppCompatActivity {
 
     public void setElementsInLayout(){
         DateTime dateTime = requests.get(positionRequest).getDateTime();
+        //<!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //stampa 10:0 invece che 10:00 DA CAMBIARE PATTERN AL DATATIME!!!
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>
         String timeToIrrigate = Integer.toString(dateTime.getHourOfDay()) + ":" + Integer.toString(dateTime.getMinuteOfHour());
 
-        companyName.setText(requests.get(positionRequest).getName());
-        requestNumber.setText("Richiesta n°\n" + requests.get(positionRequest).getId());
+        String farmerNameToModify = requests.get(positionRequest).getName();
+        //<!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //LA RICHIESTA RESTITUISCE NULL IN GETNAMECHANNEL MA CHANNELL LO HA, ERRORE NELLA RICHIESTA?
+        //PERCHE' IN TODAYTAB VA E QUI NO?
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>
+        String canalName =  requests.get(positionRequest).getNameChannel();
+
+        String[] partsName = farmerNameToModify.split("/");
+        String[] partsName1 = partsName[4].split("_");
+        String finalId = partsName1[1];
+
+        companyName.setText(canalName);
+        //companyName.setText(requests.get(positionRequest).getName());
+        requestNumber.setText("Richiesta n°" + finalId);
         requestVolume.setText(requests.get(positionRequest).getWaterVolume() + " h");
         requestDateTime.setText(timeToIrrigate);
         requestStateView.setText(requests.get(positionRequest).getStatus());

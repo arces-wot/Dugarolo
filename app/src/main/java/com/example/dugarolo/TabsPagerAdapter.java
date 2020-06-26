@@ -63,16 +63,19 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     }
 
     public ArrayList<Request> todayRequests(ArrayList<Request> requests) {
-        DateTime now = new DateTime();
+        DateTime now;
+        now = DateTime.now();
         ArrayList<Request> todayRequests = new ArrayList<>();
 
         for (Request r : requests) {
-            //Log.d("tagDay",r.getDateTime().getDayOfYear() + " - " + now.getDayOfYear() + " - " + r.getStatus());
             /*if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear())) &&
                     (r.getStatus().equals("Accepted") ||  r.getStatus().equals("Ongoing")) ) {
                 todayRequests.add(r);
             }*/
-            todayRequests.add(r);
+            if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear())) &&
+                    (r.getDateTime().isAfterNow() || r.getStatus() == "Ongoing")) {
+                todayRequests.add(r);
+            }
         }
         return todayRequests;
     }

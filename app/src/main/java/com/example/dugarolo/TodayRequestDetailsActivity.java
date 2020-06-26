@@ -5,18 +5,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.core.view.ViewCompat;
 
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -44,7 +39,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
 
-public class RequestDetailsActivity extends AppCompatActivity {
+public class TodayRequestDetailsActivity extends AppCompatActivity {
 
     private ArrayList<Request> requestList = new ArrayList<>();
     private Integer requestId;
@@ -60,7 +55,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request_details);
+        setContentView(R.layout.today_activity_request_details);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         radioGroup = findViewById(R.id.radioGroup);
@@ -84,7 +79,19 @@ public class RequestDetailsActivity extends AppCompatActivity {
         Request request = requestList.get(requestId);
 
         currentStatusToShow.setText(request.getStatus());
-        nameFarm.setText(request.getName());
+
+        String farmerNameToModify = request.getName();
+        //<!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //LA RICHIESTA RESTITUISCE NULL IN GETNAMECHANNEL MA CHANNELL LO HA, ERRORE NELLA RICHIESTA?
+        //PERCHE' IN TODAYTAB VA E QUI NO?
+        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>
+        String canalName =  request.getNameChannel();
+
+        String[] partsName = farmerNameToModify.split("/");
+        String[] partsName1 = partsName[4].split("_");
+        String finalId = partsName1[1];
+
+        nameFarm.setText(canalName + "-" + finalId);
         irrigationLabel.setText(request.getWaterVolume() + " h");
 
 
@@ -128,7 +135,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
                                 int day = calendar.get(Calendar.DAY_OF_MONTH);
 
                                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                                        RequestDetailsActivity.this,
+                                        TodayRequestDetailsActivity.this,
                                         R.style.Theme_AppCompat_DayNight,
                                         startDateSetListener,
                                         year, month, day);
@@ -156,7 +163,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
                                 int day = calendar.get(Calendar.DAY_OF_MONTH);
 
                                 DatePickerDialog datePickerDialog = new DatePickerDialog(
-                                        RequestDetailsActivity.this,
+                                        TodayRequestDetailsActivity.this,
                                         R.style.Theme_AppCompat_DayNight,
                                         endDateSetListener,
                                         year, month, day);
@@ -459,7 +466,7 @@ public class RequestDetailsActivity extends AppCompatActivity {
             super.onPostExecute(aString);
             System.out.println("---- POST REQUEST RESPONSE ----");
             System.out.print(aString);
-            Intent intent = new Intent(RequestDetailsActivity.this, MainActivity.class);
+            Intent intent = new Intent(TodayRequestDetailsActivity.this, MainActivity.class);
             intent.putExtra(MainActivity.REQUEST_STATUS, request.getStatus());
             startActivity(intent);
         }

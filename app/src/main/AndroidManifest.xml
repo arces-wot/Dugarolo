@@ -29,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RequestDetailsActivity"
+            android:name=".TodayRequestDetailsActivity"
             android:parentActivityName=".MainActivity" />
         <activity
             android:name=".MapDetailActivity"

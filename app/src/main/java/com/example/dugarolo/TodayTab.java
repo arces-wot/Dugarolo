@@ -147,7 +147,7 @@ public class TodayTab extends Fragment{
             @Override
             public void onClick(View v) {
                 int position = getLayoutPosition();
-                Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplication(), RequestDetailsActivity.class);
+                Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplication(), TodayRequestDetailsActivity.class);
                 intent.putParcelableArrayListExtra("REQUEST_LIST", (ArrayList<? extends Parcelable>) requests);
                 intent.putExtra("REQUEST_CLICKED", position);
                 int requestId = position;
@@ -249,7 +249,7 @@ public class TodayTab extends Fragment{
             holder.nAppezamento.setText("Appezzamento n°" + finalField);
 
 
-            if(currentRequest.getStatus().equals("Accepted")){
+            if(currentRequest.getStatus().equals("Accepted") || currentRequest.getStatus().equals("Scheduled")){
                 //Log.d("ProvaEx", currentRequest.getChannel() + currentRequest.getStatus());
                 holder.playText.setVisibility(View.VISIBLE);
                 holder.playImage.setVisibility(View.VISIBLE);
@@ -326,7 +326,7 @@ public class TodayTab extends Fragment{
         public void playClicked(View v, Request currentRequest, ImageView waitingImage, ImageView operatingImage, ImageView playImage,
                                 TextView playText, ImageView pauseImage, TextView pauseText, ImageView cancelImage, TextView cancelText,
                                 ImageView completeImage, TextView completeText){
-            if(currentRequest.getStatus().equals("Accepted")){
+            if(currentRequest.getStatus().equals("Accepted") || currentRequest.getStatus().equals("Scheduled")){
                 waitingImage.setVisibility(View.INVISIBLE);
                 operatingImage.setVisibility(View.VISIBLE);
 
@@ -388,7 +388,7 @@ public class TodayTab extends Fragment{
         public void deleteClicked(View v, final List<Request> requests, final Request currentRequest, final int position) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
 
-            if(currentRequest.getStatus().equals("Accepted")){
+            if(currentRequest.getStatus().equals("Accepted") || currentRequest.getStatus().equals("Scheduled")){
                 // set title
                 alertDialogBuilder.setTitle("Vuoi sicuro di voler cancellare questa richiesta?");
 
@@ -469,7 +469,7 @@ public class TodayTab extends Fragment{
             JSONObject json = new JSONObject();
             currentRequest.setCurrentStat(1);
 
-            if(currentRequest.getStatus().equals("Accepted"))
+            if(currentRequest.getStatus().equals("Accepted") || currentRequest.getStatus().equals("Scheduled"))
             {
                 try {
                     currentRequest.setStatus("Ongoing");
@@ -590,9 +590,7 @@ public class TodayTab extends Fragment{
             protected void onPostExecute(String aString) {
                 super.onPostExecute(aString);
                 System.out.println("---- POST REQUEST RESPONSE ----");
-                System.out.print(aString);
                 Log.d("ProvaExc", "---- POST REQUEST RESPONSE ----");
-                Log.d("ProvaExc", aString);
             }
         }
 
