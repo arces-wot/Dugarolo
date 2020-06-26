@@ -144,6 +144,7 @@ public class Request implements Comparable<Request>, Parcelable {
         message = in.readString();
         type=in.readString();
         channel=in.readString();
+        nameChannel=in.readString();
     }
 
     @Override
@@ -162,6 +163,7 @@ public class Request implements Comparable<Request>, Parcelable {
         dest.writeString(message);
         dest.writeString(type);
         dest.writeString(channel);
+        dest.writeString(nameChannel);
     }
 
     @SuppressWarnings("unused")

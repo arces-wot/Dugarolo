@@ -70,8 +70,12 @@ public class TodayTab extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_today, container, false);
+        TextView noRequests=root.findViewById(R.id.textView_no_requests);
         assert getArguments() != null;
         requests = getArguments().getParcelableArrayList("list");
+        if (!requests.isEmpty()){
+            noRequests.setVisibility(View.GONE);
+        }
         final RecyclerView recyclerView = root.findViewById(R.id.list_requests);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
