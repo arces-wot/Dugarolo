@@ -72,8 +72,8 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
                     (r.getStatus().equals("Accepted") ||  r.getStatus().equals("Ongoing")) ) {
                 todayRequests.add(r);
             }*/
-            if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear())) &&
-                    (r.getDateTime().isAfterNow() || r.getStatus() == "Ongoing")) {
+            if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear()))){
+                    //(r.getDateTime().isAfterNow() || r.getStatus().equals("Ongoing"))) {
                 todayRequests.add(r);
             }
         }

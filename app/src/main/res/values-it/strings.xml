@@ -47,6 +47,8 @@
     <string name="radio_filter_2">Tipo</string>
     <string name="radio_filter_3">Canale</string>
 
+    <string name="no_request">Non sono presenti richieste al momento</string>
+
     <string name="radio_filter_getType_1">Contadino</string>
     <string name="radio_filter_getType_2">Algoritmo</string>
 

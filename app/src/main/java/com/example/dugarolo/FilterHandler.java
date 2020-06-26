@@ -68,13 +68,12 @@ public class FilterHandler {
                         RadioButton radioButton=dialogS.findViewById(selected);
 
 
-                        if (radioButton.getText().toString().equals(context.getString(R.string.interrupted_request))){
-                            requestsFiltering.removeIf(requests -> !(requests.getStatus().equals("Accepted")));
-                        }else if (radioButton.getText().toString().equals(context.getString(R.string.interrupted_request))) {
+                        if (radioButton.getText().toString().equals(context.getString(R.string.accepted_request)))
+                            requestsFiltering.removeIf(requests -> !(requests.getStatus().equals("Accepted") || (requests.getStatus().equals("Scheduled"))));
+                        else if (radioButton.getText().toString().equals(context.getString(R.string.interrupted_request))) 
                             requestsFiltering.removeIf(requests -> !(requests.getStatus().equals("Interrupted")));
-                        }else if (radioButton.getText().toString().equals(context.getString(R.string.ongoing_request))) {
+                        else if (radioButton.getText().toString().equals(context.getString(R.string.ongoing_request)))
                             requestsFiltering.removeIf(requests -> !(requests.getStatus().equals("Ongoing")));
-                        }
 
                         TodayTab.setChanged(requestsFiltering);
                         dialogS.dismiss();
@@ -110,7 +109,7 @@ public class FilterHandler {
                         RadioButton radioButton=dialogT.findViewById(selected);
 
                         if (radioButton.getText().toString().equals(context.getString(R.string.radio_filter_getType_1))){
-                            requestsFiltering.removeIf(requests -> !(requests.getType().equals("cbec")));
+                            requestsFiltering.removeIf(requests -> !(requests.getType().equals("CBEC")));
                         }else if (radioButton.getText().toString().equals(context.getString(R.string.radio_filter_getType_2))) {
                             requestsFiltering.removeIf(requests -> !(requests.getType().equals("criteria")));
                         }
@@ -170,7 +169,7 @@ public class FilterHandler {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public void onClick(View v) {
-                        requestsFiltering.removeIf(requests -> !(requests.getChannel().equals(selected[0])));
+                        requestsFiltering.removeIf(requests -> !(requests.getNameChannel().equals(selected[0])));
                         TodayTab.setChanged(requestsFiltering);
                         dialogC.dismiss();
                     }
@@ -198,14 +197,14 @@ public class FilterHandler {
         for(int i=0;i<requests.size();i++){
             if(canalsName.size()!=0) {
                 for (int y = 0; y < canalsName.size(); y++) {
-                    if (canalsName.get(y).equals(requests.get(i).getChannel())) {
+                    if (canalsName.get(y).equals(requests.get(i).getNameChannel())) {
                         check = 1;
                     }
                 }
             }
 
             if (check == 0)
-                canalsName.add(requests.get(i).getChannel());
+                canalsName.add(requests.get(i).getNameChannel());
 
             check = 0;
 

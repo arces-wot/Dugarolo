@@ -141,15 +141,20 @@ public class MainActivity extends AppCompatActivity {
 
         filterButton=findViewById(R.id.filterButton);
         orderButton=findViewById(R.id.orderButton);
-        filterButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                requestsFiltering.clear();
-                requestsFiltering.addAll(requests);
-                FilterHandler filterHandler = new FilterHandler();
-                filterHandler.buildFilterDialog(MainActivity.this, requestsFiltering);
+        if(requests.size() != 0) {
+            filterButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    requestsFiltering.clear();
+                    requestsFiltering.addAll(requests);
+                    FilterHandler filterHandler = new FilterHandler();
+                    filterHandler.buildFilterDialog(MainActivity.this, requestsFiltering);
+                }
+            });
+        }else{
+            Toast.makeText(getApplicationContext(),
+                    R.string.no_request, Toast.LENGTH_LONG).show();
         }
-        });
 
         orderButton.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -311,13 +316,6 @@ public class MainActivity extends AppCompatActivity {
     public void onClickExpandMap(View view) {
 
         Intent intent = new Intent(MainActivity.this, MapDetailActivity.class);
-        //intent.putParcelableArrayListExtra("FARMS", farms);
-        /*intent.putParcelableArrayListExtra("FARMS1", farms1);
-        intent.putParcelableArrayListExtra("FARMS2", farms2);
-        intent.putParcelableArrayListExtra("FARMS3", farms3);
-        intent.putParcelableArrayListExtra("FARMS4", farms4);
-        intent.putParcelableArrayListExtra("WEIRS", weirs);
-        intent.putParcelableArrayListExtra("CANALS", canals);*/
         startActivity(intent);
     }
 

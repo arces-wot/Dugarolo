@@ -63,8 +63,9 @@
 
     <TextView
         android:id="@+id/negativeFilterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="200px"
+        android:layout_height="100px"
+        android:gravity="center"
         android:layout_marginStart="90dp"
         android:layout_marginEnd="54dp"
         android:layout_marginBottom="16dp"
@@ -78,8 +79,9 @@
 
     <TextView
         android:id="@+id/positiveFilterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="100px"
+        android:layout_height="100px"
+        android:gravity="center"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
