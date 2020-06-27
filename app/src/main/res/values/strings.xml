@@ -41,14 +41,14 @@
     <string name="radio_order_1">Time</string>
     <string name="radio_order_2">Canals</string>
     <string name="radio_order_3">Status</string>
-    <string name="radio_filter_1">Status</string>
-    <string name="radio_filter_2">Type</string>
-    <string name="radio_filter_3">Canals</string>
+    <string name="status">Status</string>
+    <string name="type">Type</string>
+    <string name="canal">Canals</string>
 
     <string name="no_request">No requests available at the moment</string>
 
-    <string name="radio_filter_getType_1">Farmer</string>
-    <string name="radio_filter_getType_2">Algorithm</string>
+    <string name="Type_1">Farmer</string>
+    <string name="Type_2">Algorithm</string>
 
 
 

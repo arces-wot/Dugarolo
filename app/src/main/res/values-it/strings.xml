@@ -43,14 +43,14 @@
     <string name="radio_order_1">Tempo</string>
     <string name="radio_order_2">Canali</string>
     <string name="radio_order_3">Stato</string>
-    <string name="radio_filter_1">Stato</string>
-    <string name="radio_filter_2">Tipo</string>
-    <string name="radio_filter_3">Canale</string>
+    <string name="status">Stato</string>
+    <string name="type">Tipo</string>
+    <string name="canal">Canale</string>
 
     <string name="no_request">Non sono presenti richieste al momento</string>
 
-    <string name="radio_filter_getType_1">Contadino</string>
-    <string name="radio_filter_getType_2">Algoritmo</string>
+    <string name="Type_1">Contadino</string>
+    <string name="Type_2">Algoritmo</string>
 
     <string name="order_selected">Ordine selezionato:</string>
 </resources>

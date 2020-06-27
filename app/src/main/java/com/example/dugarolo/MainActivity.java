@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
 
         filterButton=findViewById(R.id.filterButton);
         orderButton=findViewById(R.id.orderButton);
-        if(requests.size() != 0) {
             filterButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -151,10 +150,7 @@ public class MainActivity extends AppCompatActivity {
                     filterHandler.buildFilterDialog(MainActivity.this, requestsFiltering);
                 }
             });
-        }else{
-            Toast.makeText(getApplicationContext(),
-                    R.string.no_request, Toast.LENGTH_LONG).show();
-        }
+
 
         orderButton.setOnClickListener(new View.OnClickListener() {
                 @Override

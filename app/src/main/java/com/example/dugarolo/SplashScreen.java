@@ -60,7 +60,7 @@ public class SplashScreen extends AppCompatActivity {
             }
             assetLoader.loadRequests(farms, requests);
             assetLoader.loadWDN(canals);
-            assetLoader.loadGeoPointsWeirs(weirs);
+            //assetLoader.loadGeoPointsWeirs(weirs);
             assetLoader.updateCurrentOpenLevels(weirs);
 
 
@@ -70,7 +70,7 @@ public class SplashScreen extends AppCompatActivity {
             ArrayList<GeoPoint> geoPoints = new ArrayList<GeoPoint>();
             geoPoints.add(startPoint);
             Field field = new Field("farmName", "2", geoPoints);
-            Request request0 = new Request("1", "Name", DateTime.now(), "Accepted", "10", field , "message", "Channel", "cbec");
+            Request request0 = new Request("1", "Name", DateTime.now(), "Accepted", "10", field , "message", "Channel", "cbec","anal");
             requests.add(request0);*/
 
 
