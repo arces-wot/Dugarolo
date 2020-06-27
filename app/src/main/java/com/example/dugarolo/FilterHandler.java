@@ -70,7 +70,7 @@ public class FilterHandler {
 
                         if (radioButton.getText().toString().equals(context.getString(R.string.accepted_request)))
                             requestsFiltering.removeIf(requests -> !(requests.getStatus().equals("Accepted") || (requests.getStatus().equals("Scheduled"))));
-                        else if (radioButton.getText().toString().equals(context.getString(R.string.interrupted_request))) 
+                        else if (radioButton.getText().toString().equals(context.getString(R.string.interrupted_request)))
                             requestsFiltering.removeIf(requests -> !(requests.getStatus().equals("Interrupted")));
                         else if (radioButton.getText().toString().equals(context.getString(R.string.ongoing_request)))
                             requestsFiltering.removeIf(requests -> !(requests.getStatus().equals("Ongoing")));
