@@ -101,7 +101,6 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(false);
 
 
-
         TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests, map);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(tabsPagerAdapter);
@@ -137,28 +136,33 @@ public class MainActivity extends AppCompatActivity {
         setGPSButton();
 
 
-
-
-        filterButton=findViewById(R.id.filterButton);
-        orderButton=findViewById(R.id.orderButton);
-            filterButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+        filterButton = findViewById(R.id.filterButton);
+        orderButton = findViewById(R.id.orderButton);
+        final Boolean[] isFiltered = {false};
+        filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!isFiltered[0]) {
                     requestsFiltering.clear();
                     requestsFiltering.addAll(requests);
                     FilterHandler filterHandler = new FilterHandler();
                     filterHandler.buildFilterDialog(MainActivity.this, requestsFiltering);
+                    isFiltered[0] = true;
+                } else {
+                    TodayTab.setChanged(requests);
+                    isFiltered[0] = false;
                 }
-            });
+            }
+        });
 
 
         orderButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    OrderHandler orderHandler = new OrderHandler();
-                    orderHandler.buildOrderDialog(MainActivity.this, requests);
-                }
-});
+            @Override
+            public void onClick(View view) {
+                OrderHandler orderHandler = new OrderHandler();
+                orderHandler.buildOrderDialog(MainActivity.this, requests);
+            }
+        });
 
 
     }
@@ -174,7 +178,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void setGPSButton(){
+    public void setGPSButton() {
         locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         gps = findViewById(R.id.GPSbutton);
 
@@ -246,7 +250,6 @@ public class MainActivity extends AppCompatActivity {
                 locationManager.requestLocationUpdates("gps", 5000, 10, listener);
             }
         });
-
 
 
     }
@@ -334,16 +337,16 @@ public class MainActivity extends AppCompatActivity {
         SharedPreferences sharedPreferences = getSharedPreferences("shared preferences", MODE_PRIVATE);
         Gson gson = new Gson();
         String jsonFarms = sharedPreferences.getString("FARMS", null);
-            String jsonRequests = sharedPreferences.getString("REQUESTS", null);
-            String jsonWeirs = sharedPreferences.getString("WEIRS", null);
-            String jsonCanals = sharedPreferences.getString("CANALS", null);
-            Type typeFarm = new TypeToken<ArrayList<Farm>>() {
-            }.getType();
-            Type typeRequest = new TypeToken<ArrayList<Request>>() {
-            }.getType();
-            Type typeWeir = new TypeToken<ArrayList<Weir>>() {
-            }.getType();
-            Type typeCanal = new TypeToken<ArrayList<Canal>>() {
+        String jsonRequests = sharedPreferences.getString("REQUESTS", null);
+        String jsonWeirs = sharedPreferences.getString("WEIRS", null);
+        String jsonCanals = sharedPreferences.getString("CANALS", null);
+        Type typeFarm = new TypeToken<ArrayList<Farm>>() {
+        }.getType();
+        Type typeRequest = new TypeToken<ArrayList<Request>>() {
+        }.getType();
+        Type typeWeir = new TypeToken<ArrayList<Weir>>() {
+        }.getType();
+        Type typeCanal = new TypeToken<ArrayList<Canal>>() {
         }.getType();
         farms = gson.fromJson(jsonFarms, typeFarm);
         requests = gson.fromJson(jsonRequests, typeRequest);
