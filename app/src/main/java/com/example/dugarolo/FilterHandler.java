@@ -63,6 +63,7 @@ public class FilterHandler {
         spinnerCanals.setAdapter(spinnerArrayAdapterCanals);
         spinnerTypes.setAdapter(spinnerArrayAdapterTypes);
         spinnerStatus.setAdapter(spinnerArrayAdapterStatus);
+        dialog.show();
 
         spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             public void onItemSelected(AdapterView<?> parent, View view,
@@ -103,10 +104,13 @@ public class FilterHandler {
             public void onClick(View v) {
                 if (!selectedCanal[0].equals(""))
                     requestsFiltering.removeIf(requests -> !(requests.getNameChannel().equals(selectedCanal[0])));
+
                 if (!selectedStatus[0].equals(""))
                     requestsFiltering.removeIf(requests -> !(requests.getStatus().equals(selectedStatus[0])));
+
                 if (!selectedType[0].equals(""))
                     requestsFiltering.removeIf(requests -> !(requests.getType().equals(selectedType[0])));
+
                 TodayTab.setChanged(requestsFiltering);
                 dialog.dismiss();
             }
@@ -118,8 +122,6 @@ public class FilterHandler {
                 dialog.dismiss();
             }
         });
-
-        dialog.show();
     }
 
     public ArrayList<String> getCanalsNameForFilter(ArrayList<Request> requests) {
