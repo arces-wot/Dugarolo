@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity {
     private Marker markerPosition;
     private ImageView filterButton;
     private ImageView orderButton;
+    GeoPoint myPosition;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -199,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
                 Marker newMarkerPosition;
                 if (markerPosition != null)
                     markerPosition.remove(map);
-                GeoPoint myPosition = new GeoPoint(location.getLatitude(), location.getLongitude());
+                myPosition = new GeoPoint(location.getLatitude(), location.getLongitude());
                 newMarkerPosition = map.drawPosition(myPosition);
                 markerPosition = newMarkerPosition;
                 map.getController().setCenter(myPosition);
