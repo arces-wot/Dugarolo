@@ -13,6 +13,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.media.Image;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
@@ -23,6 +24,8 @@ import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 import android.Manifest;
 
@@ -71,17 +74,18 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     private ArrayList<Marker> weirMarkers = new ArrayList<>();
     private ArrayList<Marker> farmerMarkers = new ArrayList<>();
     private ArrayList<Farm> farms = new ArrayList<>();
-    private ArrayList<Farm> farms1 = new ArrayList<>();
-    private ArrayList<Farm> farms2 = new ArrayList<>();
-    private ArrayList<Farm> farms3 = new ArrayList<>();
-    private ArrayList<Farm> farms4 = new ArrayList<>();
-    private ArrayList<Farm> farms5 = new ArrayList<>();
     private AssetLoader assetLoader = new AssetLoader();
     private JSONReceiver jsonReceiver;
     private boolean isInFront;
     GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
     Globals globals = Globals.getInstance();
 
+    //per GPS
+    private LocationManager locationManager;
+    private LocationListener listener;
+    GeoPoint myPosition;
+    Button GPSbutton1;
+    private Marker markerPosition;
 
     private static final int REQUEST_CODE_WATER = 0;
     public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
@@ -92,16 +96,6 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         super.onCreate(savedInstanceState);
         if (getIntent().hasExtra("WEIRS")) {
             //farms = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS");
-            farms1 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS1");
-            farms2 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS2");
-            farms3 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS3");
-            farms4 = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS4");
-            farms5 = globals.getFarms();
-            farms.addAll(farms1);
-            farms.addAll(farms2);
-            farms.addAll(farms3);
-            farms.addAll(farms4);
-            farms.addAll(farms5);
             weirs = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("WEIRS");
             canals = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("CANALS");
             saveData();
@@ -118,10 +112,78 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         //disattivo l'hardware acceleration per risolvere i problemi reativi alle icone in Android >= 8
         map.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
-        //carica i valori relativi al livello dell'acqua dei canali tramite intent sevice
 
-        //new LoadMapElements().execute();
-        //loadMapElements();
+        setGPSButton();
+
+    }
+
+
+    public void setGPSButton() {
+        GPSbutton1 = findViewById(R.id.GPSbutton1);
+        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+
+        listener = new LocationListener() {
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+
+            @Override
+            public void onLocationChanged(Location location) {
+                Marker newMarkerPosition;
+                if (markerPosition != null)
+                    markerPosition.remove(map);
+                myPosition = new GeoPoint(location.getLatitude(), location.getLongitude());
+                newMarkerPosition = map.drawPosition(myPosition);
+                markerPosition = newMarkerPosition;
+                map.getController().setCenter(myPosition);
+            }
+
+            @Override
+            public void onStatusChanged(String s, int i, Bundle bundle) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String s) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String s) {
+
+                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
+                startActivity(i);
+            }
+        };
+
+        configure_button();
+    }
+
+    void configure_button() {
+        // first check for permissions
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
+                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
+                                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET}
+                        , 10);
+            }
+            return;
+        }
+        // this code won'textView execute IF permissions are not allowed, because in the line above there is return statement.
+        GPSbutton1.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.M)
+            @Override
+            public void onClick(View view) {
+                //noinspection MissingPermission
+                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
+                        != PackageManager.PERMISSION_GRANTED) {
+                    return;
+                }
+                locationManager.requestLocationUpdates("gps", 5000, 10, listener);
+            }
+        });
+
 
     }
 

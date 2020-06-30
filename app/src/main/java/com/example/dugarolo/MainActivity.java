@@ -80,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView filteredButton;
     private ImageView orderButton;
     private Boolean isTomorrow = false;
+    GeoPoint myPosition;
 
 
 
@@ -232,7 +233,7 @@ public class MainActivity extends AppCompatActivity {
                 Marker newMarkerPosition;
                 if (markerPosition != null)
                     markerPosition.remove(map);
-                GeoPoint myPosition = new GeoPoint(location.getLatitude(), location.getLongitude());
+                myPosition = new GeoPoint(location.getLatitude(), location.getLongitude());
                 newMarkerPosition = map.drawPosition(myPosition);
                 markerPosition = newMarkerPosition;
                 map.getController().setCenter(myPosition);

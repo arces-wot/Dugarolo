@@ -5,12 +5,13 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import org.osmdroid.util.GeoPoint;
+
 import java.util.ArrayList;
 
 
 public class Globals {
     private ArrayList<Farm> farms = new ArrayList<>();
-
 
     private static Globals instance = new Globals();
 

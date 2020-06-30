@@ -125,12 +125,9 @@ public class FilterHandler {
             }
         });
 
+
         return requestsFiltering;
-
-
-
     }
-
 
     public ArrayList<String> getCanalsNameForFilter(ArrayList<Request> requests) {
 

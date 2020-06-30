@@ -27,6 +27,17 @@
             android:paddingBottom="12dp"
             app:srcCompat="@drawable/focus" />
 
+        <Button
+            android:id="@+id/GPSbutton1"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_gravity="bottom|end"
+            android:layout_marginStart="130dp"
+            android:layout_marginTop="0dp"
+            android:layout_marginEnd="120px"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/maps_icon" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
