@@ -60,7 +60,7 @@ public class SplashScreen extends AppCompatActivity {
             }
             assetLoader.loadRequests(farms, requests);
             assetLoader.loadWDN(canals);
-            //assetLoader.loadGeoPointsWeirs(weirs);
+            assetLoader.loadGeoPointsWeirs(weirs);
             assetLoader.updateCurrentOpenLevels(weirs);
 
 

@@ -165,6 +165,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+            TextView noRequests=findViewById(R.id.no_requests);
+            if (requests.isEmpty()) {
+                noRequests.setVisibility(View.GONE);
+            }
+
+
+
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
