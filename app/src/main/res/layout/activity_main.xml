@@ -5,7 +5,9 @@
     android:id="@+id/layout_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_gravity="bottom"
+    android:orientation="vertical"
+    app:layout_anchorGravity="start">
 
     <include layout="@layout/toolbar_main" />
 
@@ -71,6 +73,16 @@
 
 
         </com.google.android.material.appbar.AppBarLayout>
+
+        <TextView
+            android:id="@+id/no_requests"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:layout_marginStart="45dp"
+            android:layout_marginTop="230dp"
+            android:text="@string/no_request"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="20dp" />
 
 
         <androidx.viewpager.widget.ViewPager

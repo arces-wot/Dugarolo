@@ -182,7 +182,7 @@ public class AssetLoader {
                     int current = openLevel.getInt("current");*/
                         GeoPoint geoPoint = new GeoPoint(jsonArrayElem.getJSONObject("location").getDouble("lat"),
                                 jsonArrayElem.getJSONObject("location").getDouble("lon"));
-                        Weir weir = new Weir(id, 10, 0, 5, geoPoint);
+                        Weir weir = new Weir(id, 50, 0, 10, geoPoint);
                         weirs.add(weir);
                     }
                 }
