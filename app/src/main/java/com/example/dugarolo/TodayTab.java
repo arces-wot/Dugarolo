@@ -193,13 +193,13 @@ public class TodayTab extends Fragment{
             boolean isExpanded = requests.get(position).getIsExpanded();
             holder.expandibleView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
-            if(isExpanded == false){
+            /*if(isExpanded == false){
                 holder.uncollapse.setVisibility(View.VISIBLE);
                 holder.collapse.setVisibility(View.INVISIBLE);
             }else{
                 holder.collapse.setVisibility(View.VISIBLE);
                 holder.uncollapse.setVisibility(View.INVISIBLE);
-            }
+            }*/
 
             for (FarmColor f : sharedData.getFarmColors())
                 if(f.getNameFarm().equalsIgnoreCase(name)){
@@ -475,7 +475,7 @@ public class TodayTab extends Fragment{
         //metodo che manda
         public void sendInfoToServerActivate(Request currentRequest, String currentStatus){
             JSONObject json = new JSONObject();
-            currentRequest.setCurrentStat(1);
+            //currentRequest.setCurrentStat(1);
 
             if(currentRequest.getStatus().equals("Accepted")
                     || currentRequest.getStatus().equals("Scheduled")
@@ -504,7 +504,7 @@ public class TodayTab extends Fragment{
 
         public void sendInfoToServerStop(Request currentRequest){
             JSONObject json = new JSONObject();
-            currentRequest.setCurrentStat(1);
+            //currentRequest.setCurrentStat(1);
             currentRequest.setStatus("Interrupted");
 
             try {
@@ -518,8 +518,8 @@ public class TodayTab extends Fragment{
 
         public void sendInfoToServerComplete(Request currentRequest){
             JSONObject json = new JSONObject();
-            currentRequest.setCurrentStat(1);
-            currentRequest.setStatus("Completed");
+            //currentRequest.setCurrentStat(1);
+            currentRequest.setStatus("Satisfied");
 
             try {
                 json.put("message", "Request Completed");
@@ -532,7 +532,7 @@ public class TodayTab extends Fragment{
 
         public void sendInfoToServerDelete(Request currentRequest){
             JSONObject json = new JSONObject();
-            currentRequest.setCurrentStat(1);
+            //currentRequest.setCurrentStat(1);
             currentRequest.setStatus("Cancelled");
 
             try {

@@ -43,7 +43,7 @@ public class Request implements Comparable<Request>, Parcelable {
         this.message = message;
         this.channel = channel;
         this.type = type;
-        this.isExpanded = false;
+        this.isExpanded = true;
         this.nameChannel = nameChannel;
     }
 
