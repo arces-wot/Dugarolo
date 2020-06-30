@@ -201,6 +201,9 @@ public class TodayTab extends Fragment{
                 holder.uncollapse.setVisibility(View.INVISIBLE);
             }*/
 
+            holder.uncollapse.setVisibility(View.INVISIBLE);
+            holder.collapse.setVisibility(View.INVISIBLE);
+
             for (FarmColor f : sharedData.getFarmColors())
                 if(f.getNameFarm().equalsIgnoreCase(name)){
                     color1= f.getIdColor();
@@ -250,18 +253,23 @@ public class TodayTab extends Fragment{
             holder.nAppezamento.setText("Appezzamento n°" + finalField);
 
             if(currentRequest.getStatus().equals("Accepted")
-                    || currentRequest.getStatus().equals("Scheduled")
+                    ||currentRequest.getStatus().equals("Scheduled")
                     || currentRequest.getStatus().equals("Interrupted")
-                    || currentRequest.getStatus().equals("3")){
+                    || currentRequest.getStatus().equals("3")
+                    || currentRequest.getStatus().equals("1")){
                 //Log.d("ProvaEx", currentRequest.getChannel() + currentRequest.getStatus());
                 holder.playText.setVisibility(View.VISIBLE);
                 holder.playImage.setVisibility(View.VISIBLE);
+
                 holder.pauseText.setVisibility(View.INVISIBLE);
                 holder.pauseImage.setVisibility(View.INVISIBLE);
+
                 holder.statusWaitingImage.setVisibility(View.VISIBLE);
                 holder.statusOperatingImage.setVisibility(View.INVISIBLE);
+
                 holder.cancelText.setVisibility(View.VISIBLE);
                 holder.cancelImage.setVisibility(View.VISIBLE);
+
                 holder.completeText.setVisibility(View.GONE);
                 holder.completeImage.setVisibility(View.GONE);
             }else if(currentRequest.getStatus().equals("Ongoing")
@@ -269,12 +277,16 @@ public class TodayTab extends Fragment{
                 //Log.d("ProvaEx", currentRequest.getChannel() + currentRequest.getStatus());
                 holder.playText.setVisibility(View.INVISIBLE);
                 holder.playImage.setVisibility(View.INVISIBLE);
+
                 holder.pauseText.setVisibility(View.VISIBLE);
                 holder.pauseImage.setVisibility(View.VISIBLE);
+
                 holder.statusWaitingImage.setVisibility(View.INVISIBLE);
                 holder.statusOperatingImage.setVisibility(View.VISIBLE);
+
                 holder.cancelImage.setVisibility(View.GONE);
                 holder.cancelText.setVisibility(View.GONE);
+
                 holder.completeText.setVisibility(View.VISIBLE);
                 holder.completeImage.setVisibility(View.VISIBLE);
             }
