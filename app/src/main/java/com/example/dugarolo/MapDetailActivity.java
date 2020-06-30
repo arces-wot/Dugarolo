@@ -103,6 +103,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             loadData();
         }
 
+
         loadMap(startPoint);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -112,8 +113,10 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         //disattivo l'hardware acceleration per risolvere i problemi reativi alle icone in Android >= 8
         map.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
-
         setGPSButton();
+
+
+
 
     }
 
@@ -133,7 +136,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                 myPosition = new GeoPoint(location.getLatitude(), location.getLongitude());
                 newMarkerPosition = map.drawPosition(myPosition);
                 markerPosition = newMarkerPosition;
-                map.getController().setCenter(myPosition);
+
             }
 
             @Override
@@ -181,6 +184,8 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
                     return;
                 }
                 locationManager.requestLocationUpdates("gps", 5000, 10, listener);
+
+                centerMap(myPosition);
             }
         });
 
@@ -234,8 +239,8 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         //if you make changes to the configuration, use
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         //Configuration.getInstance().save(this, prefs);
-        MyLocationNewOverlay locationNewOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
-        locationNewOverlay.disableMyLocation();
+        //MyLocationNewOverlay locationNewOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
+        //locationNewOverlay.disableMyLocation();
         map.onPause();  //needed for compass, my location overlays, v6.0.0 and up
         isInFront = false;
     }
@@ -249,8 +254,8 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         //SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
         isInFront = true;
         Configuration.getInstance().load(this, PreferenceManager.getDefaultSharedPreferences(this));
-        MyLocationNewOverlay locationNewOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
-        locationNewOverlay.enableMyLocation();
+        //MyLocationNewOverlay locationNewOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
+        //locationNewOverlay.enableMyLocation();
         map.onResume(); //needed for compass, my location overlays, v6.0.0 and up
         //drawCanals();
     }
@@ -284,11 +289,11 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             if (data == null) {
                 return;
             }
-            gpsMyLocationProvider.addLocationSource(LocationManager.NETWORK_PROVIDER);
+            /*gpsMyLocationProvider.addLocationSource(LocationManager.NETWORK_PROVIDER);
             MyLocationNewOverlay locationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
             locationOverlay.enableFollowLocation();
             locationOverlay.enableMyLocation();
-            map.getOverlayManager().add(locationOverlay);
+            map.getOverlayManager().add(locationOverlay);*/
 
             String weirNumber = data.getExtras().getString("Weir Number");
             Integer newOpenLevel = data.getExtras().getInt("Open Level");

@@ -105,6 +105,9 @@ public class WeirActivity extends AppCompatActivity {
 
             try {
                 String idForUrl = weirToUpdate.replace(" ", "%20");
+                idForUrl = idForUrl.replace(":", "%3A");
+                idForUrl = idForUrl.replace("/", "%2F");
+                idForUrl = idForUrl.replace("#", "%23");
                 URL url = new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/wdn/nodes/" + idForUrl +"/open_level");
                 /*
                 Map<String, Object> params = new LinkedHashMap<>();
@@ -159,6 +162,7 @@ public class WeirActivity extends AppCompatActivity {
             Intent intent = new Intent(WeirActivity.this, MapDetailActivity.class);
             intent.putExtra("Weir Number", weirToUpdate);
             intent.putExtra("Open Level", currentLevel);
+            intent.putExtra("FROM_WEIR", currentLevel);
             setResult(RESULT_OK, intent);
             finish();
         }
