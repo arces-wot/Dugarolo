@@ -67,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     private MyMapView map;
     private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<Request> requestsFiltering = new ArrayList<>();
+    private ArrayList<Request> requestsFilteringCheck = new ArrayList<>();
     private ArrayList<Marker> farmerMarkers = new ArrayList<>();
     private ArrayList<Weir> weirs = new ArrayList<>();
     private ArrayList<Canal> canals = new ArrayList<>();
@@ -76,8 +77,11 @@ public class MainActivity extends AppCompatActivity {
     private LocationListener listener;
     private Marker markerPosition;
     private ImageView filterButton;
+    private ImageView filteredButton;
     private ImageView orderButton;
+    private Boolean isTomorrow = false;
     GeoPoint myPosition;
+
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -116,13 +120,22 @@ public class MainActivity extends AppCompatActivity {
             }
 
             public void onPageSelected(int position) {
-                if (position == 0)
+                if (position == 0) {
 
                     fab.show();
-                else
+                    isTomorrow = false;
+                } else {
                     fab.hide();
+                    isTomorrow = true;
+                }
             }
         });
+        TextView noRequests = findViewById(R.id.no_requests);
+         if (!requests.isEmpty()) {
+            noRequests.setVisibility(View.GONE);
+        }else{
+            noRequests.setVisibility(View.VISIBLE);
+        }
 
 
         fab = findViewById(R.id.floatingActionButton);
@@ -138,21 +151,42 @@ public class MainActivity extends AppCompatActivity {
 
 
         filterButton = findViewById(R.id.filterButton);
+        filteredButton = findViewById(R.id.filteredButton);
+        filteredButton.setVisibility(View.GONE);
         orderButton = findViewById(R.id.orderButton);
         final Boolean[] isFiltered = {false};
         filterButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                if (!isTomorrow)
                 if (!isFiltered[0]) {
                     requestsFiltering.clear();
                     requestsFiltering.addAll(requests);
                     FilterHandler filterHandler = new FilterHandler();
-                    filterHandler.buildFilterDialog(MainActivity.this, requestsFiltering);
+                    requestsFilteringCheck=filterHandler.buildFilterDialog(MainActivity.this, requestsFiltering);
                     isFiltered[0] = true;
-                } else {
-                    TodayTab.setChanged(requests);
-                    isFiltered[0] = false;
+                    filterButton.setVisibility(View.GONE);
+                    filteredButton.setVisibility(View.VISIBLE);
                 }
+            }
+        });
+        if(isFiltered[0])
+        if(requestsFilteringCheck.isEmpty())
+            noRequests.setVisibility(View.VISIBLE);
+        else
+            noRequests.setVisibility(View.GONE);
+        filteredButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                TodayTab.setChanged(requests);
+                if (!requests.isEmpty()) {
+                    noRequests.setVisibility(View.GONE);
+                }else{
+                    noRequests.setVisibility(View.VISIBLE);
+                }
+                filterButton.setVisibility(View.VISIBLE);
+                filteredButton.setVisibility(View.GONE);
+                isFiltered[0] = false;
             }
         });
 
@@ -160,16 +194,15 @@ public class MainActivity extends AppCompatActivity {
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                OrderHandler orderHandler = new OrderHandler();
-                orderHandler.buildOrderDialog(MainActivity.this, requests);
+                if(!isTomorrow) {
+                    OrderHandler orderHandler = new OrderHandler();
+                    orderHandler.buildOrderDialog(MainActivity.this, requests);
+                }
             }
         });
 
 
-            TextView noRequests=findViewById(R.id.no_requests);
-            if (requests.isEmpty()) {
-                noRequests.setVisibility(View.GONE);
-            }
+
 
 
 

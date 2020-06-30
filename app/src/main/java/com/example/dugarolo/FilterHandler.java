@@ -18,7 +18,7 @@ import java.util.Collections;
 
 public class FilterHandler {
 
-    public void buildFilterDialog(Context context, ArrayList<Request> requestsFiltering) {
+    public ArrayList<Request> buildFilterDialog(Context context, ArrayList<Request> requestsFiltering) {
         Dialog dialog = new Dialog(context);
         dialog.setContentView(R.layout.dialog_filter);
         TextView negativeButton = dialog.findViewById(R.id.negativeFilterButton);
@@ -113,7 +113,9 @@ public class FilterHandler {
 
                 TodayTab.setChanged(requestsFiltering);
                 dialog.dismiss();
+
             }
+
         });
 
         negativeButton.setOnClickListener(new View.OnClickListener() {
@@ -122,6 +124,9 @@ public class FilterHandler {
                 dialog.dismiss();
             }
         });
+
+
+        return requestsFiltering;
     }
 
     public ArrayList<String> getCanalsNameForFilter(ArrayList<Request> requests) {
