@@ -103,7 +103,7 @@ public class TodayTab extends Fragment{
         public class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             public TextView farmName, irrigationTime, time, completeText;
-            public TextView canalName, nAppezamento, cancelText, mapsText, playText, pauseText;
+            public TextView canalName, nAppezamento, cancelText, mapsText, playText, pauseText, textView_no_requests;
             public ImageView statusWaitingImage,  playImage, mapsImage, cancelImage, pauseImage, basicIcon,
                     statusOperatingImage, collapse, uncollapse, completeImage;
             public Button playArea, mapsArea, deleteArea, collapsing;
@@ -143,6 +143,8 @@ public class TodayTab extends Fragment{
                 collapsing = itemView.findViewById(R.id.collapsing);
                 uncollapse = itemView.findViewById(R.id.uncollapse);
                 expandibleView = itemView.findViewById(R.id.collapsedArea1);
+
+                textView_no_requests = itemView.findViewById(R.id.textView_no_requests);
 
                 itemView.setOnClickListener(this);
 
@@ -193,7 +195,7 @@ public class TodayTab extends Fragment{
                     break;
             }
 
-            boolean isExpanded = requests.get(position).getIsExpanded();
+            /*boolean isExpanded = requests.get(position).getIsExpanded();
             holder.expandibleView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
             if(isExpanded == false){
@@ -202,7 +204,7 @@ public class TodayTab extends Fragment{
             }else{
                 holder.collapse.setVisibility(View.VISIBLE);
                 holder.uncollapse.setVisibility(View.INVISIBLE);
-            }
+            }*/
 
             for (FarmColor f : sharedData.getFarmColors())
                 if(f.getNameFarm().equalsIgnoreCase(name)){
@@ -251,6 +253,11 @@ public class TodayTab extends Fragment{
             String finalField = partsField1[1];
 
             holder.nAppezamento.setText("Appezzamento n°" + finalField);
+
+            if(currentRequest != null)
+                holder.textView_no_requests.setVisibility(View.VISIBLE);
+            else
+                holder.textView_no_requests.setVisibility(View.INVISIBLE);
 
 
             if(currentRequest.getStatus().equals("Accepted") || currentRequest.getStatus().equals("Scheduled")){
