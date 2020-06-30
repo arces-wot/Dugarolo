@@ -100,7 +100,7 @@ public class TodayTab extends Fragment{
         public class RequestHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             public TextView farmName, irrigationTime, time, completeText;
-            public TextView canalName, nAppezamento, cancelText, mapsText, playText, pauseText, textView_no_requests;
+            public TextView canalName, nAppezamento, cancelText, mapsText, playText, pauseText;
             public ImageView statusWaitingImage,  playImage, mapsImage, cancelImage, pauseImage, basicIcon,
                     statusOperatingImage, collapse, uncollapse, completeImage;
             public Button playArea, mapsArea, deleteArea, collapsing;
@@ -140,8 +140,6 @@ public class TodayTab extends Fragment{
                 collapsing = itemView.findViewById(R.id.collapsing);
                 uncollapse = itemView.findViewById(R.id.uncollapse);
                 expandibleView = itemView.findViewById(R.id.collapsedArea1);
-
-                textView_no_requests = itemView.findViewById(R.id.textView_no_requests);
 
                 itemView.setOnClickListener(this);
 
