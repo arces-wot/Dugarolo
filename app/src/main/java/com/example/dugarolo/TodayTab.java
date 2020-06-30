@@ -195,7 +195,7 @@ public class TodayTab extends Fragment{
                     break;
             }
 
-            /*boolean isExpanded = requests.get(position).getIsExpanded();
+            boolean isExpanded = requests.get(position).getIsExpanded();
             holder.expandibleView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
 
             if(isExpanded == false){
@@ -204,7 +204,7 @@ public class TodayTab extends Fragment{
             }else{
                 holder.collapse.setVisibility(View.VISIBLE);
                 holder.uncollapse.setVisibility(View.INVISIBLE);
-            }*/
+            }
 
             for (FarmColor f : sharedData.getFarmColors())
                 if(f.getNameFarm().equalsIgnoreCase(name)){
@@ -254,13 +254,10 @@ public class TodayTab extends Fragment{
 
             holder.nAppezamento.setText("Appezzamento n°" + finalField);
 
-            if(currentRequest != null)
-                holder.textView_no_requests.setVisibility(View.VISIBLE);
-            else
-                holder.textView_no_requests.setVisibility(View.INVISIBLE);
-
-
-            if(currentRequest.getStatus().equals("Accepted") || currentRequest.getStatus().equals("Scheduled")){
+            if(currentRequest.getStatus().equals("Accepted")
+                    || currentRequest.getStatus().equals("Scheduled")
+                    || currentRequest.getStatus().equals("Interrupted")
+                    || currentRequest.getStatus().equals("3")){
                 //Log.d("ProvaEx", currentRequest.getChannel() + currentRequest.getStatus());
                 holder.playText.setVisibility(View.VISIBLE);
                 holder.playImage.setVisibility(View.VISIBLE);
@@ -270,9 +267,10 @@ public class TodayTab extends Fragment{
                 holder.statusOperatingImage.setVisibility(View.INVISIBLE);
                 holder.cancelText.setVisibility(View.VISIBLE);
                 holder.cancelImage.setVisibility(View.VISIBLE);
-                holder.completeText.setVisibility(View.INVISIBLE);
-                holder.completeImage.setVisibility(View.INVISIBLE);
-            }else if(currentRequest.getStatus().equals("Ongoing")){
+                holder.completeText.setVisibility(View.GONE);
+                holder.completeImage.setVisibility(View.GONE);
+            }else if(currentRequest.getStatus().equals("Ongoing")
+                    || currentRequest.getStatus().equals("2")){
                 //Log.d("ProvaEx", currentRequest.getChannel() + currentRequest.getStatus());
                 holder.playText.setVisibility(View.INVISIBLE);
                 holder.playImage.setVisibility(View.INVISIBLE);
@@ -280,8 +278,8 @@ public class TodayTab extends Fragment{
                 holder.pauseImage.setVisibility(View.VISIBLE);
                 holder.statusWaitingImage.setVisibility(View.INVISIBLE);
                 holder.statusOperatingImage.setVisibility(View.VISIBLE);
-                holder.cancelImage.setVisibility(View.INVISIBLE);
-                holder.cancelText.setVisibility(View.INVISIBLE);
+                holder.cancelImage.setVisibility(View.GONE);
+                holder.cancelText.setVisibility(View.GONE);
                 holder.completeText.setVisibility(View.VISIBLE);
                 holder.completeImage.setVisibility(View.VISIBLE);
             }
@@ -313,7 +311,7 @@ public class TodayTab extends Fragment{
                 public void onClick(View v) {
                     playClicked(v, currentRequest, holder.statusWaitingImage, holder.statusOperatingImage,
                             holder.playImage, holder.playText, holder.pauseImage, holder. pauseText, holder.cancelImage, holder.cancelText,
-                            holder.cancelImage, holder.completeText);
+                            holder.completeImage, holder.completeText);
                 }
             });
 
@@ -337,7 +335,10 @@ public class TodayTab extends Fragment{
         public void playClicked(View v, Request currentRequest, ImageView waitingImage, ImageView operatingImage, ImageView playImage,
                                 TextView playText, ImageView pauseImage, TextView pauseText, ImageView cancelImage, TextView cancelText,
                                 ImageView completeImage, TextView completeText){
-            if(currentRequest.getStatus().equals("Accepted") || currentRequest.getStatus().equals("Scheduled")){
+            //se non è mai stata eseguita
+            if(currentRequest.getStatus().equals("Accepted")
+                    || currentRequest.getStatus().equals("Scheduled")
+                    || currentRequest.getStatus().equals("Interrupted")){
                 waitingImage.setVisibility(View.INVISIBLE);
                 operatingImage.setVisibility(View.VISIBLE);
 
@@ -355,7 +356,7 @@ public class TodayTab extends Fragment{
 
                 String currentStatus = currentRequest.getStatus();
                 sendInfoToServerActivate(currentRequest, currentStatus);
-
+            //se è già stata eseguita quindi è ongoing.
             }else{
                 waitingImage.setVisibility(View.VISIBLE);
                 operatingImage.setVisibility(View.INVISIBLE);
@@ -371,7 +372,6 @@ public class TodayTab extends Fragment{
 
                 completeImage.setVisibility(View.GONE);
                 completeText.setVisibility(View.GONE);
-
 
                 sendInfoToServerStop(currentRequest);
             }
@@ -399,7 +399,9 @@ public class TodayTab extends Fragment{
         public void deleteClicked(View v, final List<Request> requests, final Request currentRequest, final int position) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
 
-            if(currentRequest.getStatus().equals("Accepted") || currentRequest.getStatus().equals("Scheduled")){
+            if(currentRequest.getStatus().equals("Accepted")
+                    || currentRequest.getStatus().equals("Scheduled")
+                    || currentRequest.getStatus().equals("Interrupted")){
                 // set title
                 alertDialogBuilder.setTitle("Vuoi sicuro di voler cancellare questa richiesta?");
 
@@ -480,7 +482,9 @@ public class TodayTab extends Fragment{
             JSONObject json = new JSONObject();
             currentRequest.setCurrentStat(1);
 
-            if(currentRequest.getStatus().equals("Accepted") || currentRequest.getStatus().equals("Scheduled"))
+            if(currentRequest.getStatus().equals("Accepted")
+                    || currentRequest.getStatus().equals("Scheduled")
+                    || currentRequest.getStatus().equals("Interrupted"))
             {
                 try {
                     currentRequest.setStatus("Ongoing");
@@ -559,10 +563,24 @@ public class TodayTab extends Fragment{
             @Override
             protected String doInBackground(Void... voids) {
                 try {
-                    URL url = new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + this.request.getField().getId() + "/irrigation_plan/" + this.request.getId() + "/status");
 
                     Log.d("ProvaExcIdField", this.request.getField().getId());
                     Log.d("ProvaExc",  this.request.getId());
+
+                    String idreq = this.request.getId();
+                    String idForUrlreq = idreq.replace(":", "%3A");
+                    idForUrlreq = idForUrlreq.replace("/", "%2F");
+                    idForUrlreq = idForUrlreq.replace("#", "%23");
+
+                    String idfield = this.request.getField().getId();
+                    String idForUrlfield = idfield.replace(":", "%3A");
+                    idForUrlfield = idForUrlfield.replace("/", "%2F");
+                    idForUrlfield = idForUrlfield.replace("#", "%23");
+
+                    URL url = new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + idForUrlfield + "/irrigation_plan/" + idForUrlreq + "/status");
+
+                    Log.d("ProvaExcIdField", idForUrlfield);
+                    Log.d("ProvaExc",  idForUrlreq);
 
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");
@@ -600,7 +618,6 @@ public class TodayTab extends Fragment{
             @Override
             protected void onPostExecute(String aString) {
                 super.onPostExecute(aString);
-                System.out.println("---- POST REQUEST RESPONSE ----");
                 Log.d("ProvaExc", "---- POST REQUEST RESPONSE ----");
             }
         }
