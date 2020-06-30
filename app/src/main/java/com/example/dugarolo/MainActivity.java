@@ -131,11 +131,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         TextView noRequests = findViewById(R.id.no_requests);
-         if (!requests.isEmpty()) {
-            noRequests.setVisibility(View.GONE);
-        }else{
-            noRequests.setVisibility(View.VISIBLE);
-        }
+        noRequests.setVisibility(View.GONE);
 
 
         fab = findViewById(R.id.floatingActionButton);
@@ -170,20 +166,10 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        if(isFiltered[0])
-        if(requestsFilteringCheck.isEmpty())
-            noRequests.setVisibility(View.VISIBLE);
-        else
-            noRequests.setVisibility(View.GONE);
         filteredButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 TodayTab.setChanged(requests);
-                if (!requests.isEmpty()) {
-                    noRequests.setVisibility(View.GONE);
-                }else{
-                    noRequests.setVisibility(View.VISIBLE);
-                }
                 filterButton.setVisibility(View.VISIBLE);
                 filteredButton.setVisibility(View.GONE);
                 isFiltered[0] = false;
