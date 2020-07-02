@@ -7,9 +7,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.VectorDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -63,6 +65,7 @@ import com.google.gson.reflect.TypeToken;
 
 import static com.example.dugarolo.JSONIntentService.STATUS_ERROR;
 import static com.example.dugarolo.JSONIntentService.STATUS_FINISHED;
+import static java.security.AccessController.getContext;
 
 public class MapDetailActivity extends AppCompatActivity implements JSONReceiver.Receiver {
 
@@ -113,84 +116,31 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         //disattivo l'hardware acceleration per risolvere i problemi reativi alle icone in Android >= 8
         map.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         gpsMyLocationProvider = new GpsMyLocationProvider(this);
-        //setGPSButton();
+        MyLocationNewOverlay locationNewOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
+        //locationNewOverlay.enableFollowLocation();
+        locationNewOverlay.enableMyLocation();
+        map.getOverlayManager().add(locationNewOverlay);
 
 
-
-
-    }
-
-
-    public void setGPSButton() {
         GPSbutton1 = findViewById(R.id.GPSbutton1);
-        locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        listener = new LocationListener() {
-            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-
-            @Override
-            public void onLocationChanged(Location location) {
-                Marker newMarkerPosition;
-                if (markerPosition != null)
-                    markerPosition.remove(map);
-                myPosition = new GeoPoint(location.getLatitude(), location.getLongitude());
-                newMarkerPosition = map.drawPosition(myPosition);
-                markerPosition = newMarkerPosition;
-
-            }
-
-            @Override
-            public void onStatusChanged(String s, int i, Bundle bundle) {
-
-            }
-
-            @Override
-            public void onProviderEnabled(String s) {
-
-            }
-
-            @Override
-            public void onProviderDisabled(String s) {
-
-                Intent i = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                startActivity(i);
-            }
-        };
-
-        configure_button();
-    }
-
-    void configure_button() {
-        // first check for permissions
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) !=
-                PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION,
-                                Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.INTERNET}
-                        , 10);
-            }
-            return;
-        }
-        // this code won'textView execute IF permissions are not allowed, because in the line above there is return statement.
         GPSbutton1.setOnClickListener(new View.OnClickListener() {
-            @RequiresApi(api = Build.VERSION_CODES.M)
+
             @Override
             public void onClick(View view) {
-                //noinspection MissingPermission
-                if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION)
-                        != PackageManager.PERMISSION_GRANTED) {
-                    return;
-                }
-                locationManager.requestLocationUpdates("gps", 5000, 10, listener);
 
+                myPosition=locationNewOverlay.getMyLocation();
                 centerMap(myPosition);
             }
         });
 
 
     }
+
+
+
+
+
 
 
 
@@ -293,7 +243,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             MyLocationNewOverlay locationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
             locationOverlay.enableFollowLocation();
             locationOverlay.enableMyLocation();
-            map.getOverlayManager().add(locationOverlay);
+            //map.getOverlayManager().add(locationOverlay);
 
             String weirNumber = data.getExtras().getString("Weir Number");
             Integer newOpenLevel = data.getExtras().getInt("Open Level");
@@ -513,6 +463,14 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         farms = gson.fromJson(jsonFarms, typeFarm);
         weirs = gson.fromJson(jsonWeirs, typeWeir);
         canals = gson.fromJson(jsonCanals, typeCanal);
+    }
+    private static Bitmap getBitmap(VectorDrawable vectorDrawable) {
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
+                vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
+        vectorDrawable.draw(canvas);
+        return bitmap;
     }
 
 }
