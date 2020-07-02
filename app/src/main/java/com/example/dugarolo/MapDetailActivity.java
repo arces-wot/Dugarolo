@@ -241,7 +241,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             }
             gpsMyLocationProvider.addLocationSource(LocationManager.NETWORK_PROVIDER);
             MyLocationNewOverlay locationOverlay = new MyLocationNewOverlay(gpsMyLocationProvider, map);
-            locationOverlay.enableFollowLocation();
+            //locationOverlay.enableFollowLocation();
             locationOverlay.enableMyLocation();
             //map.getOverlayManager().add(locationOverlay);
 
