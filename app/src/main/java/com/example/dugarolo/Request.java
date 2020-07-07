@@ -36,15 +36,31 @@ public class Request implements Comparable<Request>, Parcelable {
 
         this.id = id;
         this.name = name;
-        this.status = status;
+        this.status = mappingStatus(status);
         this.dateTime = dateTime.toDate();
         this.waterVolume = waterVolume;
         this.field = field;
         this.message = message;
         this.channel = channel;
-        this.type = type;
+        this.type =type;
         this.isExpanded = true;
         this.nameChannel = nameChannel;
+    }
+
+    public String mappingStatus(String status) {
+        if (status.equalsIgnoreCase("0"))
+            return "Scheduled";
+        if (status.equalsIgnoreCase("1"))
+            return "accepted";
+        if (status.equalsIgnoreCase("2"))
+            return "Ongoing";
+        if (status.equalsIgnoreCase("3"))
+            return "Interrupted";
+        if (status.equalsIgnoreCase("4 "))
+            return "Cancelled";
+        if (status.equalsIgnoreCase("5"))
+            return "Satisfied";
+        return status;
     }
 
     public String getName() {
@@ -68,9 +84,15 @@ public class Request implements Comparable<Request>, Parcelable {
         this.isExpanded = isExpanded;
     }
 
-    public String getChannel(){return channel;}
+    public String getChannel() {
+        return channel;
+    }
 
-    public String getType(){return type; };
+    public String getType() {
+        return type;
+    }
+
+    ;
 
     public String getNameChannel() {
         return nameChannel;
@@ -104,9 +126,11 @@ public class Request implements Comparable<Request>, Parcelable {
         this.field = field;
     }
 
-    public void setCurrentStat(int status){this.currentStat = status;}
+    public void setCurrentStat(int status) {
+        this.currentStat = status;
+    }
 
-    public String toString(){
+    public String toString() {
         return this.name;
     }
 
@@ -131,6 +155,15 @@ public class Request implements Comparable<Request>, Parcelable {
         return this.dateTime.compareTo(o.getDateTime().toDate());
     }
 
+    public int compareStatusTo(Request o) {
+        if (this.getStatus().equalsIgnoreCase("accepted"))
+            return 1;
+        else if (o.getStatus().equalsIgnoreCase("accepted"))
+            return 1;
+        else
+            return this.getStatus().compareTo(o.getStatus());
+    }
+
 
     @RequiresApi(api = Build.VERSION_CODES.M)
 
@@ -142,9 +175,9 @@ public class Request implements Comparable<Request>, Parcelable {
         waterVolume = in.readString();
         field = (Field) in.readValue(Field.class.getClassLoader());
         message = in.readString();
-        type=in.readString();
-        channel=in.readString();
-        nameChannel=in.readString();
+        type = in.readString();
+        channel = in.readString();
+        nameChannel = in.readString();
     }
 
     @Override
@@ -186,14 +219,16 @@ public class Request implements Comparable<Request>, Parcelable {
             return a.compareTo(b);
         }
     }
+
     static class SortByChannel implements Comparator<Request> {  //per ora ordine alfabetico
         public int compare(Request a, Request b) {
-            return a.getChannel().compareToIgnoreCase(b.getChannel());
+            return a.getNameChannel().compareToIgnoreCase(b.getNameChannel());
         }
     }
+
     static class SortByStatus implements Comparator<Request> {
         public int compare(Request a, Request b) {
-            return a.getStatus().compareToIgnoreCase(b.getStatus());
+            return a.compareStatusTo(b);
         }
     }
 }

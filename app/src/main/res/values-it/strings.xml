@@ -49,8 +49,8 @@
 
     <string name="no_request">Non sono presenti richieste al momento</string>
 
-    <string name="Type_1">Contadino</string>
-    <string name="Type_2">Algoritmo</string>
+    <string name="Type_1">CBEC</string>
+    <string name="Type_2">CRITERIA</string>
 
     <string name="order_selected">Ordine selezionato:</string>
 </resources>

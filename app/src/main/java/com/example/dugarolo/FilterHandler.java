@@ -29,18 +29,20 @@ public class FilterHandler {
         final String[] selectedStatus = new String[1];
         final String[] selectedType = new String[1];
         final String[] selectedCanal = new String[1];
+        ArrayList<Request> requestsFiltered = new ArrayList<>();
 
 
         ArrayList<String> canalsName = getCanalsNameForFilter(requestsFiltering);
         ArrayList<String> types = new ArrayList<String>();
         types.add("");
-        types.add("Manuale");
-        types.add("Criteria");
+        types.add(context.getResources().getString(R.string.Type_1));
+        types.add(context.getResources().getString(R.string.Type_2));
         ArrayList<String> status = new ArrayList<String>();
         status.add("");
         status.add(context.getResources().getString(R.string.accepted_request));
         status.add(context.getResources().getString(R.string.interrupted_request));
         status.add(context.getResources().getString(R.string.ongoing_request));
+        status.add(context.getResources().getString(R.string.scheduled_request));
 
 
         ArrayAdapter<String> spinnerArrayAdapterCanals = new ArrayAdapter<String>
@@ -102,6 +104,15 @@ public class FilterHandler {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View v) {
+                if (selectedStatus[0].equals(context.getResources().getString(R.string.interrupted_request)))
+                    selectedStatus[0] = "Interrupted";
+                if (selectedStatus[0].equals(context.getResources().getString(R.string.accepted_request)))
+                    selectedStatus[0] = "Accepted";
+                if (selectedStatus[0].equals(context.getResources().getString(R.string.ongoing_request)))
+                    selectedStatus[0] = "Ongoing";
+                if (selectedStatus[0].equals(context.getResources().getString(R.string.scheduled_request)))
+                    selectedStatus[0] = "Scheduled";
+
                 if (!selectedCanal[0].equals(""))
                     requestsFiltering.removeIf(requests -> !(requests.getNameChannel().equals(selectedCanal[0])));
 
@@ -133,6 +144,7 @@ public class FilterHandler {
 
         ArrayList<String> canalsName = new ArrayList<String>();
         int check = 0;
+        canalsName.add("");
 
         for (int i = 0; i < requests.size(); i++) {
             if (canalsName.size() != 0) {
