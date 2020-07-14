@@ -20,10 +20,12 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -65,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String REQUEST_STATUS = "id";
     private ArrayList<Farm> farms = new ArrayList<>();
     private MyMapView map;
+    private MyMapView map2;
     private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<Request> requestsFiltering = new ArrayList<>();
     private ArrayList<Request> requestsFilteringCheck = new ArrayList<>();
@@ -79,9 +82,9 @@ public class MainActivity extends AppCompatActivity {
     private ImageView filterButton;
     private ImageView filteredButton;
     private ImageView orderButton;
+    private Switch mySwitch;
     private Boolean isTomorrow = false;
     GeoPoint myPosition;
-
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -89,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
-        Globals globals = Globals.getInstance();
 
 
         loadData();
@@ -106,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
         actionBar.setDisplayShowTitleEnabled(false);
 
 
-        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests, map);
+        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests, map,map2);
         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(tabsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
@@ -155,15 +157,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (!isTomorrow)
-                if (!isFiltered[0]) {
-                    requestsFiltering.clear();
-                    requestsFiltering.addAll(requests);
-                    FilterHandler filterHandler = new FilterHandler();
-                    requestsFilteringCheck=filterHandler.buildFilterDialog(MainActivity.this, requestsFiltering);
-                    isFiltered[0] = true;
-                    filterButton.setVisibility(View.GONE);
-                    filteredButton.setVisibility(View.VISIBLE);
-                }
+                    if (!isFiltered[0]) {
+                        requestsFiltering.clear();
+                        requestsFiltering.addAll(requests);
+                        FilterHandler filterHandler = new FilterHandler();
+                        requestsFilteringCheck = filterHandler.buildFilterDialog(MainActivity.this, requestsFiltering);
+                        isFiltered[0] = true;
+                        filterButton.setVisibility(View.GONE);
+                        filteredButton.setVisibility(View.VISIBLE);
+                    }
             }
         });
         filteredButton.setOnClickListener(new View.OnClickListener() {
@@ -180,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
         orderButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(!isTomorrow) {
+                if (!isTomorrow) {
                     OrderHandler orderHandler = new OrderHandler();
                     orderHandler.buildOrderDialog(MainActivity.this, requests);
                 }
@@ -188,8 +190,22 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        mySwitch = findViewById(R.id.switch1);
+        mySwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    map2.setVisibility(View.INVISIBLE);
+                    map.setVisibility(View.VISIBLE);
+                } else {
+                    map2.setVisibility(View.VISIBLE);
+                    map.setVisibility(View.INVISIBLE);
+                }
 
+            }
+
+        });
 
 
     }
@@ -221,8 +237,11 @@ public class MainActivity extends AppCompatActivity {
                     markerPosition.remove(map);
                 myPosition = new GeoPoint(location.getLatitude(), location.getLongitude());
                 newMarkerPosition = map.drawPosition(myPosition);
+                newMarkerPosition = map2.drawPosition(myPosition);
                 markerPosition = newMarkerPosition;
-                map.getController().setCenter(myPosition);
+                //map.getController().setCenter(myPosition);
+                map2.getController().animateTo(myPosition);
+                map.getController().animateTo(myPosition);
             }
 
             @Override
@@ -296,16 +315,28 @@ public class MainActivity extends AppCompatActivity {
         //inflate and create the map
         setContentView(R.layout.activity_main);
         map = findViewById(R.id.map);
+        map2 = findViewById(R.id.map2);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
         map.setTilesScaledToDpi(true);
         map.setClickable(true);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
-        map = findViewById(R.id.map);
+        map2.setTileSource(TileSourceFactory.MAPNIK);
+        map2.setMultiTouchControls(true);
+        map2.setTilesScaledToDpi(true);
+        map2.setClickable(true);
+        map2.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         IMapController mapController = map.getController();
         mapController.setZoom(14.0);
         mapController.setCenter(startPoint);
-        map.drawFarms(farms);
+        IMapController mapController2 = map2.getController();
+        mapController2.setZoom(14.0);
+        mapController2.setCenter(startPoint);
+        for (Request r : requests)
+            map2.drawField(r.getField(), requests);
+        map.drawFarms(farms,requests);
+        for (Request r: requests)
+            map.drawField(r.getField(),requests);
         //map.drawIcon(farms, farmerMarkers, 70);
         //map.drawCanals(canals);
         //map.drawWeirs(weirs,weirMarkers);

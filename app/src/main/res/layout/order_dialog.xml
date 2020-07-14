@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="240dp"
-    android:layout_height="220dp"
+    android:layout_width="280dp"
+    android:layout_height="240dp"
     android:elevation="3dp"
-    app:layout_constraintCircleRadius="10dp"
-    >
+    app:layout_constraintCircleRadius="10dp">
 
 
     <TextView
@@ -28,10 +26,10 @@
         android:id="@+id/radioOrderGroup"
         android:layout_width="121dp"
         android:layout_height="100dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="24dp"
         android:checkedButton="@+id/radioButtonOrder1"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.224"
+        app:layout_constraintHorizontal_bias="0.27"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/orderTitle">
 
@@ -41,7 +39,7 @@
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
             android:text="@string/radio_order_1"
-            android:textSize="16sp" />
+            android:textSize="20sp" />
 
         <RadioButton
             android:id="@+id/radioButtonOrder3"
@@ -49,7 +47,7 @@
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
             android:text="@string/radio_order_2"
-            android:textSize="16sp" />
+            android:textSize="20dp" />
 
         <RadioButton
             android:id="@+id/radioButtonOrder2"
@@ -57,36 +55,36 @@
             android:layout_height="wrap_content"
             android:buttonTint="@color/colorPrimary"
             android:text="@string/radio_order_3"
-            android:textSize="16sp" />
+            android:textSize="20dp" />
     </RadioGroup>
 
     <TextView
         android:id="@+id/negativeOrderButton"
         android:layout_width="200px"
         android:layout_height="100px"
+        android:layout_marginStart="88dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
-        android:layout_marginStart="92dp"
-        android:layout_marginTop="20dp"
         android:text="CANCEL"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="14dp"
         android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/radioOrderGroup" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <TextView
         android:id="@+id/positiveOrderButton"
         android:layout_width="100px"
         android:layout_height="100px"
+        android:layout_marginStart="48dp"
+        android:layout_marginBottom="16dp"
         android:gravity="center"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="20dp"
         android:text="OK"
         android:textColor="@color/colorPrimaryDark"
         android:textSize="14dp"
         android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/negativeOrderButton"
-        app:layout_constraintTop_toBottomOf="@+id/radioOrderGroup" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/negativeOrderButton" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

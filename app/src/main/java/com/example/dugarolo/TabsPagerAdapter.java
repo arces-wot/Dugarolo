@@ -27,12 +27,14 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     private ArrayList<Request> requests;
 
     private MyMapView map;
+    private MyMapView map2;
 
-    public TabsPagerAdapter(Context context, FragmentManager fm, ArrayList<Request> requests, MyMapView map) {
+    public TabsPagerAdapter(Context context, FragmentManager fm, ArrayList<Request> requests, MyMapView map,MyMapView map2) {
         super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mContext = context;
         this.requests = requests;
         this.map = map;
+        this.map2 = map2;
     }
 
     @SuppressLint("RestrictedApi")
@@ -40,7 +42,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return TodayTab.newInstance(todayRequests(requests), map);
+                return TodayTab.newInstance(todayRequests(requests), map,map2);
             case 1:
                 return TomorrowTab.newInstance(tomorrowRequests(requests));
             default:
@@ -69,7 +71,8 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
         for (Request r : requests) {
             if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear()))
-                    && !r.getStatus().equals("5") && !r.getStatus().equals("4")){
+                    && !r.getStatus().equals("5") && !r.getStatus().equals("4")
+            &&((r.getDateTime().getYear()) == (now.getYear()))){
                     //&& (r.getStatus() != ("Satisfied") && r.getStatus() != ("Cancelled"))){
                     //(r.getDateTime().isAfterNow() || r.getStatus().equals("Ongoing"))) {
                 todayRequests.add(r);

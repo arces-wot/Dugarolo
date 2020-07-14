@@ -49,6 +49,7 @@ import java.util.Objects;
 public class TodayTab extends Fragment{
 
     MyMapView map;
+    MyMapView map2;
     static RequestAdapter mAdapter;
     static ArrayList<Request> requests;
 
@@ -56,10 +57,11 @@ public class TodayTab extends Fragment{
         // Required empty public constructor
     }
 
-    public static TodayTab newInstance(ArrayList<Request> requests, MyMapView map) {
+    public static TodayTab newInstance(ArrayList<Request> requests, MyMapView map,MyMapView map2) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("list", requests);
         bundle.putParcelable("Mappa", map);
+        bundle.putParcelable("Mappa2", map2);
         TodayTab todayTab = new TodayTab();
         todayTab.setArguments(bundle);
         return todayTab;
@@ -79,16 +81,30 @@ public class TodayTab extends Fragment{
         mAdapter = new RequestAdapter(requests);
         recyclerView.setAdapter(mAdapter);
         map = getArguments().getParcelable("Mappa");
+        map2 = getArguments().getParcelable("Mappa2");
 
         return root;
 
     }
 
     static public void setChanged(ArrayList<Request> req){
+        DateTime now;
+        now = DateTime.now();
         requests.clear();
-        requests.addAll(req);
+        //requests.addAll(req);
+
+        for (Request r : req) {
+            if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear()))
+                    && !r.getStatus().equals("5") && !r.getStatus().equals("4")
+                    &&((r.getDateTime().getYear()) == (now.getYear()))){
+                requests.add(r);
+
+            }
+        }
+
         mAdapter.notifyDataSetChanged();
     }
+
 
 
     public class RequestAdapter extends RecyclerView.Adapter<TodayTab.RequestAdapter.RequestHolder>{
@@ -204,12 +220,14 @@ public class TodayTab extends Fragment{
             holder.uncollapse.setVisibility(View.INVISIBLE);
             holder.collapse.setVisibility(View.INVISIBLE);
 
-            for (FarmColor f : sharedData.getFarmColors())
+            /*for (FarmColor f : sharedData.getFarmColors())
                 if(f.getNameFarm().equalsIgnoreCase(name)){
                     color1= f.getIdColor();
                     color2= manipulateColor(f.getIdColor(),0.8f);
                     break;
-                }
+                }*/
+            color1=getColorByStatus(currentRequest);
+            color2= manipulateColor(color1,0.8f);
 
 
             VectorChildFinder vector;
@@ -467,8 +485,13 @@ public class TodayTab extends Fragment{
             GeoPoint geoPoint = area.get(0);
 
             IMapController mapController = map.getController();
-            mapController.setZoom(15.0);
-            mapController.setCenter(geoPoint);
+            mapController.setZoom(14.5);
+            mapController.animateTo(geoPoint,14.5, (long) 500);
+            //mapController.setCenter(geoPoint);
+            IMapController mapController2 = map2.getController();
+            mapController2.setZoom(14.5);
+            //mapController2.setCenter(geoPoint);
+            mapController2.animateTo(geoPoint,14.5,(long) 500);
         }
 
         public  int manipulateColor(int color, float factor) {
@@ -634,6 +657,19 @@ public class TodayTab extends Fragment{
             return requests.size();
         }
 
+
+    }
+    private int getColorByStatus(Request r) {
+        if (r.getStatus().equalsIgnoreCase("Accepted"))
+            return getResources().getColor(R.color.acceptedColor);
+        else if(r.getStatus().equalsIgnoreCase("Scheduled"))
+            return getResources().getColor(R.color.scheduledColor);
+        else if(r.getStatus().equalsIgnoreCase("Ongoing"))
+            return getResources().getColor(R.color.ongoingColor);
+        else if(r.getStatus().equalsIgnoreCase("Interrupted"))
+            return getResources().getColor(R.color.interruptedColor);
+        else
+            return getResources().getColor(R.color.colorOtherStatus);
 
     }
 

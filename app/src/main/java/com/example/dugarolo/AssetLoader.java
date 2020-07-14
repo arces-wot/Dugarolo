@@ -223,6 +223,19 @@ public class AssetLoader {
                 String json = getJSONFromURL(new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{inspector}/irrigation_plan"));
                 if (json != null) {
                     JSONArray jsonArray = new JSONArray(json);
+
+                    //////Provo a diminuire il tempo di caricamento
+                    DateTime now;
+                    now=DateTime.now();
+
+                    for (int index = 0; index < jsonArray.length(); index++) {
+                        JSONObject JSONRequest = jsonArray.getJSONObject(index);
+                        String dateTime = JSONRequest.getString("start");
+                        DateTime formattedDateTime = DateTime.parse(dateTime);
+                        if(formattedDateTime.getDayOfYear()!=now.getDayOfYear() && formattedDateTime.getDayOfYear()!=now.getDayOfYear()+1 )
+                            jsonArray.remove(index);
+                    }
+                        /////// fine prova
                 for (Farm farm : farms) {
                     ArrayList<Field> fields = farm.getFields();
                     for (Field field : fields) {

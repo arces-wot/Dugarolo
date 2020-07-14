@@ -70,6 +70,7 @@ import static java.security.AccessController.getContext;
 public class MapDetailActivity extends AppCompatActivity implements JSONReceiver.Receiver {
 
     private ArrayList<Canal> canals = new ArrayList<>();
+    private ArrayList<Request> requests = new ArrayList<>();
     private MyMapView map;
     private GpsMyLocationProvider gpsMyLocationProvider;
     private ArrayList<Weir> weirs = new ArrayList<>();
@@ -166,7 +167,9 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         map.setClickable(true);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         centerMap(startPoint);
-        map.drawFarms(farms);
+        map.drawFarms(farms,requests);
+        for (Request r: requests)
+            map.drawField(r.getField(),requests);
         map.drawCanals(canals);
         map.drawWeirs(weirs, weirMarkers);
         //map.drawIcon(farms, farmerMarkers, 80);
@@ -454,15 +457,19 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         String jsonFarms = sharedPreferences.getString("FARMS", null);
         String jsonWeirs = sharedPreferences.getString("WEIRS", null);
         String jsonCanals = sharedPreferences.getString("CANALS", null);
+        String jsonRequests = sharedPreferences.getString("REQUESTS", null);
         Type typeFarm = new TypeToken<ArrayList<Farm>>() {
         }.getType();
         Type typeWeir = new TypeToken<ArrayList<Weir>>() {
         }.getType();
         Type typeCanal = new TypeToken<ArrayList<Canal>>() {
         }.getType();
+        Type typeRequest = new TypeToken<ArrayList<Request>>() {
+        }.getType();
         farms = gson.fromJson(jsonFarms, typeFarm);
         weirs = gson.fromJson(jsonWeirs, typeWeir);
         canals = gson.fromJson(jsonCanals, typeCanal);
+        requests = gson.fromJson(jsonRequests, typeRequest);
     }
     private static Bitmap getBitmap(VectorDrawable vectorDrawable) {
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),

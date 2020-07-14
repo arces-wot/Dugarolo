@@ -22,4 +22,11 @@
     <color name="colorCompany4">#8e44ad</color>
     <color name="colorFarmName">#000000</color>
 
+
+    <color name="scheduledColor">#f1c40f</color>
+    <color name="ongoingColor">#2980B9</color>
+    <color name="acceptedColor">#16a085</color>
+    <color name="interruptedColor">#C62828</color>
+    <color name="colorOtherStatus">#8e44ad</color>
+
 </resources>

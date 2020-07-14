@@ -168,18 +168,18 @@ public class MyMapView extends MapView implements Parcelable {
     }
 
     //everything starts here
-    public void drawFarms(ArrayList<Farm> farms) {
+    public void drawFarms(ArrayList<Farm> farms,ArrayList<Request> requests) {
 
         for (Farm farm : farms) {
             ArrayList<Field> farmFields = farm.getFields();
             for (Field field : farmFields) {
-                this.drawField(field);
+                this.drawField(field,requests);
             }
         }
     }
 
     //here I set the area where the field is in the map
-    private void drawField(Field field) {
+    public void drawField(Field field,ArrayList<Request> requests) {
 
         ArrayList<GeoPoint> fieldArea = field.getArea();
         Polygon polygon = new Polygon();
@@ -188,13 +188,13 @@ public class MyMapView extends MapView implements Parcelable {
             polygon.addPoint(point);
         }
 
-        fillFarms(field, polygon);
+        fillFarms(field, polygon,requests);
     }
 
     //this method is used to fill with color the polygon I just draw
-    public void fillFarms(Field field, Polygon polygon) {
+    public void fillFarms(Field field, Polygon polygon,ArrayList<Request> requests) {
 
-        int randomColor, finalColor;
+        /*int randomColor, finalColor;
 
         //if the arrayList I use to assign color to owner is empty it means that it's the first time
         //the program get in this method
@@ -214,14 +214,37 @@ public class MyMapView extends MapView implements Parcelable {
             finalColor = checkColorIfExist(field.getFarmName(), randomColor);
             manipulateColor(finalColor, 0.8f);
             polygon.setFillColor(finalColor);
-        }
+        }*/
+        int color=getResources().getColor(R.color.colorOtherStatus);
+        for (Request r:requests)
+            if (r.getField().equals(field)){
+                color=getColorByStatus(r);
+                break;
+            }
+        //manipulateColor(color, 0.8f);
+        //polygon.getOutlinePaint().setColor(color);
+        polygon.setFillColor(color);
 
-        int strokeColor = manipulateColor(finalColor, 0.8f);
+        int strokeColor = manipulateColor(color, 0.8f);
 
         polygon.getOutlinePaint().setStrokeWidth(5);
         polygon.getOutlinePaint().setColor(strokeColor);
         this.getOverlayManager().add(polygon);
         this.invalidate();
+    }
+
+    private int getColorByStatus(Request r) {
+        if (r.getStatus().equalsIgnoreCase("Accepted"))
+            return getResources().getColor(R.color.acceptedColor);
+        else if(r.getStatus().equalsIgnoreCase("Scheduled"))
+            return getResources().getColor(R.color.scheduledColor);
+        else if(r.getStatus().equalsIgnoreCase("Ongoing"))
+            return getResources().getColor(R.color.ongoingColor);
+        else if(r.getStatus().equalsIgnoreCase("Interrupted"))
+            return getResources().getColor(R.color.interruptedColor);
+        else
+            return getResources().getColor(R.color.colorOtherStatus);
+
     }
 
     public int manipulateColor(int color, float factor) {
