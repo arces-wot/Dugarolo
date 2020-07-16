@@ -23,10 +23,17 @@
     <color name="colorFarmName">#000000</color>
 
 
-    <color name="scheduledColor">#f1c40f</color>
-    <color name="ongoingColor">#2980B9</color>
-    <color name="acceptedColor">#16a085</color>
-    <color name="interruptedColor">#C62828</color>
-    <color name="colorOtherStatus">#8e44ad</color>
+    <color name="scheduledColor2">#f1c40f</color>
+    <color name="ongoingColor2">#2980B9</color>
+    <color name="acceptedColor2">#16a085</color>
+    <color name="interruptedColor2">#C62828</color>
+    <color name="colorOtherStatus2">#8e44ad</color>
+
+    <color name="scheduledColor">#FFB74D</color>
+    <color name="ongoingColor">#29B6F6</color>
+    <color name="acceptedColor">#66BB6A</color>
+    <color name="interruptedColor">#FF5722</color>
+    <color name="colorOtherStatus">#8D6E63</color>
+
 
 </resources>

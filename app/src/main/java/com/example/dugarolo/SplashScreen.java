@@ -58,10 +58,12 @@ public class SplashScreen extends AppCompatActivity {
             }.getType();
             farms = gson.fromJson(jsonFarms, typeFarm);
             }
-            assetLoader.loadRequests(farms, requests);
+
+            assetLoader.loadRequests( farms,requests);
             assetLoader.loadWDN(canals);
             assetLoader.loadGeoPointsWeirs(weirs);
             assetLoader.updateCurrentOpenLevels(weirs);
+
 
 
             //GUAI A CHI LA TOCCA

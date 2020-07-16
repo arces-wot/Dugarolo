@@ -13,6 +13,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
 import android.util.Log;
@@ -83,6 +84,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView filteredButton;
     private ImageView orderButton;
     private Switch mySwitch;
+    private boolean mySwitchStatus=false;
     private Boolean isTomorrow = false;
     GeoPoint myPosition;
 
@@ -195,12 +197,14 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mySwitchStatus=isChecked;
                 if (isChecked) {
                     map2.setVisibility(View.INVISIBLE);
                     map.setVisibility(View.VISIBLE);
                 } else {
                     map2.setVisibility(View.VISIBLE);
                     map.setVisibility(View.INVISIBLE);
+
                 }
 
             }
@@ -288,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
                     //    Activity#requestPermissions
                     // here to request the missing permissions, and then overriding
                     //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-                    //                                          int[] grantResults)
+                    //   int[] grantResults)
                     // to handle the case where the user grants the permission. See the documentation
                     // for Activity#requestPermissions for more details.
                     return;
@@ -371,8 +375,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClickExpandMap(View view) {
-
+        GeoPoint center= (GeoPoint) map.getMapCenter();
         Intent intent = new Intent(MainActivity.this, MapDetailActivity.class);
+        intent.putExtra("CENTER", (Parcelable) center);
+        intent.putExtra("SWITCH_STATUS", mySwitchStatus);
         startActivity(intent);
     }
 

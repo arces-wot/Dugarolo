@@ -25,6 +25,7 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -49,6 +50,7 @@ public class TomorrowTab extends Fragment {
         View root = inflater.inflate(R.layout.fragment_tomorrow, container, false);
         assert getArguments() != null;
         ArrayList<Request> requests = getArguments().getParcelableArrayList("list");
+        Collections.sort(requests,new Request.SortByChannel());
         final RecyclerView recyclerView = root.findViewById(R.id.list_requests);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);

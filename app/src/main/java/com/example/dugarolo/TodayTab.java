@@ -400,6 +400,7 @@ public class TodayTab extends Fragment{
 
                 sendInfoToServerStop(currentRequest);
             }
+
         }
 
         public void updateFilterStatus(String s){

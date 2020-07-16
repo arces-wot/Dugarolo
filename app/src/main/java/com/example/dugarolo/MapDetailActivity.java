@@ -81,8 +81,8 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     private AssetLoader assetLoader = new AssetLoader();
     private JSONReceiver jsonReceiver;
     private boolean isInFront;
-    GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
-    Globals globals = Globals.getInstance();
+    GeoPoint startPoint;
+    private boolean switchStatus;
 
     //per GPS
     private LocationManager locationManager;
@@ -106,9 +106,11 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         } else {
             loadData();
         }
+        startPoint = Objects.requireNonNull(getIntent().getExtras()).getParcelable("CENTER");
+        switchStatus = Objects.requireNonNull(getIntent().getExtras()).getBoolean("SWITCH_STATUS");
 
 
-        loadMap(startPoint);
+        loadMap(startPoint, switchStatus);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         ActionBar actionBar = getSupportActionBar();
@@ -130,7 +132,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             @Override
             public void onClick(View view) {
 
-                myPosition=locationNewOverlay.getMyLocation();
+                myPosition = locationNewOverlay.getMyLocation();
                 centerMap(myPosition);
             }
         });
@@ -139,15 +141,9 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     }
 
 
-
-
-
-
-
-
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 
-    private void loadMap(GeoPoint startPoint) {
+    private void loadMap(GeoPoint startPoint, boolean switchStatus) {
         //load/initialize the osmdroid configuration, this can be done
         Context ctx = getApplicationContext();
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
@@ -167,9 +163,10 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         map.setClickable(true);
         map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         centerMap(startPoint);
-        map.drawFarms(farms,requests);
-        for (Request r: requests)
-            map.drawField(r.getField(),requests);
+        if (switchStatus)
+            map.drawFarms(farms, requests);
+        for (Request r : requests)
+            map.drawField(r.getField(), requests);
         map.drawCanals(canals);
         map.drawWeirs(weirs, weirMarkers);
         //map.drawIcon(farms, farmerMarkers, 80);
@@ -471,6 +468,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         canals = gson.fromJson(jsonCanals, typeCanal);
         requests = gson.fromJson(jsonRequests, typeRequest);
     }
+
     private static Bitmap getBitmap(VectorDrawable vectorDrawable) {
         Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(),
                 vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);

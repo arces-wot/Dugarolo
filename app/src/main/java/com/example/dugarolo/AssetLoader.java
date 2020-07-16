@@ -1,6 +1,10 @@
 package com.example.dugarolo;
 
+import android.content.SharedPreferences;
 import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
 import org.json.JSONArray;
@@ -8,18 +12,24 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.osmdroid.util.GeoPoint;
 import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
 
-public class AssetLoader {
+import androidx.appcompat.app.AppCompatActivity;
+
+
+public class AssetLoader  extends AppCompatActivity {
+
 
     public AssetLoader() {
-
     }
 
     private String getJSONFromURL(URL url) {
@@ -216,7 +226,8 @@ public class AssetLoader {
         }
     }
 
-    public void loadRequests(ArrayList<Farm> farms, ArrayList<Request> requests) {
+    public void loadRequests( ArrayList<Farm> farms,ArrayList<Request> requests) {
+
 
         if (requests.isEmpty()) {
             try {
@@ -225,7 +236,7 @@ public class AssetLoader {
                     JSONArray jsonArray = new JSONArray(json);
 
                     //////Provo a diminuire il tempo di caricamento
-                    DateTime now;
+                  /*  DateTime now;
                     now=DateTime.now();
 
                     for (int index = 0; index < jsonArray.length(); index++) {
@@ -234,15 +245,18 @@ public class AssetLoader {
                         DateTime formattedDateTime = DateTime.parse(dateTime);
                         if(formattedDateTime.getDayOfYear()!=now.getDayOfYear() && formattedDateTime.getDayOfYear()!=now.getDayOfYear()+1 )
                             jsonArray.remove(index);
-                    }
+                    }*/
                         /////// fine prova
                 for (Farm farm : farms) {
-                    ArrayList<Field> fields = farm.getFields();
-                    for (Field field : fields) {
+                    for (Field field : farm.getFields()) {
+
+
                         /*String id = field.getId();
                         String idForUrl = id.replace(":", "%3A");
                         idForUrl = idForUrl.replace("/", "%2F");
                         idForUrl = idForUrl.replace("#", "%23");*/
+                        if(field.getId().contains("3187"))
+                            field.getId();
 
 
                             for (int index = 0; index < jsonArray.length(); index++) {
@@ -253,9 +267,14 @@ public class AssetLoader {
 
                                 String fieldId=JSONRequest.getString("field");
                                 if(fieldId.equals(field.getId())){
+
                                     JSONObject channelOb = JSONRequest.getJSONObject("channel");
                                     String channel = channelOb.getString("id");
-                                    String nameChannel = channelOb.getString("name");
+                                    String nameChannel ;
+                                    if(channelOb.has("name"))
+                                     nameChannel = channelOb.getString("name");
+                                    else
+                                     nameChannel ="nameChannel";
 
 
                                     String dateTime = JSONRequest.getString("start");
@@ -274,6 +293,8 @@ public class AssetLoader {
 
                                     Request request = new Request(id, requestName, formattedDateTime, status, waterVolume.toString(), field, message, channel, type, nameChannel);
                                     requests.add(request);
+                                    if(request.getField().getId().contains("field_3187"))
+                                        message="";
                                 }
 
                             }
@@ -288,5 +309,6 @@ public class AssetLoader {
         }
 
     }
+
 }
 
