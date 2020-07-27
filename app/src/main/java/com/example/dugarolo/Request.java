@@ -56,7 +56,7 @@ public class Request implements Comparable<Request>, Parcelable {
             return "Ongoing";
         if (status.equalsIgnoreCase("3"))
             return "Interrupted";
-        if (status.equalsIgnoreCase("4 "))
+        if (status.equalsIgnoreCase("4"))
             return "Cancelled";
         if (status.equalsIgnoreCase("5"))
             return "Satisfied";

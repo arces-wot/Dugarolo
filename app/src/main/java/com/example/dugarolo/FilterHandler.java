@@ -37,7 +37,7 @@ public class FilterHandler {
         int i = 0;
         for (Request r : requestsFiltering)
             if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear()))
-                    && !r.getStatus().equals("5") && !r.getStatus().equals("4")
+                    && !r.getStatus().equals("Satisfied") && !r.getStatus().equals("Cancelled")
                     && ((r.getDateTime().getYear()) == (now.getYear())))
                 i++;
 
@@ -126,15 +126,19 @@ public class FilterHandler {
                         selectedStatus[0] = "Scheduled";
 
                     if (!selectedCanal[0].equals(""))
-                        requestsFiltering.removeIf(requests -> !(requests.getNameChannel().equals(selectedCanal[0])));
+                        requestsFiltering.removeIf(request -> !(request.getNameChannel().equals(selectedCanal[0])));
 
                     if (!selectedStatus[0].equals(""))
-                        requestsFiltering.removeIf(requests -> !(requests.getStatus().equals(selectedStatus[0])));
+                        requestsFiltering.removeIf(request -> !(request.getStatus().equals(selectedStatus[0])));
 
                     if (!selectedType[0].equals(""))
-                        requestsFiltering.removeIf(requests -> !(requests.getType().equals(selectedType[0])));
+                        requestsFiltering.removeIf(request -> !(request.getType().equals(selectedType[0])));
 
+                    requestsFiltering.removeIf(request -> (request.getType().equals("Interrupted") || request.getType().equals("Accepted")
+                            || request.getType().equals("Ongoing") || request.getType().equals("Scheduled")));
                     TodayTab.setChanged(requestsFiltering);
+
+                    //TodayTab.setChanged(requestsFiltering);
                     dialog.dismiss();
 
                 }

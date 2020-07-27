@@ -10,6 +10,7 @@
     <include
         layout="@layout/toolbar_main"/>
 
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -21,15 +22,26 @@
             android:layout_height="wrap_content"
             tools:context=".TodayRequestDetailsActivity">
 
+
+            <com.example.dugarolo.MyMapView
+                android:id="@+id/map_activity_details"
+                android:layout_width="350dp"
+                android:layout_height="140dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginTop="76dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <TextView
                 android:id="@+id/irrigation_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="60dp"
+                android:layout_marginStart="180dp"
                 android:layout_marginTop="28dp"
                 android:text="TextView"
                 android:textColor="#000000"
-                app:layout_constraintStart_toEndOf="@+id/irrigationField"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/current_status_label" />
 
             <TextView
@@ -37,19 +49,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="64dp"
                 android:text="@string/current_status"
                 android:textColor="@android:color/black"
                 android:textSize="20dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nameFarm" />
+                app:layout_constraintTop_toBottomOf="@+id/map_activity_details" />
 
             <TextView
                 android:id="@+id/irrigationField"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="25dp"
+                android:layout_marginTop="20dp"
                 android:text="Irrigation Time"
                 android:textColor="@android:color/black"
                 android:textSize="20dp"
@@ -62,7 +74,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
-                android:layout_marginTop="45dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/message_label"
                 android:textColor="@android:color/black"
                 android:textSize="20dp"
@@ -74,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="42dp"
+                android:layout_marginTop="68dp"
                 android:text="@string/select_status"
                 android:textAppearance="?android:attr/textAppearanceLarge"
                 android:textSize="20dp"
@@ -83,15 +95,15 @@
 
             <RadioGroup
                 android:id="@+id/radioGroup"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="30dp"
-                android:layout_marginEnd="8dp"
+                android:layout_width="207dp"
+                android:layout_height="0dp"
+                android:layout_marginStart="44dp"
+                android:layout_marginTop="56dp"
                 android:orientation="vertical"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selectStatus">
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/selectStatus"
+                app:layout_constraintTop_toBottomOf="@+id/message_label">
 
             </RadioGroup>
 
@@ -104,6 +116,7 @@
                 android:orientation="horizontal"
                 app:layout_constraintBottom_toTopOf="@id/submitButton"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/radioGroup" />
 
@@ -125,34 +138,34 @@
                 android:id="@+id/message"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="48dp"
+                android:layout_marginStart="180dp"
+                android:layout_marginTop="28dp"
                 android:text="TextView"
                 android:textColor="#000000"
-                app:layout_constraintStart_toEndOf="@+id/message_label"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/irrigationField" />
 
             <TextView
                 android:id="@+id/current_status"
                 android:layout_width="60dp"
                 android:layout_height="21dp"
-                android:layout_marginStart="50dp"
-                android:layout_marginTop="84dp"
+                android:layout_marginStart="180dp"
+                android:layout_marginTop="66dp"
                 android:text="TextView"
                 android:textColor="#000000"
-                app:layout_constraintStart_toEndOf="@+id/current_status_label"
-                app:layout_constraintTop_toBottomOf="@+id/nameFarm" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/map_activity_details" />
 
             <TextView
                 android:id="@+id/nameFarm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="120dp"
-                android:layout_marginTop="29dp"
+                android:layout_marginTop="16dp"
                 android:layout_marginEnd="120dp"
-                android:text="TextView"
+                android:text="channel name"
                 android:textColor="#000000"
-                android:textSize="25dp"
+                android:textSize="30dp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -170,17 +183,55 @@
 
             <TextView
                 android:id="@+id/dateLabel"
+                android:layout_width="87dp"
+                android:layout_height="18dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="316dp"
+                android:text="TextView"
+                android:textColor="#9C9C9C"
+                android:textSize="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/text_farmer_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="175dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginEnd="177dp"
-                android:text="TextView"
-                android:textColor="#000000"
-                android:textSize="15dp"
-                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:text="Farm id:"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nameFarm" />
+                app:layout_constraintTop_toBottomOf="@+id/map_activity_details" />
+
+            <TextView
+                android:id="@+id/farm_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:text="TextView"
+                app:layout_constraintStart_toEndOf="@+id/text_farmer_id"
+                app:layout_constraintTop_toBottomOf="@+id/map_activity_details" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="84dp"
+                android:layout_marginTop="16dp"
+                android:text="Appezzamento n°"
+                app:layout_constraintStart_toEndOf="@+id/farm_id"
+                app:layout_constraintTop_toBottomOf="@+id/map_activity_details" />
+
+            <TextView
+                android:id="@+id/appezzamento_id"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="16dp"
+                android:text="TextView"
+                app:layout_constraintStart_toEndOf="@+id/textView8"
+                app:layout_constraintTop_toBottomOf="@+id/map_activity_details" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

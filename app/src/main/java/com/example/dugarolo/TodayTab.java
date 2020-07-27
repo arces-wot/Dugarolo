@@ -46,18 +46,20 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-public class TodayTab extends Fragment{
+
+public class TodayTab extends Fragment {
 
     MyMapView map;
     MyMapView map2;
     static RequestAdapter mAdapter;
-    static ArrayList<Request> requests;
+    static ArrayList<Request> requests=new ArrayList<>() ;
+    static ArrayList<Request> totalRequests;
 
-    public  TodayTab() {
+    public TodayTab() {
         // Required empty public constructor
     }
 
-    public static TodayTab newInstance(ArrayList<Request> requests, MyMapView map,MyMapView map2) {
+    public static TodayTab newInstance(ArrayList<Request> requests, MyMapView map, MyMapView map2) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("list", requests);
         bundle.putParcelable("Mappa", map);
@@ -74,7 +76,8 @@ public class TodayTab extends Fragment{
         View root = inflater.inflate(R.layout.fragment_today, container, false);
 
         assert getArguments() != null;
-        requests = getArguments().getParcelableArrayList("list");
+        totalRequests = getArguments().getParcelableArrayList("list");
+        requests=unsatisfiedRequests(totalRequests);
         final RecyclerView recyclerView = root.findViewById(R.id.list_requests);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -87,7 +90,15 @@ public class TodayTab extends Fragment{
 
     }
 
-    static public void setChanged(ArrayList<Request> req){
+    static public ArrayList<Request> unsatisfiedRequests(ArrayList<Request> totalRequests) {
+        ArrayList<Request> requests = new ArrayList<Request>();
+        for(Request r : totalRequests)
+            if(!r.getStatus().equalsIgnoreCase("Satisfied") && !r.getStatus().equalsIgnoreCase("Cancelled"))
+            requests.add(r);
+            return requests;
+    }
+
+    static public void setChanged(ArrayList<Request> req) {
         DateTime now;
         now = DateTime.now();
         requests.clear();
@@ -95,8 +106,8 @@ public class TodayTab extends Fragment{
 
         for (Request r : req) {
             if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear()))
-                    && !r.getStatus().equals("5") && !r.getStatus().equals("4")
-                    &&((r.getDateTime().getYear()) == (now.getYear()))){
+                    && !r.getStatus().equals("Satisfied") && !r.getStatus().equals("Cancelled")
+                    && ((r.getDateTime().getYear()) == (now.getYear()))) {
                 requests.add(r);
 
             }
@@ -106,8 +117,7 @@ public class TodayTab extends Fragment{
     }
 
 
-
-    public class RequestAdapter extends RecyclerView.Adapter<TodayTab.RequestAdapter.RequestHolder>{
+    public class RequestAdapter extends RecyclerView.Adapter<TodayTab.RequestAdapter.RequestHolder> {
 
         public List<Request> requests;
         public Globals sharedData = Globals.getInstance();
@@ -117,7 +127,7 @@ public class TodayTab extends Fragment{
 
             public TextView farmName, irrigationTime, time, completeText;
             public TextView canalName, nAppezamento, cancelText, mapsText, playText, pauseText;
-            public ImageView statusWaitingImage,  playImage, mapsImage, cancelImage, pauseImage, basicIcon,
+            public ImageView statusWaitingImage, playImage, mapsImage, cancelImage, pauseImage, basicIcon,
                     statusOperatingImage, collapse, uncollapse, completeImage;
             public Button playArea, mapsArea, deleteArea, collapsing;
 
@@ -176,7 +186,7 @@ public class TodayTab extends Fragment{
             this.requests = requests;
         }
 
-        public List<Request> getRequests(){
+        public List<Request> getRequests() {
             return this.requests;
         }
 
@@ -195,16 +205,16 @@ public class TodayTab extends Fragment{
             final Request currentRequest = requests.get(position);
             String name = currentRequest.getName();
             DateTime dateTime = currentRequest.getDateTime();
-            int color1=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null);
-            int color2=ResourcesCompat.getColor(getResources(),R.color.colorCompany3, null);
+            int color1 = ResourcesCompat.getColor(getResources(), R.color.colorCompany3, null);
+            int color2 = ResourcesCompat.getColor(getResources(), R.color.colorCompany3, null);
 
 
             for (FarmColor f : sharedData.getFarmColors())
-                if(f.getNameFarm().equals(name)){
-                    color1= f.getIdColor();
-                    color2= manipulateColor(f.getIdColor(),0.8f);
+                if (f.getNameFarm().equals(name)) {
+                    color1 = f.getIdColor();
+                    color2 = manipulateColor(f.getIdColor(), 0.8f);
                     break;
-            }
+                }
 
             boolean isExpanded = requests.get(position).getIsExpanded();
             holder.expandibleView.setVisibility(isExpanded ? View.VISIBLE : View.GONE);
@@ -226,26 +236,28 @@ public class TodayTab extends Fragment{
                     color2= manipulateColor(f.getIdColor(),0.8f);
                     break;
                 }*/
-            color1=getColorByStatus(currentRequest);
-            color2= manipulateColor(color1,0.8f);
+
+            buildIconFarmer(currentRequest, holder.basicIcon);
+            /*color1 = getColorByStatus(currentRequest);
+            color2 = manipulateColor(color1, 0.8f);
 
 
             VectorChildFinder vector;
-            if(currentRequest.getType().equals("CBEC")){
-                vector = new VectorChildFinder(getContext(),R.drawable.ic_farmercolor, holder.basicIcon);
+            if (currentRequest.getType().equals("CBEC")) {
+                vector = new VectorChildFinder(getContext(), R.drawable.ic_farmercolor, holder.basicIcon);
                 VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
                 VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
                 path1.setFillColor(color1);
                 path2.setFillColor(color2);
-            }else if(currentRequest.getType().equals("criteria")){
-                vector = new VectorChildFinder(getContext(),R.drawable.ic_robo_swamp, holder.basicIcon);
+            } else if (currentRequest.getType().equals("criteria")) {
+                vector = new VectorChildFinder(getContext(), R.drawable.ic_robo_swamp, holder.basicIcon);
                 VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
                 VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
                 VectorDrawableCompat.VFullPath path3 = vector.findPathByName("backgroundShadow2");
                 path1.setFillColor(color1);
                 path2.setFillColor(color2);
                 path3.setFillColor(color2);
-            }
+            }*/
 
             DateTimeFormatter dtf = DateTimeFormat.forPattern("HH:mm");
             String formattedDateTime = dateTime.toString(dtf);
@@ -256,7 +268,7 @@ public class TodayTab extends Fragment{
             String[] partsName1 = partsName[4].split("_");
             String finalId = partsName1[1];
 
-            holder.farmName.setText(finalId);
+            holder.farmName.setText("Farm id: " + finalId);
             holder.time.setText(getResources().getString(R.string.expected_time) + ": " + formattedDateTime);
             holder.irrigationTime.setText(getResources().getString(R.string.total_irrigation_time) + ": " + currentRequest.getWaterVolume());
 
@@ -264,17 +276,15 @@ public class TodayTab extends Fragment{
 
             String idFieldNameToModify = currentRequest.getField().getId();
 
-            String[] partsField= idFieldNameToModify.split("/");
+            String[] partsField = idFieldNameToModify.split("/");
             String[] partsField1 = partsField[4].split("_");
             String finalField = partsField1[1];
 
             holder.nAppezamento.setText("Appezzamento n°" + finalField);
 
-            if(currentRequest.getStatus().equals("Accepted")
-                    ||currentRequest.getStatus().equals("Scheduled")
-                    || currentRequest.getStatus().equals("Interrupted")
-                    || currentRequest.getStatus().equals("3")
-                    || currentRequest.getStatus().equals("1")){
+            if (currentRequest.getStatus().equals("Accepted")
+                    || currentRequest.getStatus().equals("Scheduled")
+                    || currentRequest.getStatus().equals("Interrupted")) {
                 //Log.d("ProvaEx", currentRequest.getChannel() + currentRequest.getStatus());
                 holder.playText.setVisibility(View.VISIBLE);
                 holder.playImage.setVisibility(View.VISIBLE);
@@ -290,8 +300,8 @@ public class TodayTab extends Fragment{
 
                 holder.completeText.setVisibility(View.GONE);
                 holder.completeImage.setVisibility(View.GONE);
-            }else if(currentRequest.getStatus().equals("Ongoing")
-                    || currentRequest.getStatus().equals("2")){
+            } else if (currentRequest.getStatus().equals("Ongoing")
+                    || currentRequest.getStatus().equals("2")) {
                 //Log.d("ProvaEx", currentRequest.getChannel() + currentRequest.getStatus());
                 holder.playText.setVisibility(View.INVISIBLE);
                 holder.playImage.setVisibility(View.INVISIBLE);
@@ -314,14 +324,13 @@ public class TodayTab extends Fragment{
             holder.collapsing.setOnClickListener(new View.OnClickListener() {
                 //@Override
                 public void onClick(View v) {
-                    if(holder.expandibleView.getVisibility()==View.GONE)
-                    {
+                    if (holder.expandibleView.getVisibility() == View.GONE) {
                         currentRequest.setIsExpanded(true);
                         notifyItemChanged(position);
                         holder.collapse.setVisibility(View.VISIBLE);
                         holder.uncollapse.setVisibility(View.INVISIBLE);
 
-                    }else{
+                    } else {
                         currentRequest.setIsExpanded(false);
                         notifyItemChanged(position);
                         holder.collapse.setVisibility(View.INVISIBLE);
@@ -335,8 +344,8 @@ public class TodayTab extends Fragment{
                 //@Override
                 public void onClick(View v) {
                     playClicked(v, currentRequest, holder.statusWaitingImage, holder.statusOperatingImage,
-                            holder.playImage, holder.playText, holder.pauseImage, holder. pauseText, holder.cancelImage, holder.cancelText,
-                            holder.completeImage, holder.completeText);
+                            holder.playImage, holder.playText, holder.pauseImage, holder.pauseText, holder.cancelImage, holder.cancelText,
+                            holder.completeImage, holder.completeText,holder.basicIcon);
                 }
             });
 
@@ -359,11 +368,11 @@ public class TodayTab extends Fragment{
 
         public void playClicked(View v, Request currentRequest, ImageView waitingImage, ImageView operatingImage, ImageView playImage,
                                 TextView playText, ImageView pauseImage, TextView pauseText, ImageView cancelImage, TextView cancelText,
-                                ImageView completeImage, TextView completeText){
+                                ImageView completeImage, TextView completeText, ImageView basicIcon) {
             //se non è mai stata eseguita
-            if(currentRequest.getStatus().equals("Accepted")
+            if (currentRequest.getStatus().equals("Accepted")
                     || currentRequest.getStatus().equals("Scheduled")
-                    || currentRequest.getStatus().equals("Interrupted")){
+                    || currentRequest.getStatus().equals("Interrupted")) {
                 waitingImage.setVisibility(View.INVISIBLE);
                 operatingImage.setVisibility(View.VISIBLE);
 
@@ -381,8 +390,11 @@ public class TodayTab extends Fragment{
 
                 String currentStatus = currentRequest.getStatus();
                 sendInfoToServerActivate(currentRequest, currentStatus);
-            //se è già stata eseguita quindi è ongoing.
-            }else{
+                map.drawField(currentRequest.getField(), (ArrayList<Request>) requests);
+                map2.drawField(currentRequest.getField(), (ArrayList<Request>) requests);
+                buildIconFarmer(currentRequest, basicIcon);
+                //se è già stata eseguita quindi è ongoing.
+            } else {
                 waitingImage.setVisibility(View.VISIBLE);
                 operatingImage.setVisibility(View.INVISIBLE);
 
@@ -399,19 +411,23 @@ public class TodayTab extends Fragment{
                 completeText.setVisibility(View.GONE);
 
                 sendInfoToServerStop(currentRequest);
+                map.drawField(currentRequest.getField(), (ArrayList<Request>) requests);
+                map2.drawField(currentRequest.getField(), (ArrayList<Request>) requests);
+                buildIconFarmer(currentRequest, basicIcon);
             }
+
 
         }
 
-        public void updateFilterStatus(String s){
-            if(s.equals("Criteria")) {
+        public void updateFilterStatus(String s) {
+            if (s.equals("Criteria")) {
                 for (int i = 0; i < requests.size(); i++) {
                     if (requests.get(i).getType().equals("cbec")) {
                         requests.remove(i);
                         mAdapter.notifyItemRemoved(i);
                     }
                 }
-            }else if(s.equals("cbec")){
+            } else if (s.equals("cbec")) {
                 for (int i = 0; i < requests.size(); i++) {
                     if (requests.get(i).getType().equals("Criteria")) {
                         requests.remove(i);
@@ -422,14 +438,14 @@ public class TodayTab extends Fragment{
         }
 
 
-        public void deleteClicked(View v, final List<Request> requests, final Request currentRequest, final int position) {
+        public void deleteClicked(View v,  List<Request> requests,  Request currentRequest, final int position) {
             AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
 
-            if(currentRequest.getStatus().equals("Accepted")
+            if (currentRequest.getStatus().equals("Accepted")
                     || currentRequest.getStatus().equals("Scheduled")
-                    || currentRequest.getStatus().equals("Interrupted")){
+                    || currentRequest.getStatus().equals("Interrupted")) {
                 // set title
-                alertDialogBuilder.setTitle("Vuoi sicuro di voler cancellare questa richiesta?");
+                alertDialogBuilder.setTitle("Sei sicuro di voler cancellare questa richiesta?");
 
                 // set dialog message
                 alertDialogBuilder
@@ -439,6 +455,9 @@ public class TodayTab extends Fragment{
                                 sendInfoToServerDelete(currentRequest);
                                 requests.remove(currentRequest);
                                 mAdapter.notifyItemRemoved(position);
+                                mAdapter.notifyDataSetChanged();
+                                map.drawField(currentRequest.getField(), (ArrayList<Request>) requests);
+                                map2.drawField(currentRequest.getField(), (ArrayList<Request>) requests);
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -451,7 +470,7 @@ public class TodayTab extends Fragment{
                 alertDialog.show();
 
                 sendInfoToServerDelete(currentRequest);
-            }else if(currentRequest.getStatus().equals("Ongoing")){
+            } else if (currentRequest.getStatus().equals("Ongoing")) {
 
                 alertDialogBuilder.setTitle("La richiesta è stata soddisfatta?");
 
@@ -463,6 +482,9 @@ public class TodayTab extends Fragment{
                                 sendInfoToServerComplete(currentRequest);
                                 requests.remove(currentRequest);
                                 mAdapter.notifyItemRemoved(position);
+                                mAdapter.notifyDataSetChanged();
+                                map.drawField(currentRequest.getField(), (ArrayList<Request>) requests);
+                                map2.drawField(currentRequest.getField(), (ArrayList<Request>) requests);
                             }
                         })
                         .setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -479,7 +501,7 @@ public class TodayTab extends Fragment{
         }
 
 
-        public void centerMapWithPosition(Request currentRequest){
+        public void centerMapWithPosition(Request currentRequest) {
 
             Field f = currentRequest.getField();
             ArrayList<GeoPoint> area = f.getArea();
@@ -487,36 +509,26 @@ public class TodayTab extends Fragment{
 
             IMapController mapController = map.getController();
             mapController.setZoom(14.5);
-            mapController.animateTo(geoPoint,14.5, (long) 500);
+            mapController.animateTo(geoPoint, 14.5, (long) 500);
             //mapController.setCenter(geoPoint);
             IMapController mapController2 = map2.getController();
             mapController2.setZoom(14.5);
             //mapController2.setCenter(geoPoint);
-            mapController2.animateTo(geoPoint,14.5,(long) 500);
+            mapController2.animateTo(geoPoint, 14.5, (long) 500);
         }
 
-        public  int manipulateColor(int color, float factor) {
-            int a = Color.alpha(color);
-            int r = Math.round(Color.red(color) * factor);
-            int g = Math.round(Color.green(color) * factor);
-            int b = Math.round(Color.blue(color) * factor);
-            return Color.argb(a,
-                    Math.min(r,255),
-                    Math.min(g,255),
-                    Math.min(b,255));
-        }
+
 
         PostNewStatus postNewStatus;
 
         //metodo che manda
-        public void sendInfoToServerActivate(Request currentRequest, String currentStatus){
+        public void sendInfoToServerActivate(Request currentRequest, String currentStatus) {
             JSONObject json = new JSONObject();
             //currentRequest.setCurrentStat(1);
 
-            if(currentRequest.getStatus().equals("Accepted")
+            if (currentRequest.getStatus().equals("Accepted")
                     || currentRequest.getStatus().equals("Scheduled")
-                    || currentRequest.getStatus().equals("Interrupted"))
-            {
+                    || currentRequest.getStatus().equals("Interrupted")) {
                 try {
                     currentRequest.setStatus("Ongoing");
                     json.put("message", "Changing status from Accepted to Ongoing");
@@ -525,7 +537,7 @@ public class TodayTab extends Fragment{
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-            }else if(currentRequest.getStatus().equals("Interrupted")){
+            } else if (currentRequest.getStatus().equals("Interrupted")) {
                 try {
                     currentRequest.setStatus("Ongoing");
                     json.put("message", "Changing status from Interrupted to Ongoing");
@@ -538,7 +550,7 @@ public class TodayTab extends Fragment{
 
         }
 
-        public void sendInfoToServerStop(Request currentRequest){
+        public void sendInfoToServerStop(Request currentRequest) {
             JSONObject json = new JSONObject();
             //currentRequest.setCurrentStat(1);
             currentRequest.setStatus("Interrupted");
@@ -552,7 +564,7 @@ public class TodayTab extends Fragment{
             }
         }
 
-        public void sendInfoToServerComplete(Request currentRequest){
+        public void sendInfoToServerComplete(Request currentRequest) {
             JSONObject json = new JSONObject();
             //currentRequest.setCurrentStat(1);
             currentRequest.setStatus("Satisfied");
@@ -566,7 +578,7 @@ public class TodayTab extends Fragment{
             }
         }
 
-        public void sendInfoToServerDelete(Request currentRequest){
+        public void sendInfoToServerDelete(Request currentRequest) {
             JSONObject json = new JSONObject();
             //currentRequest.setCurrentStat(1);
             currentRequest.setStatus("Cancelled");
@@ -596,7 +608,7 @@ public class TodayTab extends Fragment{
                 try {
 
                     Log.d("ProvaExcIdField", this.request.getField().getId());
-                    Log.d("ProvaExc",  this.request.getId());
+                    Log.d("ProvaExc", this.request.getId());
 
                     String idreq = this.request.getId();
                     String idForUrlreq = idreq.replace(":", "%3A");
@@ -611,7 +623,7 @@ public class TodayTab extends Fragment{
                     URL url = new URL("http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/{ispector}/AssignedFarms/" + idForUrlfield + "/irrigation_plan/" + idForUrlreq + "/status");
 
                     Log.d("ProvaExcIdField", idForUrlfield);
-                    Log.d("ProvaExc",  idForUrlreq);
+                    Log.d("ProvaExc", idForUrlreq);
 
                     HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                     conn.setRequestMethod("POST");
@@ -621,13 +633,13 @@ public class TodayTab extends Fragment{
                     conn.connect();
 
                     String jsonInputString = jsonObject.toString();
-                    try(OutputStream os = conn.getOutputStream()) {
+                    try (OutputStream os = conn.getOutputStream()) {
                         byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                         os.write(input, 0, input.length);
                     }
                     conn.getOutputStream().flush();
                     String res = "";
-                    try(BufferedReader br = new BufferedReader(
+                    try (BufferedReader br = new BufferedReader(
                             new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
                         StringBuilder response = new StringBuilder();
                         String responseLine = null;
@@ -660,20 +672,55 @@ public class TodayTab extends Fragment{
 
 
     }
+
     private int getColorByStatus(Request r) {
         if (r.getStatus().equalsIgnoreCase("Accepted"))
             return getResources().getColor(R.color.acceptedColor);
-        else if(r.getStatus().equalsIgnoreCase("Scheduled"))
+        else if (r.getStatus().equalsIgnoreCase("Scheduled"))
             return getResources().getColor(R.color.scheduledColor);
-        else if(r.getStatus().equalsIgnoreCase("Ongoing"))
+        else if (r.getStatus().equalsIgnoreCase("Ongoing"))
             return getResources().getColor(R.color.ongoingColor);
-        else if(r.getStatus().equalsIgnoreCase("Interrupted"))
+        else if (r.getStatus().equalsIgnoreCase("Interrupted"))
             return getResources().getColor(R.color.interruptedColor);
         else
             return getResources().getColor(R.color.colorOtherStatus);
 
     }
 
+    public void buildIconFarmer(Request currentRequest, ImageView basicIcon) {
+        int color1 = getColorByStatus(currentRequest);
+        int color2 = manipulateColor(color1, 0.8f);
+
+
+        VectorChildFinder vector;
+        if (currentRequest.getType().equals("CBEC")) {
+            vector = new VectorChildFinder(getContext(), R.drawable.ic_farmercolor, basicIcon);
+            VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
+            VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
+            path1.setFillColor(color1);
+            path2.setFillColor(color2);
+        } else if (currentRequest.getType().equals("criteria")) {
+            vector = new VectorChildFinder(getContext(), R.drawable.ic_robo_swamp, basicIcon);
+            VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
+            VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
+            VectorDrawableCompat.VFullPath path3 = vector.findPathByName("backgroundShadow2");
+            path1.setFillColor(color1);
+            path2.setFillColor(color2);
+            path3.setFillColor(color2);
+        }
+
+    }
+
+    public int manipulateColor(int color, float factor) {
+        int a = Color.alpha(color);
+        int r = Math.round(Color.red(color) * factor);
+        int g = Math.round(Color.green(color) * factor);
+        int b = Math.round(Color.blue(color) * factor);
+        return Color.argb(a,
+                Math.min(r, 255),
+                Math.min(g, 255),
+                Math.min(b, 255));
+    }
 
 
 }

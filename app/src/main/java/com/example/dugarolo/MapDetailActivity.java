@@ -177,7 +177,7 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
 
     public void centerMap(GeoPoint g) {
         IMapController mapController = map.getController();
-        mapController.setZoom(15.0);
+        mapController.setZoom(13.0);
         mapController.setCenter(g);
     }
 

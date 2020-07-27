@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,12 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.osmdroid.api.IGeoPoint;
+import org.osmdroid.api.IMapController;
+import org.osmdroid.config.Configuration;
+import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.CustomZoomButtonsController;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,6 +45,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 
 public class TodayRequestDetailsActivity extends AppCompatActivity {
 
@@ -48,9 +56,10 @@ public class TodayRequestDetailsActivity extends AppCompatActivity {
     private EditText editTextReasonCancelled, waterVolumeSatisfied;
     private TextView textViewStartDate, messageToShow, currentStatusToShow, nameFarm, irrigationLabel, dateLabel;
     private DatePickerDialog.OnDateSetListener startDateSetListener, endDateSetListener;
-    private TextView textViewEndDate, currentStatusTextView, messageTextView;
+    private TextView textViewEndDate, currentStatusTextView, messageTextView,farmId,appezzamento;
     private ImageView currentStatusImageView;
     PostNewStatus postNewStatus;
+    private MyMapView map;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +74,8 @@ public class TodayRequestDetailsActivity extends AppCompatActivity {
         nameFarm = findViewById(R.id.nameFarm);
         irrigationLabel = findViewById(R.id.irrigation_time);
         dateLabel = findViewById(R.id.dateLabel);
+        farmId=findViewById(R.id.farm_id);
+        appezzamento=findViewById(R.id.appezzamento_id);
         //RequestLab requestLab = RequestLab.get(this);
         //List<Request> requestList = requestLab.getRequestList();
         requestList = getIntent().getParcelableArrayListExtra("REQUEST_LIST");
@@ -78,25 +89,26 @@ public class TodayRequestDetailsActivity extends AppCompatActivity {
         //Request request = Request.requests[requestId];
         Request request = requestList.get(requestId);
 
+        nameFarm.setText(request.getNameChannel());
+        appezzamento.setText(request.getField().getId().split("_")[1]);
+        farmId.setText(request.getId().split("//")[1]);
+
+
         currentStatusToShow.setText(request.getStatus());
 
         String farmerNameToModify = request.getName();
-        //<!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        //LA RICHIESTA RESTITUISCE NULL IN GETNAMECHANNEL MA CHANNELL LO HA, ERRORE NELLA RICHIESTA?
-        //PERCHE' IN TODAYTAB VA E QUI NO?
-        //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!>
-        String canalName =  request.getNameChannel();
+
 
         String[] partsName = farmerNameToModify.split("/");
         String[] partsName1 = partsName[4].split("_");
         String finalId = partsName1[1];
 
-        nameFarm.setText(canalName + "-" + finalId);
+
         irrigationLabel.setText(request.getWaterVolume() + " h");
 
 
         DateTime dateTime = request.getDateTime();
-        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yyyy HH:mm");
+        DateTimeFormatter dtf = DateTimeFormat.forPattern("dd/MM/yy");
         String formattedDateTime = dateTime.toString(dtf);
 
         dateLabel.setText(formattedDateTime);
@@ -105,18 +117,18 @@ public class TodayRequestDetailsActivity extends AppCompatActivity {
         //setCurrentStatusTextView(request.getStatus());
         messageTextView = findViewById(R.id.message);
         String message = request.getMessage();
-        if(message == null || message.equals("")) {
+        if (message == null || message.equals("")) {
             messageTextView.setText(getResources().getString(R.string.no_message));
-        }
-        else {
+        } else {
             messageTextView.setText(message);
         }
+        loadMap(request,getApplicationContext());
         //colorStatusIcon(request.getStatus());
         buildLayout(request.getStatus());
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
-                if(vg.getChildCount() > 0) {
+                if (vg.getChildCount() > 0) {
                     vg.removeAllViews();
                 }
                 LayoutInflater vi = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -182,7 +194,7 @@ public class TodayRequestDetailsActivity extends AppCompatActivity {
                         };
                         break;
                     case R.id.cancelled:
-                        View v1 = vi.inflate(R.layout.cancelled_request_form,  null);
+                        View v1 = vi.inflate(R.layout.cancelled_request_form, null);
                         vg.addView(v1, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
                         break;
                     default:
@@ -266,7 +278,7 @@ public class TodayRequestDetailsActivity extends AppCompatActivity {
                     String sdts = textViewStartDate.getText().toString();
                     String edts = textViewEndDate.getText().toString();
                     String wvs = waterVolumeSatisfied.getText().toString();
-                    message = getResources().getString(R.string.start) + ": " +  sdts +
+                    message = getResources().getString(R.string.start) + ": " + sdts +
                             ", " + getResources().getString(R.string.end) + ": " + edts +
                             ", " + getResources().getString(R.string.total_irrigation_time) + ": " + wvs + " h";
                     break;
@@ -293,7 +305,7 @@ public class TodayRequestDetailsActivity extends AppCompatActivity {
     }
 
     private void buildLayout(String status) {
-        if(radioGroup.getChildCount() > 0) {
+        if (radioGroup.getChildCount() > 0) {
             radioGroup.removeAllViews();
         }
         RadioButton radioButton = new RadioButton(this);
@@ -436,13 +448,13 @@ public class TodayRequestDetailsActivity extends AppCompatActivity {
                 conn.connect();
 
                 String jsonInputString = jsonObject.toString();
-                try(OutputStream os = conn.getOutputStream()) {
+                try (OutputStream os = conn.getOutputStream()) {
                     byte[] input = jsonInputString.getBytes(StandardCharsets.UTF_8);
                     os.write(input, 0, input.length);
                 }
                 conn.getOutputStream().flush();
                 String res = "";
-                try(BufferedReader br = new BufferedReader(
+                try (BufferedReader br = new BufferedReader(
                         new InputStreamReader(conn.getInputStream(), StandardCharsets.UTF_8))) {
                     StringBuilder response = new StringBuilder();
                     String responseLine = null;
@@ -470,5 +482,33 @@ public class TodayRequestDetailsActivity extends AppCompatActivity {
             intent.putExtra(MainActivity.REQUEST_STATUS, request.getStatus());
             startActivity(intent);
         }
+
+
+    }
+
+    public void loadMap(Request request, Context ctx) {
+        //load/initialize the osmdroid configuration, this can be done
+
+        Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
+        ArrayList<Request> requests= new ArrayList<>();
+        requests.add(request);
+        double xPoint=0,yPoint=0;
+        for(GeoPoint g : request.getField().getArea()){
+            xPoint= g.getLatitude()+xPoint;
+            yPoint= g.getLongitude()+yPoint;
+        }
+        GeoPoint point=new GeoPoint(xPoint/request.getField().getArea().size(),yPoint/request.getField().getArea().size());
+
+        map = findViewById(R.id.map_activity_details);
+
+        map.setTileSource(TileSourceFactory.MAPNIK);
+        map.setMultiTouchControls(false);
+        map.setTilesScaledToDpi(false);
+        map.setClickable(false);
+        map.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
+        IMapController mapController = map.getController();
+        mapController.setZoom(15.5);
+        mapController.setCenter(point);
+        map.drawField(request.getField(), requests);
     }
 }
