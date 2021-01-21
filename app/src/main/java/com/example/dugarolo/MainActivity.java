@@ -1,10 +1,8 @@
 package com.example.dugarolo;
 
 import android.Manifest;
-import android.app.AlertDialog;
-import android.app.Dialog;
+import android.app.DatePickerDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -16,34 +14,26 @@ import android.os.Bundle;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.DatePicker;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
-import android.widget.Toast;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.collection.ArraySet;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
 import androidx.viewpager.widget.ViewPager;
-
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.joda.time.DateTime;
@@ -55,21 +45,22 @@ import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.overlay.Marker;
 
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collection.*;
-import java.util.Collections;
-import java.util.Objects;
-import java.util.stream.Collectors;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
 
     public static final String REQUEST_STATUS = "id";
     private ArrayList<Farm> farms = new ArrayList<>();
     private MyMapView map;
     private MyMapView map2;
+    private MyMapView mapHistory;
     private ArrayList<Request> requests = new ArrayList<>();
     private ArrayList<Request> requestsFiltering = new ArrayList<>();
     private ArrayList<Request> requestsFilteringCheck = new ArrayList<>();
@@ -88,6 +79,10 @@ public class MainActivity extends AppCompatActivity {
     private boolean mySwitchStatus=false;
     private Boolean isTomorrow = false;
     GeoPoint myPosition;
+    private GeoPoint startPoint;
+    private Context ctx;
+    private Intent intentExpandMap;
+    private ViewPager viewPager;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -99,9 +94,10 @@ public class MainActivity extends AppCompatActivity {
 
         loadData();
 
-        final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
-        Context ctx = getApplicationContext();
-        loadMap(startPoint, ctx);
+        startPoint = new GeoPoint(44.778325, 10.720202);
+        ctx = getApplicationContext();
+        intentExpandMap = new Intent(MainActivity.this, MapDetailActivity.class);
+        loadMap(startPoint, ctx, requests);
 
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -112,7 +108,7 @@ public class MainActivity extends AppCompatActivity {
 
 
         TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests, map,map2);
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(tabsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
@@ -126,12 +122,21 @@ public class MainActivity extends AppCompatActivity {
 
             public void onPageSelected(int position) {
                 if (position == 0) {
-
+                    fab.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.info));
                     fab.show();
                     isTomorrow = false;
-                } else {
+                    refreshVisibilityMaps();
+
+                } else  if (position == 1){
                     fab.hide();
                     isTomorrow = true;
+                    refreshVisibilityMaps();
+                }
+                else if (position == 2){
+                    fab.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.calendar));
+                    fab.show();
+                    isTomorrow = true;
+                    mapHistory.setVisibility(View.VISIBLE);
                 }
             }
         });
@@ -140,11 +145,17 @@ public class MainActivity extends AppCompatActivity {
 
 
         fab = findViewById(R.id.floatingActionButton);
+        fab.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.info));
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Planning.class);
-                startActivity(intent);
+                if(viewPager.getCurrentItem() == 2){
+                    DialogFragment datePicker = new DatePickerFragment();
+                    datePicker.show(getSupportFragmentManager(), "date picker");
+                }
+                else
+                    startActivity(intent);
             }
         });
 
@@ -206,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     map2.setVisibility(View.VISIBLE);
                     map.setVisibility(View.INVISIBLE);
-
                 }
 
             }
@@ -308,7 +318,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void loadMap(GeoPoint startPoint, Context ctx) {
+    public void loadMap(GeoPoint startPoint, Context ctx ,ArrayList<Request> requestsList) {
         //load/initialize the osmdroid configuration, this can be done
 
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
@@ -322,6 +332,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         map = findViewById(R.id.map);
         map2 = findViewById(R.id.map2);
+        mapHistory = findViewById(R.id.mapHistory);
         map.setTileSource(TileSourceFactory.MAPNIK);
         map.setMultiTouchControls(true);
         map.setTilesScaledToDpi(true);
@@ -332,17 +343,25 @@ public class MainActivity extends AppCompatActivity {
         map2.setTilesScaledToDpi(true);
         map2.setClickable(true);
         map2.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
+        mapHistory.setTileSource(TileSourceFactory.MAPNIK);
+        mapHistory.setMultiTouchControls(true);
+        mapHistory.setTilesScaledToDpi(true);
+        mapHistory.setClickable(true);
+        mapHistory.getZoomController().setVisibility(CustomZoomButtonsController.Visibility.NEVER);
         IMapController mapController = map.getController();
         mapController.setZoom(14.0);
         mapController.setCenter(startPoint);
         IMapController mapController2 = map2.getController();
         mapController2.setZoom(14.0);
         mapController2.setCenter(startPoint);
-        for (Request r : requests)
-            map2.drawField(r.getField(), requests);
-        map.drawFarms(farms,requests);
-        for (Request r: requests)
-            map.drawField(r.getField(),requests);
+        IMapController mapControllerHistory = mapHistory.getController();
+        mapControllerHistory.setZoom(14.0);
+        mapControllerHistory.setCenter(startPoint);
+        for (Request r : requestsList)
+            map2.drawField(r.getField(), requestsList);
+        map.drawFarms(farms,requestsList);
+        for (Request r: requestsList)
+            map.drawField(r.getField(),requestsList);
         //map.drawIcon(farms, farmerMarkers, 70);
         //map.drawCanals(canals);
         //map.drawWeirs(weirs,weirMarkers);
@@ -378,10 +397,10 @@ public class MainActivity extends AppCompatActivity {
 
     public void onClickExpandMap(View view) {
         GeoPoint center= (GeoPoint) map.getMapCenter();
-        Intent intent = new Intent(MainActivity.this, MapDetailActivity.class);
-        intent.putExtra("CENTER", (Parcelable) center);
-        intent.putExtra("SWITCH_STATUS", mySwitchStatus);
-        startActivity(intent);
+        intentExpandMap.putExtra("CENTER", (Parcelable) center);
+        intentExpandMap.putExtra("SWITCH_STATUS", mySwitchStatus);
+        intentExpandMap.putExtra("VIEWPAGER_POSITION", viewPager.getCurrentItem());
+        startActivity(intentExpandMap);
     }
 
     private void saveData() {
@@ -427,9 +446,46 @@ public class MainActivity extends AppCompatActivity {
     }*/
 
     public ViewPager getViewPager(TabsPagerAdapter tabsPagerAdapter) {
-        ViewPager viewPager = findViewById(R.id.view_pager);
+         ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(tabsPagerAdapter);
         return viewPager;
     }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        ArrayList<Request> requestsDatePicker = new ArrayList<>();
+        requestsDatePicker.addAll(requests);
+        requestsDatePicker.removeIf(request ->{
+            DateTime dateR = request.getDateTime();
+            int dayR = dateR.getDayOfMonth();
+            int monthR = dateR.getMonthOfYear();
+            int yearR = dateR.getYear();
+            if(dayR == dayOfMonth && monthR == month+1 && yearR == year)
+                return false;
+            else
+                return true;
+        });//!(request.getDateTime().equals(c)));
+        mapHistory.clear();
+        mapHistory.getController().scrollBy(0,0);
+        for (Request r: requestsDatePicker)
+            mapHistory.drawField(r.getField(),requestsDatePicker);
+
+        intentExpandMap.putExtra("R_DATE_PICKER", requestsDatePicker);
+        HistoryTab.setChanged(requestsDatePicker);
+    }
+
+    public void refreshVisibilityMaps(){
+        mapHistory.setVisibility(View.GONE);
+        if(mySwitch.isChecked()){
+            map.setVisibility(View.VISIBLE);
+            map2.setVisibility(View.GONE);
+        }
+        else{
+            map2.setVisibility(View.VISIBLE);
+            map.setVisibility(View.GONE);
+        }
+    }
+
 }
 

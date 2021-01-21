@@ -2,6 +2,7 @@ package com.example.dugarolo;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Application;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -34,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+@SuppressLint("ParcelCreator")
 public class MyMapView extends MapView implements Parcelable {
 
     Globals sharedData = Globals.getInstance();
@@ -60,6 +62,7 @@ public class MyMapView extends MapView implements Parcelable {
     public MyMapView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
+
 
     public void drawWeirs(final ArrayList<Weir> weirs, ArrayList<Marker> weirMarkers) {
         for (Weir weir : weirs) {
@@ -380,6 +383,13 @@ public class MyMapView extends MapView implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeIntArray(FarmColor);
+        parcel.writeInt(min);
+        parcel.writeInt(max);
+        parcel.writeInt(c);
+    }
 
+    public void clear(){
+        this.getOverlayManager().clear();
     }
 }

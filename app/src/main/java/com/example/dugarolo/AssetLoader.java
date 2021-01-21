@@ -255,14 +255,15 @@ public class AssetLoader  extends AppCompatActivity {
                         String idForUrl = id.replace(":", "%3A");
                         idForUrl = idForUrl.replace("/", "%2F");
                         idForUrl = idForUrl.replace("#", "%23");*/
-                        if(field.getId().contains("3187"))
-                            field.getId();
+
 
 
                             for (int index = 0; index < jsonArray.length(); index++) {
                                 JSONObject JSONRequest = jsonArray.getJSONObject(index);
 
-                                String id = JSONRequest.getString("id");
+
+                                String id = JSONRequest.getString("name");
+
 
 
                                 String fieldId=JSONRequest.getString("field");

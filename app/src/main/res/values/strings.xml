@@ -36,6 +36,7 @@
     <string name="hint_end_date">Select end date by clicking here</string>
     <string name="tab_text_1">Today</string>
     <string name="tab_text_2">Tomorrow</string>
+    <string name="tab_History">History</string>
     <string name="order_title">Order by:</string>
     <string name="filter_title">Filter by:</string>
     <string name="radio_order_1">Time</string>
@@ -51,7 +52,8 @@
     <string name="Type_2">CRITERIA</string>
 
 
-
     <string name="order_selected">Order selected:</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 </resources>

@@ -28,6 +28,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import static org.joda.time.Period.days;
+
 public class SplashScreen extends AppCompatActivity {
     private AssetLoader assetLoader = new AssetLoader();
     private ArrayList<Farm> farms = new ArrayList<>();
@@ -54,9 +56,9 @@ public class SplashScreen extends AppCompatActivity {
                 assetLoader.loadGeoPointsFarms(farms);
                 writeFarmToFile();
             }else{
-            Type typeFarm = new TypeToken<ArrayList<Farm>>() {
-            }.getType();
-            farms = gson.fromJson(jsonFarms, typeFarm);
+                Type typeFarm = new TypeToken<ArrayList<Farm>>() {
+                }.getType();
+                farms = gson.fromJson(jsonFarms, typeFarm);
             }
 
             assetLoader.loadRequests( farms,requests);
@@ -68,13 +70,35 @@ public class SplashScreen extends AppCompatActivity {
 
             //GUAI A CHI LA TOCCA
             //Sample Request
-            /*final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
+            final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
             ArrayList<GeoPoint> geoPoints = new ArrayList<GeoPoint>();
             geoPoints.add(startPoint);
-            Field field = new Field("farmName", "2", geoPoints);
-            Request request0 = new Request("1", "Name", DateTime.now(), "Accepted", "10", field , "message", "Channel", "cbec","anal");
-            requests.add(request0);*/
+            Field field = new Field("http://swamp-project.org/cbec/farmer_91268487", "http://swamp-project.org/cbec/field_25905", geoPoints);
+            field=farms.get(0).getFields().get(0);
+            Request request0 = new Request("http://swamp-project.org/cbec/farmer_91268487", "http://swamp-project.org/cbec/farmer_91268487", DateTime.now(), "Ongoing", "10", field , "message", "Channel", "CBEC","Fosdondo");
+            requests.add(request0);
+            requests.add(new Request("http://swamp-project.org/cbec/farmer_91018883", "http://swamp-project.org/cbec/farmer_91018883", DateTime.now(),
+                    "Accepted", "10", farms.get(1).getFields().get(0), "message", "Channel", "Criteria","Fosdondo"));
+            requests.add(new Request("http://swamp-project.org/cbec/farmer_83801", "http://swamp-project.org/cbec/farmer_83801", DateTime.now(),
+                    "Scheduled", "10", farms.get(2).getFields().get(0), "message", "Channel", "CBEC","Fosdondo"));
+            requests.add(new Request("http://swamp-project.org/cbec/farmer_103059", "http://swamp-project.org/cbec/farmer_103059", DateTime.now(),
+                    "Accepted", "10", farms.get(3).getFields().get(0), "message", "Channel", "CBEC","Fosdondo"));
+            requests.add(new Request("http://swamp-project.org/cbec/farmer_120092", "http://swamp-project.org/cbec/farmer_120092", DateTime.now().plusDays(1),
+                    "Accepted", "10", farms.get(4).getFields().get(0), "message", "Channel", "CBEC","Fosdondo"));
+            requests.add(new Request("http://swamp-project.org/cbec/farmer_21545", "http://swamp-project.org/cbec/farmer_21545", DateTime.now().plusDays(1),
+                    "Accepted", "10", farms.get(5).getFields().get(0), "message", "Channel", "CBEC","Fosdondo"));
+            requests.add(new Request("http://swamp-project.org/cbec/farmer_67356", "http://swamp-project.org/cbec/farmer_67356", DateTime.now().plusDays(1),
+                    "Accepted", "10", farms.get(6).getFields().get(0), "message", "Channel", "CBEC","Fosdondo"));
 
+
+            requests.add(new Request("http://swamp-project.org/cbec/farmer_67356", "http://swamp-project.org/cbec/farmer_67356", DateTime.now().minusMonths(1),
+                    "Accepted", "10", farms.get(6).getFields().get(0), "message", "Channel", "CBEC","Fosdondo"));
+            requests.add(new Request("http://swamp-project.org/cbec/farmer_67356", "http://swamp-project.org/cbec/farmer_67356", DateTime.now().minusMonths(1),
+                    "Accepted", "10", farms.get(6).getFields().get(0), "message", "Channel", "CBEC","Fosdondo"));
+            requests.add(new Request("http://swamp-project.org/cbec/farmer_67356", "http://swamp-project.org/cbec/farmer_67356", DateTime.now().minusMonths(1),
+                    "Accepted", "10", farms.get(6).getFields().get(0), "message", "Channel", "CBEC","Fosdondo"));
+            requests.add(new Request("http://swamp-project.org/cbec/farmer_67356", "http://swamp-project.org/cbec/farmer_67356", DateTime.now().minusMonths(1),
+                    "Accepted", "10", farms.get(6).getFields().get(0), "message", "Channel", "CBEC","Fosdondo"));
 
             return true;
         }

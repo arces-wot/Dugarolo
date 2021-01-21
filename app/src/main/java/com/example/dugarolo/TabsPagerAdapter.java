@@ -22,7 +22,7 @@ import java.util.Date;
 public class TabsPagerAdapter extends FragmentPagerAdapter {
     @StringRes
     private static final int[] TAB_TITLES =
-            new int[]{R.string.tab_text_1, R.string.tab_text_2};
+            new int[]{R.string.tab_text_1, R.string.tab_text_2, R.string.tab_History};
     private final Context mContext;
     private ArrayList<Request> requests;
 
@@ -45,6 +45,8 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
                 return TodayTab.newInstance(todayRequests(requests), map,map2);
             case 1:
                 return TomorrowTab.newInstance(tomorrowRequests(requests));
+            case 2:
+                return HistoryTab.newInstance(new ArrayList<>(requests));
             default:
                 return null;
         }
@@ -61,7 +63,7 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     }
     @Override
     public int getCount() {
-        return 2;
+        return 3;
     }
 
     public ArrayList<Request> todayRequests(ArrayList<Request> requests) {

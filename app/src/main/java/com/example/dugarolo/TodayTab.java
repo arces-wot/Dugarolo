@@ -693,13 +693,13 @@ public class TodayTab extends Fragment {
 
 
         VectorChildFinder vector;
-        if (currentRequest.getType().equals("CBEC")) {
+        if (currentRequest.getType().equalsIgnoreCase("CBEC")) {
             vector = new VectorChildFinder(getContext(), R.drawable.ic_farmercolor, basicIcon);
             VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
             VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");
             path1.setFillColor(color1);
             path2.setFillColor(color2);
-        } else if (currentRequest.getType().equals("criteria")) {
+        } else if (currentRequest.getType().equalsIgnoreCase("criteria")) {
             vector = new VectorChildFinder(getContext(), R.drawable.ic_robo_swamp, basicIcon);
             VectorDrawableCompat.VFullPath path1 = vector.findPathByName("background");
             VectorDrawableCompat.VFullPath path2 = vector.findPathByName("backgroundShadow");

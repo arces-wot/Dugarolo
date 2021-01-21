@@ -38,6 +38,7 @@
 
     <string name="tab_text_1">Oggi</string>
     <string name="tab_text_2">Domani</string>
+    <string name="tab_History">Storico</string>
     <string name="order_title">Ordina per:</string>
     <string name="filter_title">Filtra per:</string>
     <string name="radio_order_1">Tempo</string>

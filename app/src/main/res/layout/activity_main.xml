@@ -27,6 +27,12 @@
             android:layout_height="match_parent"
             android:layout_gravity="bottom|end"/>
 
+        <com.example.dugarolo.MyMapView
+            android:id="@+id/mapHistory"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="bottom|end"/>
+
 
 
 
@@ -105,7 +111,6 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottom_bar"
             android:layout_width="match_parent"
@@ -162,14 +167,15 @@
 
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/floatingActionButton"
-            android:layout_width="56dp"
-            android:layout_height="56dp"
-            android:clickable="true"
-            android:focusable="true"
-            android:src="@drawable/info"
-            app:backgroundTint="@color/colorPrimary"
-            app:layout_anchor="@id/bottom_bar" />
+        android:id="@+id/floatingActionButton"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:clickable="true"
+        android:focusable="true"
+        app:backgroundTint="@color/colorPrimary"
+        app:layout_anchor="@id/bottom_bar" />
+
+
 
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>

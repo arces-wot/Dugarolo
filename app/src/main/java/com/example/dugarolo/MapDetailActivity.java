@@ -81,8 +81,10 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
     private AssetLoader assetLoader = new AssetLoader();
     private JSONReceiver jsonReceiver;
     private boolean isInFront;
-    GeoPoint startPoint;
+    private GeoPoint startPoint;
     private boolean switchStatus;
+    private int viewPagerPosition;
+
 
     //per GPS
     private LocationManager locationManager;
@@ -102,8 +104,12 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
             //farms = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("FARMS");
             weirs = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("WEIRS");
             canals = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("CANALS");
+
             saveData();
         } else {
+            viewPagerPosition =getIntent().getIntExtra("VIEWPAGER_POSITION", 0);
+            if (getIntent().hasExtra("R_DATE_PICKER") && viewPagerPosition ==2)
+                requests = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("R_DATE_PICKER");
             loadData();
         }
         startPoint = Objects.requireNonNull(getIntent().getExtras()).getParcelable("CENTER");
@@ -466,7 +472,10 @@ public class MapDetailActivity extends AppCompatActivity implements JSONReceiver
         farms = gson.fromJson(jsonFarms, typeFarm);
         weirs = gson.fromJson(jsonWeirs, typeWeir);
         canals = gson.fromJson(jsonCanals, typeCanal);
-        requests = gson.fromJson(jsonRequests, typeRequest);
+        if (getIntent().hasExtra("R_DATE_PICKER") && viewPagerPosition ==2)
+            requests = Objects.requireNonNull(getIntent().getExtras()).getParcelableArrayList("R_DATE_PICKER");
+        else
+            requests = gson.fromJson(jsonRequests, typeRequest);
     }
 
     private static Bitmap getBitmap(VectorDrawable vectorDrawable) {
