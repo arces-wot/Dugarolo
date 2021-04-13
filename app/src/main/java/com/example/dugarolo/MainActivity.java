@@ -2,6 +2,7 @@ package com.example.dugarolo;
 
 import android.Manifest;
 import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,8 +10,10 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.provider.Settings;
@@ -21,6 +24,7 @@ import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.ActionBar;
@@ -30,13 +34,20 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.viewpager.widget.ViewPager;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import net.danlew.android.joda.JodaTimeAndroid;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
@@ -44,12 +55,11 @@ import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.overlay.Marker;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.text.DateFormat;
-import java.time.LocalDate;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 
@@ -76,13 +86,17 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     private ImageView filteredButton;
     private ImageView orderButton;
     private Switch mySwitch;
-    private boolean mySwitchStatus=false;
+    private boolean mySwitchStatus = false;
     private Boolean isTomorrow = false;
     GeoPoint myPosition;
     private GeoPoint startPoint;
     private Context ctx;
     private Intent intentExpandMap;
     private ViewPager viewPager;
+    private DateTime from;
+    private DateTime to;
+    private ArrayList<Request> requestsDatePicker;
+    private DateTime selectedDate = null;
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -90,7 +104,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         JodaTimeAndroid.init(this);
-
 
         loadData();
 
@@ -107,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         actionBar.setDisplayShowTitleEnabled(false);
 
 
-        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests, map,map2);
+        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(), requests, map, map2, mapHistory);
         viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(tabsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
@@ -127,16 +140,17 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
                     isTomorrow = false;
                     refreshVisibilityMaps();
 
-                } else  if (position == 1){
+                } else if (position == 1) {
                     fab.hide();
                     isTomorrow = true;
                     refreshVisibilityMaps();
-                }
-                else if (position == 2){
+                } else if (position == 2) {
                     fab.setImageDrawable(ContextCompat.getDrawable(getApplication(), R.drawable.calendar));
                     fab.show();
                     isTomorrow = true;
                     mapHistory.setVisibility(View.VISIBLE);
+                    map2.setVisibility(View.GONE);
+                    map.setVisibility(View.GONE);
                 }
             }
         });
@@ -150,11 +164,10 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, Planning.class);
-                if(viewPager.getCurrentItem() == 2){
+                if (viewPager.getCurrentItem() == 2) {
                     DialogFragment datePicker = new DatePickerFragment();
                     datePicker.show(getSupportFragmentManager(), "date picker");
-                }
-                else
+                } else
                     startActivity(intent);
             }
         });
@@ -210,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                mySwitchStatus=isChecked;
+                mySwitchStatus = isChecked;
                 if (isChecked) {
                     map2.setVisibility(View.INVISIBLE);
                     map.setVisibility(View.VISIBLE);
@@ -222,8 +235,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
             }
 
         });
-
-
     }
 
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -242,8 +253,6 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         gps = findViewById(R.id.GPSbutton);
 
         listener = new LocationListener() {
-
-
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
 
             @Override
@@ -318,7 +327,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
 
 
     @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public void loadMap(GeoPoint startPoint, Context ctx ,ArrayList<Request> requestsList) {
+    public void loadMap(GeoPoint startPoint, Context ctx, ArrayList<Request> requestsList) {
         //load/initialize the osmdroid configuration, this can be done
 
         Configuration.getInstance().load(ctx, PreferenceManager.getDefaultSharedPreferences(ctx));
@@ -359,13 +368,12 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         mapControllerHistory.setCenter(startPoint);
         for (Request r : requestsList)
             map2.drawField(r.getField(), requestsList);
-        map.drawFarms(farms,requestsList);
-        for (Request r: requestsList)
-            map.drawField(r.getField(),requestsList);
+        map.drawFarms(farms, requestsList);
+        for (Request r : requestsList)
+            map.drawField(r.getField(), requestsList);
         //map.drawIcon(farms, farmerMarkers, 70);
         //map.drawCanals(canals);
         //map.drawWeirs(weirs,weirMarkers);
-
     }
 
 
@@ -396,7 +404,7 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
     }
 
     public void onClickExpandMap(View view) {
-        GeoPoint center= (GeoPoint) map.getMapCenter();
+        GeoPoint center = (GeoPoint) map.getMapCenter();
         intentExpandMap.putExtra("CENTER", (Parcelable) center);
         intentExpandMap.putExtra("SWITCH_STATUS", mySwitchStatus);
         intentExpandMap.putExtra("VIEWPAGER_POSITION", viewPager.getCurrentItem());
@@ -437,55 +445,92 @@ public class MainActivity extends AppCompatActivity implements DatePickerDialog.
         requests = gson.fromJson(jsonRequests, typeRequest);
         weirs = gson.fromJson(jsonWeirs, typeWeir);
         canals = gson.fromJson(jsonCanals, typeCanal);
+        requestsDatePicker = new ArrayList<>();
     }
 
-   /* public TabsPagerAdapter getTabsPagerAdapter(ArrayList<Request> requests, MyMapView map) {
-        TabsPagerAdapter tabsPagerAdapter = new TabsPagerAdapter(getApplicationContext(), getSupportFragmentManager(),
-                requests, map);
-        return tabsPagerAdapter;
-    }*/
 
     public ViewPager getViewPager(TabsPagerAdapter tabsPagerAdapter) {
-         ViewPager viewPager = findViewById(R.id.view_pager);
+        ViewPager viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(tabsPagerAdapter);
         return viewPager;
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.O)
+
     @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
-        ArrayList<Request> requestsDatePicker = new ArrayList<>();
-        requestsDatePicker.addAll(requests);
-        requestsDatePicker.removeIf(request ->{
-            DateTime dateR = request.getDateTime();
-            int dayR = dateR.getDayOfMonth();
-            int monthR = dateR.getMonthOfYear();
-            int yearR = dateR.getYear();
-            if(dayR == dayOfMonth && monthR == month+1 && yearR == year)
-                return false;
-            else
-                return true;
-        });//!(request.getDateTime().equals(c)));
-        mapHistory.clear();
-        mapHistory.getController().scrollBy(0,0);
-        for (Request r: requestsDatePicker)
-            mapHistory.drawField(r.getField(),requestsDatePicker);
-
-        intentExpandMap.putExtra("R_DATE_PICKER", requestsDatePicker);
-        HistoryTab.setChanged(requestsDatePicker);
+        requestsDatePicker = requests;
+        from = new DateTime(year, month + 1, dayOfMonth, 0, 0, 0, 0);
+        to = from.plusDays(1);
+        selectedDate = from;
+        new AsyncTasks().execute();
     }
 
-    public void refreshVisibilityMaps(){
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void onPostDateSet() {
+        mapHistory.clear();
+        mapHistory.getController().scrollBy(0, 0);
+        for (Request r : requestsDatePicker)
+            mapHistory.drawField(r.getField(), requestsDatePicker);
+
+        intentExpandMap.putExtra("R_DATE_PICKER", requestsDatePicker);
+        HistoryTab.setChanged(requestsDatePicker, selectedDate);
+    }
+
+    public void refreshVisibilityMaps() {
         mapHistory.setVisibility(View.GONE);
-        if(mySwitch.isChecked()){
+        if (mySwitch.isChecked()) {
             map.setVisibility(View.VISIBLE);
             map2.setVisibility(View.GONE);
-        }
-        else{
+        } else {
             map2.setVisibility(View.VISIBLE);
             map.setVisibility(View.GONE);
         }
     }
 
+    private class AsyncTasks extends AsyncTask<Void, Void, Boolean> {
+
+        ProgressDialog pd;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = new ProgressDialog(MainActivity.this);
+            pd.setMessage("loading");
+            pd.show();
+            requestsDatePicker.clear();
+            //Fake request t parcel a datatime
+            /*if(selectedDate != null) {
+                final GeoPoint startPoint = new GeoPoint(44.778325, 10.720202);
+                ArrayList<GeoPoint> geoPoints = new ArrayList<GeoPoint>();
+                geoPoints.add(startPoint);
+                Field field = new Field("http://swamp-project.org/cbec/farmer_91268487", "http://swamp-project.org/cbec/field_25905", geoPoints);
+                Request fakeRequest = new Request("FAKE", "DATE", selectedDate, "Accepted", "10", field, "message", "Channel", "Criteria", "Fosdondo");
+                requestsDatePicker.add(0, fakeRequest);
+            }*/
+            //////////////////////////////////
+        }
+
+        protected Boolean doInBackground(Void... voids) {
+        Looper.prepare();
+            try {
+                AssetLoader loader = new AssetLoader();
+                loader.loadSpecificRequest(from, to,farms, requestsDatePicker);
+                Looper.myLooper().quit();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            Looper.loop();
+            return true;
+        }
+        @RequiresApi(api = Build.VERSION_CODES.N)
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            if (aBoolean) {
+                onPostDateSet();
+                if (pd != null)
+                    pd.dismiss();
+            }
+        }
+
+    }
 }
 

@@ -4,18 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/constraintLayout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list_requests"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="50dp"
+        android:layout_width="409dp"
+        android:layout_height="624dp"
         android:padding="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/resultView"
         app:layout_constraintVertical_bias="0.0" />
 
     <TextView
@@ -25,17 +23,20 @@
         android:text="Per visualizzare lo storico\n\nSelezionare una data"
         android:textAlignment="center"
         android:textSize="30dp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/list_requests"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.615"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.252" />
+        app:layout_constraintVertical_bias="0.49" />
 
     <ImageView
         android:id="@+id/arrowImage"
         android:layout_width="108dp"
         android:layout_height="120dp"
         android:rotation="270"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/list_requests"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -43,5 +44,20 @@
         app:layout_constraintTop_toBottomOf="@+id/PickDate"
         app:layout_constraintVertical_bias="0.407"
         app:srcCompat="?attr/actionModeCloseDrawable" />
+
+    <TextView
+        android:id="@+id/resultView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        android:gravity="center|center_horizontal"
+        android:textColor="@color/white"
+        android:textSize="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

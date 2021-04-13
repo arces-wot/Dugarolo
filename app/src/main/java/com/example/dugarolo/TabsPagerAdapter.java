@@ -28,13 +28,17 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
 
     private MyMapView map;
     private MyMapView map2;
+    private MyMapView mapHistory;
+    private DateTime selectedDate;
 
-    public TabsPagerAdapter(Context context, FragmentManager fm, ArrayList<Request> requests, MyMapView map,MyMapView map2) {
+    public TabsPagerAdapter(Context context, FragmentManager fm, ArrayList<Request> requests, MyMapView map, MyMapView map2, MyMapView mapHistory) {
         super(fm, FragmentPagerAdapter.BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT);
         mContext = context;
         this.requests = requests;
         this.map = map;
         this.map2 = map2;
+        this.mapHistory = mapHistory;
+        this.selectedDate = selectedDate;
     }
 
     @SuppressLint("RestrictedApi")
@@ -42,11 +46,11 @@ public class TabsPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return TodayTab.newInstance(todayRequests(requests), map,map2);
+                return TodayTab.newInstance(todayRequests(new ArrayList<>(requests)), map, map2, mapHistory);
             case 1:
-                return TomorrowTab.newInstance(tomorrowRequests(requests));
+                return TomorrowTab.newInstance(tomorrowRequests(new ArrayList<>(requests)));
             case 2:
-                return HistoryTab.newInstance(new ArrayList<>(requests));
+                return HistoryTab.newInstance(new ArrayList<>(), map, map2, mapHistory);
             default:
                 return null;
         }

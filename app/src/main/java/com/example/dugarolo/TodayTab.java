@@ -51,6 +51,7 @@ public class TodayTab extends Fragment {
 
     MyMapView map;
     MyMapView map2;
+    MyMapView historyMap;
     static RequestAdapter mAdapter;
     static ArrayList<Request> requests=new ArrayList<>() ;
     static ArrayList<Request> totalRequests;
@@ -59,63 +60,16 @@ public class TodayTab extends Fragment {
         // Required empty public constructor
     }
 
-    public static TodayTab newInstance(ArrayList<Request> requests, MyMapView map, MyMapView map2) {
+    public static TodayTab newInstance(ArrayList<Request> requests, MyMapView map, MyMapView map2, MyMapView historyMap) {
         Bundle bundle = new Bundle();
         bundle.putParcelableArrayList("list", requests);
         bundle.putParcelable("Mappa", map);
         bundle.putParcelable("Mappa2", map2);
+        bundle.putParcelable("MappaStorico", historyMap);
         TodayTab todayTab = new TodayTab();
         todayTab.setArguments(bundle);
         return todayTab;
     }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_today, container, false);
-
-        assert getArguments() != null;
-        totalRequests = getArguments().getParcelableArrayList("list");
-        requests=unsatisfiedRequests(totalRequests);
-        final RecyclerView recyclerView = root.findViewById(R.id.list_requests);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
-        recyclerView.setLayoutManager(layoutManager);
-        mAdapter = new RequestAdapter(requests);
-        recyclerView.setAdapter(mAdapter);
-        map = getArguments().getParcelable("Mappa");
-        map2 = getArguments().getParcelable("Mappa2");
-
-        return root;
-
-    }
-
-    static public ArrayList<Request> unsatisfiedRequests(ArrayList<Request> totalRequests) {
-        ArrayList<Request> requests = new ArrayList<Request>();
-        for(Request r : totalRequests)
-            if(!r.getStatus().equalsIgnoreCase("Satisfied") && !r.getStatus().equalsIgnoreCase("Cancelled"))
-            requests.add(r);
-            return requests;
-    }
-
-    static public void setChanged(ArrayList<Request> req) {
-        DateTime now;
-        now = DateTime.now();
-        requests.clear();
-        //requests.addAll(req);
-
-        for (Request r : req) {
-            if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear()))
-                    && !r.getStatus().equals("Satisfied") && !r.getStatus().equals("Cancelled")
-                    && ((r.getDateTime().getYear()) == (now.getYear()))) {
-                requests.add(r);
-
-            }
-        }
-
-        mAdapter.notifyDataSetChanged();
-    }
-
 
     public class RequestAdapter extends RecyclerView.Adapter<TodayTab.RequestAdapter.RequestHolder> {
 
@@ -513,8 +467,11 @@ public class TodayTab extends Fragment {
             //mapController.setCenter(geoPoint);
             IMapController mapController2 = map2.getController();
             mapController2.setZoom(14.5);
-            //mapController2.setCenter(geoPoint);
             mapController2.animateTo(geoPoint, 14.5, (long) 500);
+
+            IMapController mapHistoryController = historyMap.getController();
+            mapHistoryController.setZoom(14.5);
+            mapHistoryController.animateTo(geoPoint, 14.5, (long) 500);
         }
 
 
@@ -672,6 +629,55 @@ public class TodayTab extends Fragment {
 
 
     }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View root = inflater.inflate(R.layout.fragment_today, container, false);
+
+        assert getArguments() != null;
+        totalRequests = getArguments().getParcelableArrayList("list");
+        requests=unsatisfiedRequests(totalRequests);
+        final RecyclerView recyclerView = root.findViewById(R.id.list_requests);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        recyclerView.setLayoutManager(layoutManager);
+        mAdapter = new RequestAdapter(requests);
+        recyclerView.setAdapter(mAdapter);
+        map = getArguments().getParcelable("Mappa");
+        map2 = getArguments().getParcelable("Mappa2");
+        historyMap = getArguments().getParcelable("MappaStorico");
+
+        return root;
+
+    }
+
+    static public ArrayList<Request> unsatisfiedRequests(ArrayList<Request> totalRequests) {
+        ArrayList<Request> requests = new ArrayList<Request>();
+        for(Request r : totalRequests)
+            if(!r.getStatus().equalsIgnoreCase("Satisfied") && !r.getStatus().equalsIgnoreCase("Cancelled"))
+            requests.add(r);
+            return requests;
+    }
+
+    static public void setChanged(ArrayList<Request> req) {
+        DateTime now;
+        now = DateTime.now();
+        requests.clear();
+        //requests.addAll(req);
+
+        for (Request r : req) {
+            if (((r.getDateTime().getDayOfYear()) == (now.getDayOfYear()))
+                    && !r.getStatus().equals("Satisfied") && !r.getStatus().equals("Cancelled")
+                    && ((r.getDateTime().getYear()) == (now.getYear()))) {
+                requests.add(r);
+
+            }
+        }
+
+        mAdapter.notifyDataSetChanged();
+    }
+
 
     private int getColorByStatus(Request r) {
         if (r.getStatus().equalsIgnoreCase("Accepted"))

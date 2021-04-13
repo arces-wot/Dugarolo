@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -65,7 +66,13 @@ public class SplashScreen extends AppCompatActivity {
             assetLoader.loadWDN(canals);
             assetLoader.loadGeoPointsWeirs(weirs);
             assetLoader.updateCurrentOpenLevels(weirs);
-
+            /*
+            try {
+                assetLoader.loadSpecificRequest(from, from.plusDays(1),farms, requests);
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            */
 
 
             //GUAI A CHI LA TOCCA

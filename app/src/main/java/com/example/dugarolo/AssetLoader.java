@@ -1,12 +1,16 @@
 package com.example.dugarolo;
 
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+import org.joda.time.format.DateTimeFormat;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,13 +20,19 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -32,15 +42,15 @@ public class AssetLoader  extends AppCompatActivity {
     public AssetLoader() {
     }
 
-    private String getJSONFromURL(URL url) {
+    public String getJSONFromURL(URL url) {
         HttpURLConnection connection = null;
         BufferedReader bufferedReader = null;
         StringBuffer jsonText = new StringBuffer();
 
         try {
             connection = (HttpURLConnection) url.openConnection();
-            connection.setReadTimeout(10000);
-            connection.setConnectTimeout(15000);
+            connection.setReadTimeout(60000);
+            connection.setConnectTimeout(60000);
             connection.setRequestMethod("GET");
             connection.connect();
 
@@ -65,7 +75,10 @@ public class AssetLoader  extends AppCompatActivity {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
-        } finally {
+        } catch(Exception e){
+            e.printStackTrace();
+        }
+        finally {
             if (connection != null) {
                 connection.disconnect();
             }
@@ -311,5 +324,82 @@ public class AssetLoader  extends AppCompatActivity {
 
     }
 
+    public void loadSpecificRequest(DateTime from, DateTime to,ArrayList<Farm> farms, ArrayList<Request> requests) throws UnsupportedEncodingException {
+        String strUrl = "http://mml.arces.unibo.it:3000/v0/WDmanager/{id}/WDMInspector/irrigations";
+        String pattern = "yyyy-MM-dd'T'HH:mm:ss.SS'Z'";
+        DateTimeFormatter formatter = DateTimeFormat.forPattern(pattern);
+        String strFrom = URLEncoder.encode(formatter.print(from),"UTF-8");//.replace(":", "%3A");//.replace("-","%96");
+        String strTo =  URLEncoder.encode(formatter.print(to),"UTF-8");//.replace(":", "%3A");//.replace("-","%2D");
+        strUrl += "?from=" + strFrom + "&to=" + strTo;
+        JSONArray jsonArray = null;
+
+        ///ridurre tempo caricamento
+        Map<String, Field> fieldMap = new HashMap<String, Field>();
+
+        for (Farm farm : farms)
+            for (Field field : farm.getFields())
+                fieldMap.put(field.getId(),field);
+
+
+        try {
+
+            URL url = new URL(strUrl);
+            jsonArray = new JSONArray(getJSONFromURL(url));
+
+
+            if (jsonArray != null) {
+
+
+                //for (Farm farm : farms)
+                    //for (Field field : farm.getFields())
+                        for (int index = 0; index < jsonArray.length(); index++) {
+                            JSONObject JSONRequest = jsonArray.getJSONObject(index);
+
+                            String id = JSONRequest.getString("id");
+                            String fieldId = JSONRequest.getString("field");
+                            //if (fieldId.equals(field.getId())) {
+                            if (fieldMap.containsKey(fieldId)) {
+                                Field field = fieldMap.get(fieldId);
+
+                                JSONObject channelOb = JSONRequest.getJSONObject("channel");
+                                String channel = channelOb.getString("id");
+                                String nameChannel;
+                                if (channelOb.has("name"))
+                                    nameChannel = channelOb.getString("name");
+                                else
+                                    nameChannel = "nameChannel";
+
+
+                                String dateTime = JSONRequest.getString("start");
+                                DateTime formattedDateTime = DateTime.parse(dateTime);
+                                Integer waterVolume = JSONRequest.getInt("waterVolume");
+                                String requestName = field.getFarmName();
+                                String status = JSONRequest.getString("status");
+
+
+                                String type = JSONRequest.getString("type");
+                                String message = "";
+
+                                if (JSONRequest.has("message"))
+                                    message = JSONRequest.getString("message");
+
+                                Request request = new Request(id, requestName, formattedDateTime, status, waterVolume.toString(), field, message, channel, type, nameChannel);
+                                requests.add(request);
+                            }
+                        }
+
+
+            }
+        } catch (MalformedURLException | JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
 }
+
+
+
+
 

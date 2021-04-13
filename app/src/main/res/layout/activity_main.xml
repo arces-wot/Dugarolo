@@ -20,18 +20,22 @@
             android:id="@+id/map"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom|end"/>
+            android:layout_gravity="bottom|end"
+            android:visibility="visible" />
+
         <com.example.dugarolo.MyMapView
             android:id="@+id/map2"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom|end"/>
+            android:layout_gravity="bottom|end"
+            android:visibility="gone" />
 
         <com.example.dugarolo.MyMapView
             android:id="@+id/mapHistory"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom|end"/>
+            android:layout_gravity="bottom|end"
+            android:visibility="gone" />
 
 
 
